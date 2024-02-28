@@ -5,8 +5,8 @@ Projet réseau 2023-2024/L3 info/AMU. Jeu multijoueur de collecte de trésors da
 client-serveur 
 
 
-- Binôme 1 : *Nom  Prénom* 
+- Binôme 1 : *LEFEVRE  Quentin* 
 
-- Binôme 2 : *Nom Prénom*
+- Binôme 2 : *LE Bro Anonyme*
 
 

@@ -1,4 +1,4 @@
-package com.example.goldfinder;
+package com.example.goldfinder.client;
 
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -7,14 +7,21 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.ByteBuffer;
+import java.nio.channels.DatagramChannel;
+import java.nio.channels.SocketChannel;
+
+import com.example.goldfinder.Controller;
 
 public class AppClient extends javafx.application.Application {
     private static final String VIEW_RESOURCE_PATH = "/com/example/goldfinder/gridView.fxml";
     private static final String APP_NAME = "Gold Finder";
 
-
     private Stage primaryStage;
     private Parent view;
+
+    private ClientBoi clientBoi;
+
     private void initializePrimaryStage(Stage primaryStage) {
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle(APP_NAME);
@@ -30,9 +37,6 @@ public class AppClient extends javafx.application.Application {
         showScene();
     }
 
-
-
-
     private void initializeView() throws IOException {
         FXMLLoader loader = new FXMLLoader();
         URL location = AppClient.class.getResource(VIEW_RESOURCE_PATH);
@@ -42,6 +46,7 @@ public class AppClient extends javafx.application.Application {
         view.setOnKeyPressed(controller::handleMove);
         controller.initialize();
 
+        clientBoi = new ClientBoi();
     }
 
     private void showScene() {
@@ -53,4 +58,6 @@ public class AppClient extends javafx.application.Application {
     public static void main(String[] args) {
         launch(args);
     }
+
+    //timeline pour faire un thread en javafx
 }

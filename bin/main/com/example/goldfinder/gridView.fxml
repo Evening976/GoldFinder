@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.layout.AnchorPane?>
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.goldfinder.Controller">
+
+<HBox styleClass="background" stylesheets="@DarkTheme.css"
+      xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+
+      prefHeight="800.0" prefWidth="800.0"
+>
+    <VBox prefWidth="200">
+        <Separator maxHeight="-Infinity" maxWidth="-Infinity"
+                   prefHeight="24.0" prefWidth="200.0"/>
+        <Label maxHeight="-Infinity" maxWidth="-Infinity" alignment="CENTER" prefHeight="24.0" prefWidth="200.0"
+               text="Score"/>
+        <Label fx:id="score" alignment="CENTER" contentDisplay="TEXT_ONLY"
+               maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="24.0" prefWidth="200.0"/>
+        <Separator maxHeight="-Infinity" maxWidth="-Infinity"
+                   prefHeight="24.0" prefWidth="200.0"/>
+        <Button fx:id="restartButton" maxHeight="-Infinity" maxWidth="-Infinity"
+                mnemonicParsing="false" onAction="#restartButtonAction" prefHeight="24.0" prefWidth="200.0"
+                text="Restart"/>
+        <Button fx:id="oneStepButton" maxHeight="-Infinity" maxWidth="-Infinity"
+                mnemonicParsing="false" onAction="#oneStepButtonAction" prefHeight="24.0" prefWidth="200.0"
+                text="One step"/>
+        <ToggleButton fx:id="playToggleButton" maxHeight="-Infinity" maxWidth="-Infinity"
+                      mnemonicParsing="false" onAction="#playToggleButtonAction" prefHeight="24.0"
+                      prefWidth="200.0" styleClass="button" text="Play"/>
+        <ToggleButton fx:id="pauseToggleButton" maxHeight="-Infinity" maxWidth="-Infinity"
+                      mnemonicParsing="false" onAction="#pauseToggleButtonAction" prefHeight="24.0"
+                      prefWidth="200.0" styleClass="button" text="Pause"/>
+    </VBox>
+    <Canvas fx:id="gridCanvas"
+            xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+    height="800.0"
+    width="800.0">
+    </Canvas>
+
+</HBox>
+</AnchorPane>

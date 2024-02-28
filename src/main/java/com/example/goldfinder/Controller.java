@@ -37,12 +37,13 @@ public class Controller {
     }
 
     public void restartButtonAction(ActionEvent actionEvent) {
+        //TODO:Restart game on this press
     }
 
     public void handleMove(KeyEvent keyEvent) {
             switch (keyEvent.getCode()) {
-                case Z -> row = Math.max(0, row - 1);
-                case Q -> column = Math.max(0, column - 1);
+                case W -> row = Math.max(0, row - 1);
+                case A -> column = Math.max(0, column - 1);
                 case S -> row = Math.min(ROW_COUNT-1, row + 1);
                 case D -> column = Math.min(COLUMN_COUNT-1, column +1);
             }
