@@ -40,7 +40,7 @@ public class AppClient extends javafx.application.Application {
         view = loader.load();
         Controller controller = loader.getController();
         view.setOnKeyPressed(controller::handleMove);
-        controller.initialize();
+        controller.initialize(clientBoi);
 
         clientBoi = new ClientBoi();
     }

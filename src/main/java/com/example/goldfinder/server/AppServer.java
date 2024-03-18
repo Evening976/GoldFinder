@@ -19,7 +19,7 @@ public class AppServer extends IServer {
         try {
             server = new AppServer(serverPort);
             System.out.println("server should be listening on port " + serverPort);
-            server.startServer();
+            server.startServer(grid);
         } catch (IOException e) {
             System.out.println("Error creating server " + e.getMessage());
         }

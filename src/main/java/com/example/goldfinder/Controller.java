@@ -1,5 +1,6 @@
 package com.example.goldfinder;
 
+import com.example.goldfinder.client.ClientBoi;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
@@ -19,8 +20,11 @@ public class Controller {
     GridView gridView;
     int column, row;
 
-    public void initialize() {
+    ClientBoi client;
+
+    public void initialize(ClientBoi client) {
         this.gridView = new GridView(gridCanvas, COLUMN_COUNT, ROW_COUNT);
+        this.client = client;
         score.setText("0");
         gridView.repaint();
         column = 10; row = 10;

@@ -2,11 +2,13 @@ package com.example.goldfinder.server;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.SocketChannel;
+import java.nio.channels.spi.AbstractSelectableChannel;
 
 import com.example.goldfinder.Player;
 import com.example.utils.ConnectionMode;
@@ -28,6 +30,10 @@ public abstract class ICommon {
     return receiveTCPMessage(client);
   }
 
+  public synchronized String receiveMessage(DatagramChannel client) throws IOException {
+    return receiveUDPMessage(client);
+  }
+
   public synchronized int sendMessage(SelectionKey key, String message) throws IOException {
     Player player = (Player) key.attachment();
     if (player.getConnectionMode() == ConnectionMode.TCP)
@@ -36,8 +42,11 @@ public abstract class ICommon {
       return sendUDPMessage(key, message);
   }
 
-  public synchronized int sendMessage(SocketChannel client, ByteBuffer buffer, String message) throws IOException {
-    return sendTCPMessage(client, buffer, message);
+  public synchronized int sendMessage(AbstractSelectableChannel client, ByteBuffer buffer, String message) throws IOException {
+    if(client instanceof SocketChannel)
+      return sendTCPMessage((SocketChannel) client, buffer, message);
+    else
+      return sendUDPMessage((DatagramChannel) client, buffer, message);
   }
 
   public synchronized ByteBuffer getrBuffer() {
@@ -59,12 +68,11 @@ public abstract class ICommon {
     return client.write(z);
   }
 
-  private synchronized int sendUDPMessage(SelectionKey key, String message) throws IOException {
-    ByteBuffer buffer = ByteBuffer.allocate(1024);
+  private synchronized int sendUDPMessage(DatagramChannel client, ByteBuffer buffer, String message) throws IOException {
     buffer.clear();
     buffer.put(message.getBytes());
     buffer.flip();
-    return ((DatagramChannel) key.channel()).send(buffer, ((DatagramPacket) key.attachment()).getSocketAddress());
+    return client.send(buffer, new InetSocketAddress("127.0.0.1", 1234));
   }
 
   private synchronized String receiveTCPMessage(SocketChannel client) throws IOException {
@@ -81,11 +89,11 @@ public abstract class ICommon {
     return "";
   }
 
-  private String receiveUDPMessage(SelectionKey key) {
+  private String receiveUDPMessage(DatagramChannel client) {
     ByteBuffer buffer = ByteBuffer.allocate(1024);
     buffer.clear();
     try {
-      ((DatagramChannel) key.channel()).receive(buffer);
+      client.receive(buffer);
     } catch (IOException e) {
       e.printStackTrace();
     }
