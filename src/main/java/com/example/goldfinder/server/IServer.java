@@ -29,8 +29,8 @@ public abstract class IServer extends ICommon {
   public void startServer(){
     while(true){
           try {
-        if (selector.select() == 0)
-          continue;
+        if (selector.select() == 0){
+          continue;}
         Iterator<SelectionKey> selectedKeys = selector.selectedKeys().iterator();
         while (selectedKeys.hasNext()) {
           SelectionKey key = selectedKeys.next();

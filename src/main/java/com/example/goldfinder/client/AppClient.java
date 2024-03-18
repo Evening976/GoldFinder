@@ -1,5 +1,6 @@
 package com.example.goldfinder.client;
 
+import com.example.goldfinder.Controller;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -7,11 +8,6 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.ByteBuffer;
-import java.nio.channels.DatagramChannel;
-import java.nio.channels.SocketChannel;
-
-import com.example.goldfinder.Controller;
 
 public class AppClient extends javafx.application.Application {
     private static final String VIEW_RESOURCE_PATH = "/com/example/goldfinder/gridView.fxml";
