@@ -10,3 +10,6 @@ client-serveur
 - Binôme 2 : *LE Bro Anonyme*
 
 
+NOTE : tout gérer avec messages (pas d'acceptable)
+
+
