@@ -1,9 +1,12 @@
 package com.example.goldfinder.server;
 
+import com.example.utils.Logger;
+
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
+import java.nio.channels.SelectableChannel;
 import java.nio.channels.SocketChannel;
 import java.nio.channels.spi.AbstractSelectableChannel;
 
@@ -20,10 +23,17 @@ public abstract class ICommon {
         return receiveUDPMessage(client);
     }
 
-    public synchronized int sendMessage(AbstractSelectableChannel client, ByteBuffer buffer, String message) throws IOException {
-        if (client instanceof SocketChannel)
-            return sendTCPMessage((SocketChannel) client, buffer, message);
-        return sendUDPMessage((DatagramChannel) client, buffer, message);
+    public synchronized int sendMessage(SelectableChannel client, ByteBuffer buffer, String message) {
+        try {
+            if (client instanceof SocketChannel)
+                return sendTCPMessage((SocketChannel) client, buffer, message);
+            return sendUDPMessage((DatagramChannel) client, buffer, message);
+        }
+        catch (IOException e) {
+            Logger.printError("Could not send message : ");
+            e.printStackTrace();
+        }
+        return -1;
     }
 
     public synchronized ByteBuffer getrBuffer() {

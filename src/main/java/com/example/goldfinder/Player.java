@@ -38,4 +38,12 @@ public class Player implements Serializable {
     public void setName(String playerName) {
         this.name = playerName;
     }
+
+    public int getxPos() {
+        return xPos;
+    }
+
+    public int getyPos() {
+        return yPos;
+    }
 }

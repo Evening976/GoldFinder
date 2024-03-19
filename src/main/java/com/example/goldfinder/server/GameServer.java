@@ -94,9 +94,9 @@ public class GameServer extends IServer {
     }
 
     private SelectionKey handleCommand(SelectionKey key, String msg) {
-        //TODO:Déplacer les commandes dans une classe dédiée
         String currCom = msg.split(" ")[0];
         Player player = (Player) key.attachment();
+        gdGame g = games.getByID(player.getGameID());
         switch (currCom) {
             case "GAME_JOIN":
                 String playerName = msg.split(" ")[1];
@@ -106,22 +106,7 @@ public class GameServer extends IServer {
                 p.getValue().addPlayer(player);
                 System.out.println("Player " + playerName + " has joined game : " + player.getGameID());
                 break;
-            case "SURROUNDING":
-                //send map
-                break;
-            case "dir":
-                String direction = msg.split(" ")[1];
-                switch (direction) {
-                    case "UP":
-                        break;
-                    case "DOWN":
-                        break;
-                    case "LEFT":
-                        break;
-                    case "RIGHT":
-                        break;
-                }
-                break;
+            default: sendMessage(key.channel(), getrBuffer(), ServerCommandHandler.handleCommand(msg, g, player));
         }
         key.attach(player);
         return key;

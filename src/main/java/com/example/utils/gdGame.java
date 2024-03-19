@@ -24,6 +24,26 @@ public class gdGame {
         else isReady = true;
     }
 
+    public String getSurrounding(int xpos, int ypos){
+        return "up: " + grid.upWall(xpos, ypos) + " down: " + grid.downWall(xpos, ypos) + " left: " + grid.leftWall(xpos, ypos) + " right: " + grid.rightWall(xpos, ypos);
+    }
+
+    public String getUp(int xpos, int ypos){
+        return "up: " + grid.upWall(xpos, ypos);
+    }
+
+    public String getDown(int xpos, int ypos){
+        return "down: " + grid.downWall(xpos, ypos);
+    }
+
+    public String getLeft(int xpos, int ypos){
+        return "left: " + grid.leftWall(xpos, ypos);
+    }
+
+    public String getRight(int xpos, int ypos){
+        return "right: " + grid.rightWall(xpos, ypos);
+    }
+
     public void removePlayer(Player player) {
         if(players.remove(player)) isReady = false;
     }
