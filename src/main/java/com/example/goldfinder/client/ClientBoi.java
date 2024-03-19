@@ -7,6 +7,7 @@ import java.io.IOException;
 
 public class ClientBoi extends IClient {
   final ConnectionMode mode;
+  private boolean isPlaying = false;
   public ClientBoi(ConnectionMode mode) {
     super(mode);
       this.mode = mode;
@@ -20,8 +21,10 @@ public class ClientBoi extends IClient {
   @Override
   protected void handleClient() throws IOException, InterruptedException {
     for(int i = 0; i < 10; i++){
-      if(mode == ConnectionMode.TCP)
-        sendMessage(tcpSocket, Wbuffer, "Hello from client");
+      if(mode == ConnectionMode.TCP) {
+        sendMessage(tcpSocket, Wbuffer, "GAME_JOIN Ryo");
+        isPlaying = true;
+      }
       else
         sendMessage(udpSocket, Wbuffer, "Hello from client");
 
@@ -30,4 +33,24 @@ public class ClientBoi extends IClient {
     }
   }
 
+  public void sendMessage(String msg){
+    try {
+      if (mode == ConnectionMode.TCP) {
+        sendMessage(tcpSocket, Wbuffer, msg);
+        isPlaying = true;
+      } else
+        sendMessage(udpSocket, Wbuffer, msg);
+    }
+    catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  public boolean isPlaying(){
+    return isPlaying;
+  }
+
+  public void setPlaying(boolean b) {
+    isPlaying = b;
+  }
 }

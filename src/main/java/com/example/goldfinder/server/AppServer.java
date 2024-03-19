@@ -3,7 +3,7 @@ package com.example.goldfinder.server;
 import java.io.IOException;
 import java.util.Random;
 
-public class AppServer extends IServer {
+public class AppServer extends GameServer {
 
     public AppServer(int port) throws IOException {
         super(port);
@@ -19,7 +19,7 @@ public class AppServer extends IServer {
         try {
             server = new AppServer(serverPort);
             System.out.println("server should be listening on port " + serverPort);
-            server.startServer(grid);
+            server.startServer();
         } catch (IOException e) {
             System.out.println("Error creating server " + e.getMessage());
         }

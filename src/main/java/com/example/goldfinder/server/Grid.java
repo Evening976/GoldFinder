@@ -1,8 +1,9 @@
 package com.example.goldfinder.server;
 
+import java.io.Serializable;
 import java.util.Random;
 
-public class Grid {
+public class Grid implements Serializable {
     boolean[][] hWall, vWall, gold;
     int columnCount, rowCount;
 

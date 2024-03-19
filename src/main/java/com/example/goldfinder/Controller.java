@@ -1,10 +1,12 @@
 package com.example.goldfinder;
 
 import com.example.goldfinder.client.ClientBoi;
+import com.example.utils.ConnectionMode;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 
 import static com.example.goldfinder.server.AppServer.COLUMN_COUNT;
@@ -17,27 +19,32 @@ public class Controller {
     @FXML
     Label score;
 
+    @FXML
+    TextField playerName;
+
     GridView gridView;
     int column, row;
-
     ClientBoi client;
 
-    public void initialize(ClientBoi client) {
+    public void initialize() {
         this.gridView = new GridView(gridCanvas, COLUMN_COUNT, ROW_COUNT);
-        this.client = client;
+        client = new ClientBoi(ConnectionMode.TCP);
         score.setText("0");
         gridView.repaint();
         column = 10; row = 10;
         gridView.paintToken(column, row);
     }
 
-    public void pauseToggleButtonAction(ActionEvent actionEvent) {
-    }
-
     public void playToggleButtonAction(ActionEvent actionEvent) {
-    }
+        String name = playerName.getText();
+        if(!client.isPlaying()){
+            if(!name.isEmpty()){
+                client.sendMessage("GAME_JOIN " + name);
+                client.setPlaying(true);
+                playerName.setDisable(true);
+            }
+        }
 
-    public void oneStepButtonAction(ActionEvent actionEvent) {
     }
 
     public void restartButtonAction(ActionEvent actionEvent) {

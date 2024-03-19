@@ -2,8 +2,10 @@ package com.example.goldfinder;
 
 import com.example.utils.ConnectionMode;
 
-public class Player {
+import java.io.Serializable;
 
+public class Player implements Serializable {
+    Short gameID = null;
     String name;
     ConnectionMode connectionMode;
     int goldCollected;
@@ -23,5 +25,17 @@ public class Player {
 
     public ConnectionMode getConnectionMode() {
         return connectionMode;
+    }
+
+    public void attachToGame(Short gameID) {
+        this.gameID = gameID;
+    }
+
+    public Short getGameID() {
+        return gameID;
+    }
+
+    public void setName(String playerName) {
+        this.name = playerName;
     }
 }
