@@ -17,6 +17,10 @@ public class Player {
         this.yPos = yPos;
     }
 
+    public String getName() {
+        return name;
+    }
+
     public ConnectionMode getConnectionMode() {
         return connectionMode;
     }

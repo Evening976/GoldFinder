@@ -1,6 +1,7 @@
 package com.example.goldfinder.client;
 
 import com.example.goldfinder.Controller;
+import com.example.utils.ConnectionMode;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -31,6 +32,11 @@ public class AppClient extends javafx.application.Application {
         initializePrimaryStage(primaryStage);
         initializeView();
         showScene();
+
+        try{clientBoi.handleClient();}
+        catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void initializeView() throws IOException {
@@ -42,17 +48,20 @@ public class AppClient extends javafx.application.Application {
         view.setOnKeyPressed(controller::handleMove);
         controller.initialize(clientBoi);
 
-        clientBoi = new ClientBoi();
+        clientBoi = new ClientBoi(ConnectionMode.TCP);
     }
 
     private void showScene() {
         Scene scene = new Scene(view);
         primaryStage.setScene(scene);
         primaryStage.show();
+
+
     }
 
     public static void main(String[] args) {
         launch(args);
+
     }
 
     //timeline pour faire un thread en javafx
