@@ -28,7 +28,7 @@ public class gdGame {
     }
 
     public String getUp(int xpos, int ypos){
-        if(grid.upWall(xpos, ypos)) return "up: WALL ";
+        if(grid.upWall(xpos, ypos) || ypos == 0) return "up: WALL ";
         for(Player p : players){
             if(p.getxPos() == xpos && p.getyPos() == ypos - 1) return "up: PLAYER" + players.indexOf(p) + " ";
         }
@@ -37,7 +37,7 @@ public class gdGame {
     }
 
     public String getDown(int xpos, int ypos){
-        if(grid.downWall(xpos, ypos)) return "down: WALL ";
+        if(grid.downWall(xpos, ypos) || ypos == grid.getRowCount()) return "down: WALL ";
         for(Player p : players){
             if(p.getxPos() == xpos && p.getyPos() == ypos + 1) return "down: PLAYER" + players.indexOf(p) + " ";
         }
@@ -46,7 +46,7 @@ public class gdGame {
     }
 
     public String getLeft(int xpos, int ypos){
-        if(grid.leftWall(xpos, ypos)) return "left: WALL ";
+        if(grid.leftWall(xpos, ypos) || xpos == 0) return "left: WALL ";
         for(Player p : players){
             if(p.getxPos() == xpos - 1 && p.getyPos() == ypos) return "left: PLAYER" + players.indexOf(p)+ " ";
         }
@@ -55,12 +55,19 @@ public class gdGame {
     }
 
     public String getRight(int xpos, int ypos){
-        if(grid.rightWall(xpos, ypos)) return "right: WALL ";
+        if(grid.rightWall(xpos, ypos) || xpos == grid.getColumnCount()) return "right: WALL ";
         for(Player p : players){
             if(p.getxPos() == xpos + 1 && p.getyPos() == ypos) return "right: PLAYER" + players.indexOf(p)+ " ";
         }
         if(grid.hasGold(xpos + 1, ypos)) return "right: GOLD ";
         return "right: EMPTY ";
+    }
+
+
+    public void movePlayer(Player p, int xpos, int ypos){
+        Player tgt = players.get(players.indexOf(p));
+        p.move(xpos, ypos);
+        tgt.move(xpos, ypos);
     }
 
     public void removePlayer(Player player) {

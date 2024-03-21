@@ -19,6 +19,11 @@ public class Player implements Serializable {
         this.yPos = yPos;
     }
 
+    public void move(int x, int y) {
+        xPos += x;
+        yPos += y;
+    }
+
     public String getName() {
         return name;
     }
@@ -33,6 +38,10 @@ public class Player implements Serializable {
 
     public Short getGameID() {
         return gameID;
+    }
+
+    public void collectGold() {
+        goldCollected++;
     }
 
     public void setName(String playerName) {

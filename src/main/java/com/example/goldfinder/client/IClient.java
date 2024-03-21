@@ -58,10 +58,10 @@ public abstract class IClient extends ICommon {
 
   public void connect() throws IOException, InterruptedException {
     if(tcpSocket != null) Logger.printSucess("Connected to server!");
-    while(true) handleClient();
+    //while(true) handleClient();
   }
 
-  protected abstract void handleClient() throws IOException, InterruptedException;
+  public abstract String updateClient(int xpos, int ypos) throws IOException, InterruptedException;
 
 
   protected void handleRead() throws IOException {
@@ -81,21 +81,6 @@ public abstract class IClient extends ICommon {
     } catch (Exception e) {
       e.printStackTrace();
     }
-  }
-
-  private void startReadThread() {
-    readerThread = new Thread(() -> {
-      while (true) {
-        try {
-          handleRead();
-        } catch (IOException e) {
-          out.println(Logger.getErrorLog("Connection with server has been closed"));
-          clean();
-          break;
-        }
-      }
-    });
-    readerThread.start();
   }
 }
 

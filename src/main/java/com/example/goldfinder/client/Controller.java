@@ -1,5 +1,6 @@
 package com.example.goldfinder.client;
 
+import com.example.goldfinder.client.commands.Move_Command;
 import com.example.utils.ConnectionMode;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -7,6 +8,8 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
+
+import java.util.Objects;
 
 import static com.example.goldfinder.server.AppServer.COLUMN_COUNT;
 import static com.example.goldfinder.server.AppServer.ROW_COUNT;
@@ -57,11 +60,31 @@ public class Controller {
     }
 
     public void handleMove(KeyEvent keyEvent) {
+        String resp = "";
         switch (keyEvent.getCode()) {
-            case W -> row = Math.max(0, row - 1);
-            case A -> column = Math.max(0, column - 1);
-            case S -> row = Math.min(ROW_COUNT - 1, row + 1);
-            case D -> column = Math.min(COLUMN_COUNT - 1, column + 1);
+            case W -> {
+                if ((resp = client.sendCommand(new Move_Command(), "UP")).startsWith("VALID_MOVE"))
+                    row = Math.max(0, row - 1);
+            }
+            case A -> {
+                if ((resp = client.sendCommand(new Move_Command(), "LEFT")).startsWith("VALID_MOVE"))
+                    column = Math.max(0, column - 1);
+            }
+            case S -> {
+                if ((resp = client.sendCommand(new Move_Command(), "DOWN")).startsWith("VALID_MOVE"))
+                    row = Math.min(ROW_COUNT - 1, row + 1);
+            }
+            case D -> {
+                if ((resp = client.sendCommand(new Move_Command(), "RIGHT")).startsWith("VALID_MOVE"))
+                    column = Math.min(COLUMN_COUNT - 1, column + 1);
+            }
+            default -> {
+                return;
+            }
+        }
+        if (resp.endsWith("GOLD")) {
+            gridView.goldAt[column][row] = false;
+            score.setText(String.valueOf(Integer.parseInt(score.getText()) + 1));
         }
         gridView.repaint();
         gridView.paintToken(column, row);

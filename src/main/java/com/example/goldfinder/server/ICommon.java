@@ -1,5 +1,6 @@
 package com.example.goldfinder.server;
 
+import com.example.utils.ConnectionMode;
 import com.example.utils.Logger;
 
 import java.io.IOException;
@@ -15,8 +16,12 @@ public abstract class ICommon {
     protected DatagramChannel udpSocket;
     private final ByteBuffer rBuffer = ByteBuffer.allocate(1024);
 
-    public synchronized String receiveMessage(SocketChannel client) throws IOException {
-        return receiveTCPMessage(client);
+    public synchronized String receiveMessage(SocketChannel client) {
+        try {
+            return receiveTCPMessage(client);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public synchronized String receiveMessage(DatagramChannel client) {
