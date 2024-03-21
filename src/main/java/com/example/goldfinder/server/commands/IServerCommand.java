@@ -1,9 +1,10 @@
-package com.example.utils;
+package com.example.goldfinder.server.commands;
 
 import com.example.goldfinder.Player;
 import com.example.goldfinder.server.GameServer;
+import com.example.utils.gdGame;
 
-public interface ICommand {
+public interface IServerCommand {
     String run(GameServer server, Player p, gdGame g, String[] params);
     gdGame getGame();
     Player getPlayer();

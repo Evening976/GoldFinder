@@ -4,26 +4,19 @@ import com.example.goldfinder.Player;
 import com.example.goldfinder.server.GameServer;
 import com.example.utils.gdGame;
 
-public class Surrounding implements IServerCommand {
-
-    Player player;
-    gdGame game;
-
+public class Leaderboard implements IServerCommand {
     @Override
     public String run(GameServer server, Player p, gdGame g, String[] params) {
-        for(String s : params) System.out.println(s);
-        this.player = p;
-        this.game = g;
-        return game.getSurrounding(p.getxPos(),p.getyPos());
+        return null;
     }
 
     @Override
     public gdGame getGame() {
-        return game;
+        return null;
     }
 
     @Override
     public Player getPlayer() {
-        return player;
+        return null;
     }
 }

@@ -3,11 +3,10 @@ package com.example.goldfinder.server.commands;
 import com.example.goldfinder.Player;
 import com.example.goldfinder.server.GameServer;
 import com.example.utils.Logger;
-import com.example.utils.ICommand;
 import com.example.utils.gdGame;
 import javafx.util.Pair;
 
-public class Game_Join implements ICommand {
+public class Game_Join implements IServerCommand {
     Player player;
     gdGame game;
     @Override

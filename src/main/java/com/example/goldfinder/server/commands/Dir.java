@@ -2,10 +2,9 @@ package com.example.goldfinder.server.commands;
 
 import com.example.goldfinder.Player;
 import com.example.goldfinder.server.GameServer;
-import com.example.utils.ICommand;
 import com.example.utils.gdGame;
 
-public class Dir implements ICommand {
+public class Dir implements IServerCommand {
     Player player;
     gdGame game;
 

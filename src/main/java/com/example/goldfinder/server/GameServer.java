@@ -2,7 +2,7 @@ package com.example.goldfinder.server;
 
 import com.example.goldfinder.Player;
 import com.example.utils.*;
-import com.example.utils.ICommand;
+import com.example.goldfinder.server.commands.IServerCommand;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -97,7 +97,7 @@ public class GameServer extends IServer {
         if(player.getGameID() != null)
             g = games.getByID(player.getGameID());
 
-        ICommand currentCommand = CommandParser.parse(msg);
+        IServerCommand currentCommand = ServerCommandParser.parseCommand(msg);
         if (currentCommand != null) {
             if(g == null)
                 System.out.println(currentCommand.run(this, player, null, msg.split(" ")));
