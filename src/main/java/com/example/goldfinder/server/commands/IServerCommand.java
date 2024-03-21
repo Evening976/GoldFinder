@@ -1,6 +1,6 @@
 package com.example.goldfinder.server.commands;
 
-import com.example.goldfinder.Player;
+import com.example.utils.Player;
 import com.example.goldfinder.server.GameServer;
 import com.example.utils.gdGame;
 

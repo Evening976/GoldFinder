@@ -4,7 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.goldfinder.Controller">
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.goldfinder.client.Controller">
 
 <HBox prefHeight="800.0" prefWidth="879.0" styleClass="background" stylesheets="@DarkTheme.css" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
     <VBox prefWidth="200">

@@ -1,16 +1,22 @@
 package com.example.goldfinder.client;
 
+import com.example.goldfinder.client.commands.CommandState;
+import com.example.goldfinder.client.commands.IClientCommand;
+import com.example.utils.ClientCommandParser;
 import com.example.utils.ConnectionMode;
 import com.example.utils.Logger;
 
 import java.io.IOException;
+import java.util.ArrayDeque;
+import java.util.PriorityQueue;
+import java.util.Queue;
+import java.util.Stack;
 
 public class ClientBoi extends IClient {
-  final ConnectionMode mode;
   private boolean isPlaying = false;
+  //ArrayDeque<IClientCommand> commandStack = new ArrayDeque<>();
   public ClientBoi(ConnectionMode mode) {
     super(mode);
-      this.mode = mode;
       try{
       connect();
     } catch (IOException | InterruptedException e) {
@@ -19,17 +25,14 @@ public class ClientBoi extends IClient {
   }
 
   @Override
-  protected void handleClient() throws IOException, InterruptedException {
-    for(int i = 0; i < 10; i++){
-      if(mode == ConnectionMode.TCP) {
-        sendMessage(tcpSocket, Wbuffer, "GAME_JOIN Ryo");
-        isPlaying = true;
-      }
-      else
-        sendMessage(udpSocket, Wbuffer, "Hello from client");
-
-      Logger.printDebug("Sent message to server");
-      Thread.sleep(1000);
+  protected void handleClient() throws IOException {
+    String msg = (mode == ConnectionMode.TCP ? receiveMessage(tcpSocket) : receiveMessage(udpSocket));
+    if (msg != null) {
+      Logger.printYellow("Received message from server: " + msg);
+      IClientCommand currentCommand = ClientCommandParser.parseCommand(msg);
+        if (currentCommand != null) {
+          currentCommand.run(this, msg);
+        }
     }
   }
 

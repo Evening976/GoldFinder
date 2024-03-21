@@ -1,4 +1,4 @@
-package com.example.goldfinder;
+package com.example.utils;
 
 import com.example.utils.ConnectionMode;
 

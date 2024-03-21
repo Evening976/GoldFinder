@@ -1,4 +1,4 @@
-package com.example.goldfinder;
+package com.example.goldfinder.client;
 
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;

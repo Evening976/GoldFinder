@@ -1,6 +1,5 @@
 package com.example.utils;
 
-import com.example.goldfinder.Player;
 import com.example.goldfinder.server.Grid;
 
 import java.util.ArrayList;

@@ -1,6 +1,5 @@
-package com.example.goldfinder;
+package com.example.goldfinder.client;
 
-import com.example.goldfinder.client.ClientBoi;
 import com.example.utils.ConnectionMode;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

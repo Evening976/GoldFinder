@@ -51,7 +51,6 @@ public abstract class IClient extends ICommon {
     private void startUDPConnection() throws IOException {
       udpSocket = DatagramChannel.open();
       udpSocket.configureBlocking(false);
-      //udpSocket.bind(new InetSocketAddress("127.0.0.1", 1234));
       udpSocket.connect(new InetSocketAddress("127.0.0.1", 1234));
 
       sendMessage(udpSocket, Wbuffer, "Hello from client");
@@ -59,7 +58,7 @@ public abstract class IClient extends ICommon {
 
   public void connect() throws IOException, InterruptedException {
     if(tcpSocket != null) Logger.printSucess("Connected to server!");
-    startReadThread();
+    while(true) handleClient();
   }
 
   protected abstract void handleClient() throws IOException, InterruptedException;

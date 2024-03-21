@@ -1,6 +1,6 @@
 package com.example.goldfinder.server;
 
-import com.example.goldfinder.Player;
+import com.example.utils.Player;
 import com.example.utils.gdGame;
 
 public class ServerCommandHandler {

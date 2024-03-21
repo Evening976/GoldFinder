@@ -1,6 +1,5 @@
 package com.example.goldfinder.client;
 
-import com.example.goldfinder.Controller;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -13,7 +12,7 @@ import java.net.URL;
 public class AppClient extends javafx.application.Application {
     private static final String VIEW_RESOURCE_PATH = "/com/example/goldfinder/gridView.fxml";
     private static final String APP_NAME = "Gold Finder";
-
+    private static Controller controller;
     private Stage primaryStage;
     private Parent view;
 
@@ -37,15 +36,19 @@ public class AppClient extends javafx.application.Application {
         URL location = AppClient.class.getResource(VIEW_RESOURCE_PATH);
         loader.setLocation(location);
         view = loader.load();
-        Controller controller = loader.getController();
+        controller = loader.getController();
         view.setOnKeyPressed(controller::handleMove);
-        controller.initialize();
+        //controller.initialize();
     }
 
     private void showScene() {
         Scene scene = new Scene(view);
         primaryStage.setScene(scene);
         primaryStage.show();
+    }
+
+    public static Controller getController(){
+        return controller;
     }
 
     public static void main(String[] args) {

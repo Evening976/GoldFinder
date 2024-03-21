@@ -1,8 +1,11 @@
 package com.example.goldfinder.client.commands;
 
-public class Valid_Move implements IClientCommand{
+import com.example.goldfinder.client.ClientBoi;
+
+public class Valid_Move extends IClientCommand{
+
     @Override
-    public String run(String[] params) {
+    public String run(ClientBoi boi, String params) {
         return null;
     }
 }
