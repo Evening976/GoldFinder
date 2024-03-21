@@ -25,23 +25,43 @@ public class gdGame {
     }
 
     public String getSurrounding(int xpos, int ypos){
-        return "up: " + grid.upWall(xpos, ypos) + " down: " + grid.downWall(xpos, ypos) + " left: " + grid.leftWall(xpos, ypos) + " right: " + grid.rightWall(xpos, ypos);
+        return getUp(xpos, ypos) + getDown(xpos, ypos) + getLeft(xpos, ypos) + getRight(xpos, ypos);
     }
 
     public String getUp(int xpos, int ypos){
-        return "up: " + grid.upWall(xpos, ypos);
+        if(grid.upWall(xpos, ypos)) return "up: WALL ";
+        for(Player p : players){
+            if(p.getxPos() == xpos && p.getyPos() == ypos - 1) return "up: PLAYER" + players.indexOf(p) + " ";
+        }
+        if(grid.hasGold(xpos, ypos - 1)) return "up: GOLD ";
+        return "up: EMPTY ";
     }
 
     public String getDown(int xpos, int ypos){
-        return "down: " + grid.downWall(xpos, ypos);
+        if(grid.downWall(xpos, ypos)) return "down: WALL ";
+        for(Player p : players){
+            if(p.getxPos() == xpos && p.getyPos() == ypos + 1) return "down: PLAYER" + players.indexOf(p) + " ";
+        }
+        if(grid.hasGold(xpos, ypos + 1)) return "down: GOLD ";
+        return "down: EMPTY ";
     }
 
     public String getLeft(int xpos, int ypos){
-        return "left: " + grid.leftWall(xpos, ypos);
+        if(grid.leftWall(xpos, ypos)) return "left: WALL ";
+        for(Player p : players){
+            if(p.getxPos() == xpos - 1 && p.getyPos() == ypos) return "left: PLAYER" + players.indexOf(p)+ " ";
+        }
+        if(grid.hasGold(xpos - 1, ypos)) return "left: GOLD ";
+        return "left: EMPTY ";
     }
 
     public String getRight(int xpos, int ypos){
-        return "right: " + grid.rightWall(xpos, ypos);
+        if(grid.rightWall(xpos, ypos)) return "right: WALL ";
+        for(Player p : players){
+            if(p.getxPos() == xpos + 1 && p.getyPos() == ypos) return "right: PLAYER" + players.indexOf(p)+ " ";
+        }
+        if(grid.hasGold(xpos + 1, ypos)) return "right: GOLD ";
+        return "right: EMPTY ";
     }
 
     public void removePlayer(Player player) {

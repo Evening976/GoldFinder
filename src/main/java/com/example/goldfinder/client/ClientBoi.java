@@ -34,16 +34,11 @@ public class ClientBoi extends IClient {
   }
 
   public void sendMessage(String msg){
-    try {
       if (mode == ConnectionMode.TCP) {
         sendMessage(tcpSocket, Wbuffer, msg);
         isPlaying = true;
       } else
         sendMessage(udpSocket, Wbuffer, msg);
-    }
-    catch (IOException e) {
-      e.printStackTrace();
-    }
   }
 
   public boolean isPlaying(){

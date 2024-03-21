@@ -1,11 +1,8 @@
 package com.example.goldfinder.server;
 
 import com.example.goldfinder.Player;
-import com.example.utils.ConnectionMode;
-import com.example.utils.GameMap;
-import com.example.utils.Logger;
-import com.example.utils.gdGame;
-import javafx.util.Pair;
+import com.example.utils.*;
+import com.example.utils.ICommand;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -94,19 +91,20 @@ public class GameServer extends IServer {
     }
 
     private SelectionKey handleCommand(SelectionKey key, String msg) {
-        String currCom = msg.split(" ")[0];
         Player player = (Player) key.attachment();
-        gdGame g = games.getByID(player.getGameID());
-        switch (currCom) {
-            case "GAME_JOIN":
-                String playerName = msg.split(" ")[1];
-                player.setName(playerName);
-                Pair<Short, gdGame> p = games.getAvailable();
-                player.attachToGame(p.getKey());
-                p.getValue().addPlayer(player);
-                System.out.println("Player " + playerName + " has joined game : " + player.getGameID());
-                break;
-            default: sendMessage(key.channel(), getrBuffer(), ServerCommandHandler.handleCommand(msg, g, player));
+        gdGame g = null;
+
+        if(player.getGameID() != null)
+            g = games.getByID(player.getGameID());
+
+        ICommand currentCommand = CommandParser.parse(msg);
+        if (currentCommand != null) {
+            if(g == null)
+                System.out.println(currentCommand.run(this, player, null, msg.split(" ")));
+            else System.out.println(currentCommand.run(this, player, games.getByID(player.getGameID()), msg.split(" ")));
+
+            player = currentCommand.getPlayer();
+            games.setGame(player.getGameID(), currentCommand.getGame());
         }
         key.attach(player);
         return key;
@@ -122,5 +120,9 @@ public class GameServer extends IServer {
             sendMessage(client, buffer, message);
         }
         backBuffer.clear();
+    }
+
+    public GameMap getGames(){
+        return games;
     }
 }

@@ -51,4 +51,12 @@ public class Grid implements Serializable {
             for(int row=0;row<rowCount; row++)
                 gold[column][row]=(random.nextInt(10)<v);
     }
+
+    public int getColumnCount() {
+        return columnCount;
+    }
+
+    public int getRowCount() {
+        return rowCount;
+    }
 }

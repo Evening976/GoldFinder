@@ -35,8 +35,15 @@ public class GameMap {
                 return new Pair<>(key.getValue(), games.get(key));
             }
         }
+
+        if(games.size() >= maxGames) return null;
+
         Pair<Boolean, Short> key = new Pair<>(false, (short) games.size());
         games.put(key, new gdGame(maxPlayers));
         return new Pair<>(key.getValue(), games.get(key));
+    }
+
+    public void setGame(short gameID, gdGame game) {
+        games.put(new Pair<>(true, gameID), game);
     }
 }

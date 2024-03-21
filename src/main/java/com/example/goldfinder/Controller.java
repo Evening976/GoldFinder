@@ -21,6 +21,8 @@ public class Controller {
 
     @FXML
     TextField playerName;
+    @FXML
+    TextField debugCommand;
 
     GridView gridView;
     int column, row;
@@ -31,35 +33,39 @@ public class Controller {
         client = new ClientBoi(ConnectionMode.TCP);
         score.setText("0");
         gridView.repaint();
-        column = 10; row = 10;
+        column = 10;
+        row = 10;
         gridView.paintToken(column, row);
     }
 
     public void playToggleButtonAction(ActionEvent actionEvent) {
         String name = playerName.getText();
-        if(!client.isPlaying()){
-            if(!name.isEmpty()){
+        if (!client.isPlaying()) {
+            if (!name.isEmpty()) {
                 client.sendMessage("GAME_JOIN " + name);
                 client.setPlaying(true);
                 playerName.setDisable(true);
             }
         }
-
     }
 
     public void restartButtonAction(ActionEvent actionEvent) {
         //TODO:Restart game on this press
+        String command = debugCommand.getText();
+        if (!command.isEmpty()) {
+            client.sendMessage(command);
+        }
     }
 
     public void handleMove(KeyEvent keyEvent) {
-            switch (keyEvent.getCode()) {
-                case W -> row = Math.max(0, row - 1);
-                case A -> column = Math.max(0, column - 1);
-                case S -> row = Math.min(ROW_COUNT-1, row + 1);
-                case D -> column = Math.min(COLUMN_COUNT-1, column +1);
-            }
-            gridView.repaint();
-            gridView.paintToken(column, row);
+        switch (keyEvent.getCode()) {
+            case W -> row = Math.max(0, row - 1);
+            case A -> column = Math.max(0, column - 1);
+            case S -> row = Math.min(ROW_COUNT - 1, row + 1);
+            case D -> column = Math.min(COLUMN_COUNT - 1, column + 1);
+        }
+        gridView.repaint();
+        gridView.paintToken(column, row);
     }
 }
 
