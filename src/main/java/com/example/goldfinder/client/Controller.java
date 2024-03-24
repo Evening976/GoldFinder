@@ -1,5 +1,6 @@
 package com.example.goldfinder.client;
 
+import com.example.goldfinder.client.commands.Client_Join;
 import com.example.goldfinder.client.commands.Move_Command;
 import com.example.utils.ConnectionMode;
 import javafx.event.ActionEvent;
@@ -8,8 +9,6 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
-
-import java.util.Objects;
 
 import static com.example.goldfinder.server.AppServer.COLUMN_COUNT;
 import static com.example.goldfinder.server.AppServer.ROW_COUNT;
@@ -44,9 +43,10 @@ public class Controller {
         String name = playerName.getText();
         if (!client.isPlaying()) {
             if (!name.isEmpty()) {
-                client.sendMessage("GAME_JOIN " + name);
-                client.setPlaying(true);
+                String r = client.sendCommand(new Client_Join(), name);
+                System.out.println("Response to game_join : " + r);
                 playerName.setDisable(true);
+                System.out.println("isPlaying = " + client.isPlaying());
             }
         }
     }

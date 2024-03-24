@@ -2,13 +2,9 @@ package com.example.goldfinder.client;
 
 import com.example.goldfinder.client.commands.IClientCommand;
 import com.example.goldfinder.client.commands.SurroundingClient;
-import com.example.utils.ClientCommandParser;
 import com.example.utils.ConnectionMode;
-import com.example.utils.Logger;
 
 import java.io.IOException;
-import java.nio.channels.SelectableChannel;
-import java.nio.channels.SocketChannel;
 
 public class ClientBoi extends IClient {
     private boolean isPlaying = false;
@@ -33,21 +29,19 @@ public class ClientBoi extends IClient {
     }
 
     public String sendCommand(IClientCommand command, String params) {
-        if (command != null) {
-            command.run(this, params);
-            String resp;
+        command.run(this, params);
+        System.out.println("sent command : " + params);
+        String resp = "";
 
-            if (mode == ConnectionMode.TCP) {
-                while (true) {
-                    if (!(resp = receiveMessage(tcpSocket)).isEmpty()) return command.response(this, resp);
-                }
-            } else {
-                while (true) {
-                    if (!(resp = receiveMessage(udpSocket)).isEmpty()) return command.response(this, resp);
-                }
+        if (mode == ConnectionMode.TCP) {
+            while (true) {
+                if (!(resp = receiveMessage(tcpSocket)).isEmpty()){return command.response(this, resp);}
+            }
+        } else {
+            while (true) {
+                if (!(resp = receiveMessage(udpSocket)).isEmpty()){return command.response(this, resp);}
             }
         }
-        return "";
     }
 
     public void sendMessage(String msg) {
