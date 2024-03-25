@@ -37,10 +37,25 @@ public class GridView {
 
     }
 
+    public void setGoldAt(int col, int row){
+        if(col >= 0 && col < columnCount && row >= 0 && row < rowCount)
+            goldAt[col][row] = true;
+    }
+
+    public void setVWall(int col, int row){
+        if(col >= 0 && col < columnCount+1 && row >= 0 && row < rowCount)
+            vWall[col][row] = true;
+    }
+
+    public void setHWall(int col, int row){
+        if(col >= 0 && col < columnCount && row >= 0 && row < rowCount+1)
+            hWall[col][row] = true;
+    }
+
     private double cellWidth(){ return canvas.getWidth()/columnCount; }
     private double cellHeight(){ return canvas.getHeight()/rowCount; }
 
-    public void paintToken(int column, int row) {
+    public void paintPlayer(int column, int row, int playerIndex) {
         canvas.getGraphicsContext2D().setFill(Color.BLUE);
         canvas.getGraphicsContext2D().fillRect(column*cellWidth(),row*cellHeight(),cellWidth(),cellHeight());
     }

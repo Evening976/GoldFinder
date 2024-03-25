@@ -105,6 +105,8 @@ public class GameServer extends IServer {
 
             player = currentCommand.getPlayer();
             games.setGame(player.getGameID(), currentCommand.getGame());
+
+            System.out.println("Game server data : " + player + " game : " + games.getByID(player.getGameID()));
         }
         key.attach(player);
         return key;

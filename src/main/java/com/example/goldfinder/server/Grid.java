@@ -52,6 +52,10 @@ public class Grid implements Serializable {
                 gold[column][row]=(random.nextInt(10)<v);
     }
 
+    public void removeGold(int column, int row){
+        gold[column][row] = false;
+    }
+
     public int getColumnCount() {
         return columnCount;
     }

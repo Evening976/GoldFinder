@@ -15,13 +15,14 @@ public class Game_Join implements IServerCommand {
 
         String playerName = params[1];
         player.setName(playerName);
-        Pair<Short, gdGame> p = server.getGames().getAvailable();
-        player.attachToGame(p.getKey());
-        p.getValue().addPlayer(this.player);
+        Pair<Short, gdGame> availableGame = server.getGames().getAvailable();
+        player.attachToGame(availableGame.getKey());
+        availableGame.getValue().addPlayer(this.player);
+        availableGame.getValue().spawnPlayer(player);
 
-        this.game = p.getValue();
+        this.game = availableGame.getValue();
 
-        return Logger.getDebugLog("Player " + playerName + " joined game " + p.getKey());
+        return Logger.getDebugLog("Player " + playerName + " joined game " + availableGame.getKey());
     }
 
     @Override
@@ -31,6 +32,6 @@ public class Game_Join implements IServerCommand {
 
     @Override
     public Player getPlayer() {
-        return player;
+        return game.getPlayer(player);
     }
 }

@@ -52,6 +52,11 @@ public class Player implements Serializable {
         return xPos;
     }
 
+    @Override
+    public String toString(){
+        return xPos + "," + yPos;
+    }
+
     public int getyPos() {
         return yPos;
     }

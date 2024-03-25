@@ -5,11 +5,15 @@ import com.example.goldfinder.client.ClientBoi;
 public class SurroundingClient implements IClientCommand{
     @Override
     public String run(ClientBoi boi, String params) {
-        return null;
+        if(boi.isPlaying()) {
+            boi.sendMessage("SURROUNDING");
+            return "";
+        }
+        return "ALED";
     }
 
     @Override
     public String response(ClientBoi boi, String msg) {
-        return null;
+        return msg;
     }
 }

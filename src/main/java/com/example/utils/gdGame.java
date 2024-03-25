@@ -24,57 +24,93 @@ public class gdGame {
     }
 
     public String getSurrounding(int xpos, int ypos){
-        return getUp(xpos, ypos) + getDown(xpos, ypos) + getLeft(xpos, ypos) + getRight(xpos, ypos);
+        return "up:" + getUp(xpos, ypos) + "down:" + getDown(xpos, ypos) + "left:" + getLeft(xpos, ypos) + "right:" + getRight(xpos, ypos);
+    }
+
+    private boolean isFree(int xpos, int ypos){
+        boolean p = !grid.hasGold(xpos, ypos) && !grid.downWall(xpos, ypos) && !grid.upWall(xpos, ypos) && !grid.leftWall(xpos, ypos) && !grid.rightWall(xpos, ypos);
+        for(Player player : players){
+            if(player.getxPos() == xpos && player.getyPos() == ypos) return false;
+        }
+        return p;
     }
 
     public String getUp(int xpos, int ypos){
-        if(grid.upWall(xpos, ypos) || ypos == 0) return "up: WALL ";
+        if(grid.upWall(xpos, ypos) || ypos == 0) return "WALL ";
         for(Player p : players){
-            if(p.getxPos() == xpos && p.getyPos() == ypos - 1) return "up: PLAYER" + players.indexOf(p) + " ";
+            if(p.getxPos() == xpos && p.getyPos() == ypos - 1) return "PLAYER" + players.indexOf(p)+1 + " ";
         }
-        if(grid.hasGold(xpos, ypos - 1)) return "up: GOLD ";
-        return "up: EMPTY ";
+        if(grid.hasGold(xpos, ypos - 1)) return "GOLD ";
+        return "EMPTY ";
     }
 
     public String getDown(int xpos, int ypos){
-        if(grid.downWall(xpos, ypos) || ypos == grid.getRowCount()) return "down: WALL ";
+        if(grid.downWall(xpos, ypos) || ypos == grid.getRowCount()) return "WALL ";
         for(Player p : players){
-            if(p.getxPos() == xpos && p.getyPos() == ypos + 1) return "down: PLAYER" + players.indexOf(p) + " ";
+            if(p.getxPos() == xpos && p.getyPos() == ypos + 1) return "PLAYER" + players.indexOf(p) + " ";
         }
-        if(grid.hasGold(xpos, ypos + 1)) return "down: GOLD ";
-        return "down: EMPTY ";
+        if(grid.hasGold(xpos, ypos + 1)) return "GOLD ";
+        return "EMPTY ";
     }
 
     public String getLeft(int xpos, int ypos){
-        if(grid.leftWall(xpos, ypos) || xpos == 0) return "left: WALL ";
+        if(grid.leftWall(xpos, ypos) || xpos == 0) return "WALL ";
         for(Player p : players){
-            if(p.getxPos() == xpos - 1 && p.getyPos() == ypos) return "left: PLAYER" + players.indexOf(p)+ " ";
+            if(p.getxPos() == xpos - 1 && p.getyPos() == ypos) return "PLAYER" + players.indexOf(p)+ " ";
         }
-        if(grid.hasGold(xpos - 1, ypos)) return "left: GOLD ";
-        return "left: EMPTY ";
+        if(grid.hasGold(xpos - 1, ypos)) return "GOLD ";
+        return "EMPTY ";
     }
 
     public String getRight(int xpos, int ypos){
-        if(grid.rightWall(xpos, ypos) || xpos == grid.getColumnCount()) return "right: WALL ";
+        if(grid.rightWall(xpos, ypos) || xpos == grid.getColumnCount()) return "WALL ";
         for(Player p : players){
-            if(p.getxPos() == xpos + 1 && p.getyPos() == ypos) return "right: PLAYER" + players.indexOf(p)+ " ";
+            if(p.getxPos() == xpos + 1 && p.getyPos() == ypos) return "PLAYER" + players.indexOf(p)+ " ";
         }
-        if(grid.hasGold(xpos + 1, ypos)) return "right: GOLD ";
-        return "right: EMPTY ";
+        if(grid.hasGold(xpos + 1, ypos)) return "GOLD ";
+        return "EMPTY ";
+    }
+
+    public void spawnPlayer(Player p){
+        while (true) {
+            int xpos = (int) (Math.random() * grid.getColumnCount());
+            int ypos = (int) (Math.random() * grid.getRowCount());
+            if(isFree(xpos, ypos)){
+                p.move(xpos, ypos);
+                break;
+            }
+        }
+    }
+
+
+    public void collectGold(Player p){
+        if(grid.hasGold(p.getxPos(), p.getyPos())){
+            p.collectGold();
+            grid.removeGold(p.getxPos(), p.getyPos());
+        }
     }
 
 
     public void movePlayer(Player p, int xpos, int ypos){
-        Player tgt = players.get(players.indexOf(p));
-        p.move(xpos, ypos);
-        tgt.move(xpos, ypos);
+        players.get(players.indexOf(p)).move(xpos, ypos);
+        System.out.println("Player moved to " + p);
     }
 
     public void removePlayer(Player player) {
         if(players.remove(player)) isReady = false;
     }
 
+
+    public Player getPlayer(Player p){
+       return players.get(players.indexOf(p));
+    }
+
     public boolean isReady() {
         return isReady;
+    }
+
+    @Override
+    public String toString(){
+        return "Game with " + players.size() + " players";
     }
 }

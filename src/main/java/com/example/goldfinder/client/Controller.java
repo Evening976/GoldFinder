@@ -3,6 +3,8 @@ package com.example.goldfinder.client;
 import com.example.goldfinder.client.commands.Client_Join;
 import com.example.goldfinder.client.commands.Move_Command;
 import com.example.utils.ConnectionMode;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
@@ -20,6 +22,10 @@ public class Controller {
     @FXML
     Label score;
 
+
+    @FXML
+    private Timeline timeline;
+
     @FXML
     TextField playerName;
     @FXML
@@ -31,12 +37,18 @@ public class Controller {
 
     public void initialize() {
         this.gridView = new GridView(gridCanvas, COLUMN_COUNT, ROW_COUNT);
+
+        timeline = new Timeline();
+        KeyFrame kf = new KeyFrame(javafx.util.Duration.seconds(0.1), this::updateClient);
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.getKeyFrames().add(kf);
         client = new ClientBoi(ConnectionMode.TCP);
         score.setText("0");
         gridView.repaint();
         column = 10;
         row = 10;
-        gridView.paintToken(column, row);
+        gridView.paintPlayer(column, row, 0);
+        timeline.play();
     }
 
     public void playToggleButtonAction(ActionEvent actionEvent) {
@@ -59,8 +71,59 @@ public class Controller {
         }
     }
 
+    public void updateClient(ActionEvent actionEvent) {
+        if (!client.isPlaying()) return;
+        String resp = client.updateClient(column, row);
+        System.out.println(resp);
+        String[] parts = resp.split(" ");
+        for (String p : parts) {
+            String[] subparts = p.split(":");
+            switch (subparts[0]) {
+                case "up" -> {
+                    if (subparts[1].equals("WALL")) {
+                        gridView.setHWall(column, row);
+                    } else if (subparts[1].equals("GOLD")) {
+                        gridView.setGoldAt(column, row - 1);
+                    } else if (subparts[1].startsWith("PLAYER")) {
+                        gridView.paintPlayer(column, row - 1, Integer.parseInt(subparts[1].substring(6)));
+                    }
+                }
+                case "down" -> {
+                    if (subparts[1].equals("WALL")) {
+                        gridView.setHWall(column, row + 1);
+                    } else if (subparts[1].equals("GOLD")) {
+                        gridView.setGoldAt(column,row + 1);
+                    } else if (subparts[1].startsWith("PLAYER")) {
+                        gridView.paintPlayer(column, row + 1, Integer.parseInt(subparts[1].substring(6)));
+                    }
+                }
+                case "left" -> {
+                    if (subparts[1].equals("WALL")) {
+                        gridView.setVWall(column, row);
+                    } else if (subparts[1].equals("GOLD")) {
+                        gridView.setGoldAt(column - 1, row);
+                    } else if (subparts[1].startsWith("PLAYER")) {
+                        gridView.paintPlayer(column - 1, row, Integer.parseInt(subparts[1].substring(6)));
+                    }
+                }
+                case "right" -> {
+                    if (subparts[1].equals("WALL")) {
+                        gridView.setVWall(column + 1, row);
+                    } else if (subparts[1].equals("GOLD")) {
+                        gridView.setGoldAt(column + 1, row);
+                    } else if (subparts[1].startsWith("PLAYER")) {
+                        gridView.paintPlayer(column + 1, row, Integer.parseInt(subparts[1].substring(6)));
+                    }
+                }
+            }
+        }
+        gridView.repaint();
+        gridView.paintPlayer(column, row, 0);
+    }
+
     public void handleMove(KeyEvent keyEvent) {
         String resp = "";
+        if (!client.isPlaying()) return;
         switch (keyEvent.getCode()) {
             case W -> {
                 if ((resp = client.sendCommand(new Move_Command(), "UP")).startsWith("VALID_MOVE"))
@@ -87,7 +150,7 @@ public class Controller {
             score.setText(String.valueOf(Integer.parseInt(score.getText()) + 1));
         }
         gridView.repaint();
-        gridView.paintToken(column, row);
+        gridView.paintPlayer(column, row, 0);
     }
 }
 

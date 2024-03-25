@@ -9,7 +9,6 @@ import java.io.IOException;
 public class ClientBoi extends IClient {
     private boolean isPlaying = false;
 
-    //ArrayDeque<IClientCommand> commandStack = new ArrayDeque<>();
     public ClientBoi(ConnectionMode mode) {
         super(mode);
         try {
@@ -20,12 +19,8 @@ public class ClientBoi extends IClient {
     }
 
     @Override
-    public String updateClient(int xpos, int ypos) throws IOException {
-        String msg = (mode == ConnectionMode.TCP ? receiveMessage(tcpSocket) : receiveMessage(udpSocket));
-        if (!msg.isEmpty()) {
-            return sendCommand(new SurroundingClient(), xpos + ":" + ypos);
-        }
-        return "";
+    public String updateClient(int xpos, int ypos) {
+        return sendCommand(new SurroundingClient(), "");
     }
 
     public String sendCommand(IClientCommand command, String params) {
