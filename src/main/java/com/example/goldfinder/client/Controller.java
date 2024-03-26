@@ -35,6 +35,9 @@ public class Controller {
     int column, row;
     ClientBoi client;
 
+    int vParallax = 0;
+    int hParallax = 0;
+
     public void initialize() {
         this.gridView = new GridView(gridCanvas, COLUMN_COUNT, ROW_COUNT);
 
@@ -73,7 +76,9 @@ public class Controller {
 
     public void updateClient(ActionEvent actionEvent) {
         if (!client.isPlaying()) return;
-        String resp = client.updateClient(column, row);
+        int _col = column;
+        int _row = row; //pour éviter les problèmes de concurrence
+        String resp = client.updateClient(_col, _row);
         System.out.println(resp);
         String[] parts = resp.split(" ");
         for (String p : parts) {
@@ -81,38 +86,38 @@ public class Controller {
             switch (subparts[0]) {
                 case "up" -> {
                     if (subparts[1].equals("WALL")) {
-                        gridView.setHWall(column, row);
+                        gridView.setHWall(_col, _row);
                     } else if (subparts[1].equals("GOLD")) {
-                        gridView.setGoldAt(column, row - 1);
+                        gridView.setGoldAt(_col, _row - 1);
                     } else if (subparts[1].startsWith("PLAYER")) {
-                        gridView.paintPlayer(column, row - 1, Integer.parseInt(subparts[1].substring(6)));
+                        gridView.paintPlayer(_col, _row - 1, Integer.parseInt(subparts[1].substring(6)));
                     }
                 }
                 case "down" -> {
                     if (subparts[1].equals("WALL")) {
-                        gridView.setHWall(column, row + 1);
+                        gridView.setHWall(_col, _row + 1);
                     } else if (subparts[1].equals("GOLD")) {
-                        gridView.setGoldAt(column,row + 1);
+                        gridView.setGoldAt(_col,_row + 1);
                     } else if (subparts[1].startsWith("PLAYER")) {
-                        gridView.paintPlayer(column, row + 1, Integer.parseInt(subparts[1].substring(6)));
+                        gridView.paintPlayer(_col, _row + 1, Integer.parseInt(subparts[1].substring(6)));
                     }
                 }
                 case "left" -> {
                     if (subparts[1].equals("WALL")) {
-                        gridView.setVWall(column, row);
+                        gridView.setVWall(_col, _row);
                     } else if (subparts[1].equals("GOLD")) {
-                        gridView.setGoldAt(column - 1, row);
+                        gridView.setGoldAt(_col - 1, _row);
                     } else if (subparts[1].startsWith("PLAYER")) {
-                        gridView.paintPlayer(column - 1, row, Integer.parseInt(subparts[1].substring(6)));
+                        gridView.paintPlayer(_col - 1, _row, Integer.parseInt(subparts[1].substring(6)));
                     }
                 }
                 case "right" -> {
                     if (subparts[1].equals("WALL")) {
-                        gridView.setVWall(column + 1, row);
+                        gridView.setVWall(_col + 1, _row);
                     } else if (subparts[1].equals("GOLD")) {
-                        gridView.setGoldAt(column + 1, row);
+                        gridView.setGoldAt(_col + 1, _row);
                     } else if (subparts[1].startsWith("PLAYER")) {
-                        gridView.paintPlayer(column + 1, row, Integer.parseInt(subparts[1].substring(6)));
+                        gridView.paintPlayer(_col + 1, _row, Integer.parseInt(subparts[1].substring(6)));
                     }
                 }
             }
