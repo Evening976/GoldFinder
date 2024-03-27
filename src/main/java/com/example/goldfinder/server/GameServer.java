@@ -1,10 +1,10 @@
 package com.example.goldfinder.server;
 
-import com.example.utils.Player;
-import com.example.utils.*;
 import com.example.goldfinder.server.commands.IServerCommand;
+import com.example.utils.*;
 
 import java.io.IOException;
+import java.net.DatagramPacket;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
@@ -36,10 +36,9 @@ public class GameServer extends IServer {
                     if (key.isAcceptable()) {
                         handleAccept(key);
                     } else if (key.isReadable()) {
-                        if (key.channel() instanceof SocketChannel)
-                            handleTCPRead(key);
-                        else
-                            handleUDPRead(key);
+                        System.out.println("Reading..." + key.channel());
+                        if (key.channel() instanceof SocketChannel) handleTCPRead(key);
+                        else handleUDPRead(key);
                     } else if (key.isWritable()) {
                         handleBackBuffer((SocketChannel) key.channel(), getrBuffer());
                     }
@@ -76,13 +75,14 @@ public class GameServer extends IServer {
 
     private void handleUDPRead(SelectionKey key) throws IOException {
         InetSocketAddress senderAddress = (InetSocketAddress) ((DatagramChannel) key.channel()).receive(getrBuffer());
+        System.out.println("Received UDP message from " + senderAddress);
         if (!attachedPlayers.containsKey(senderAddress)) {
             attachedPlayers.put(senderAddress, new Player("Player" + playerID++, ConnectionMode.UDP, 0, 0));
         }
         key.attach(attachedPlayers.get(senderAddress));
 
-
         String msg = receiveUDPMessage(key);
+        System.out.println("Received UDP message: " + msg);
         if (!msg.isEmpty()) {
             Logger.printDebug(((Player) key.attachment()).getName() + " Received UDP message: " + msg);
             SelectionKey k = handleCommand(key, msg);
@@ -90,7 +90,29 @@ public class GameServer extends IServer {
         }
     }
 
-    private SelectionKey handleCommand(SelectionKey key, String msg) {
+    private String receiveUDPMessage(SelectionKey key) {
+        ByteBuffer buffer = ByteBuffer.allocate(1024);
+        buffer.clear();
+        try {
+            ((DatagramChannel) key.channel()).receive(buffer);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        buffer.flip();
+        byte[] receivedBytes = new byte[buffer.remaining()];
+        buffer.get(receivedBytes);
+        return new String(receivedBytes);
+    }
+
+    private synchronized int sendUDPMessage(SelectionKey key, String message) throws IOException {
+        ByteBuffer buffer = ByteBuffer.allocate(1024);
+        buffer.clear();
+        buffer.put(message.getBytes());
+        buffer.flip();
+        return ((DatagramChannel) key.channel()).send(buffer, ((DatagramPacket) key.attachment()).getSocketAddress());
+    }
+
+        private SelectionKey handleCommand(SelectionKey key, String msg) {
         Player player = (Player) key.attachment();
         gdGame g = null;
 

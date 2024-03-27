@@ -25,7 +25,7 @@ public class ClientBoi extends IClient {
 
     public String sendCommand(IClientCommand command, String params) {
         command.run(this, params);
-        System.out.println("sent command : " + params);
+        //System.out.println("sent command : " + params);
         String resp = "";
 
         if (mode == ConnectionMode.TCP) {
@@ -42,9 +42,10 @@ public class ClientBoi extends IClient {
     public void sendMessage(String msg) {
         if (mode == ConnectionMode.TCP) {
             sendMessage(tcpSocket, Wbuffer, msg);
-            isPlaying = true;
         } else
             sendMessage(udpSocket, Wbuffer, msg);
+
+        isPlaying = true;
     }
 
     public boolean isPlaying() {

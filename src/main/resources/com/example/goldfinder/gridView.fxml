@@ -16,7 +16,7 @@
             <Label text="Name :" />
             <TextField fx:id="playerName" />
         </VBox>
-        <Canvas fx:id="gridCanvas" height="1600.0" width="1600.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
+        <Canvas fx:id="gridCanvas" height="900.0" width="900.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
         </Canvas>
 
     </HBox>

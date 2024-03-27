@@ -1,17 +1,17 @@
 package com.example.goldfinder.client;
 
+import com.example.goldfinder.server.ICommon;
+import com.example.utils.ConnectionMode;
+import com.example.utils.Logger;
+
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
 import java.nio.channels.SocketChannel;
 
-
-import com.example.goldfinder.server.ICommon;
-import com.example.utils.ConnectionMode;
-import com.example.utils.Logger;
-
-import static java.lang.System.*;
+import static java.lang.System.exit;
+import static java.lang.System.out;
 
 public abstract class IClient extends ICommon {
   ByteBuffer Wbuffer = ByteBuffer.allocate(128);
@@ -52,12 +52,10 @@ public abstract class IClient extends ICommon {
       udpSocket = DatagramChannel.open();
       udpSocket.configureBlocking(false);
       udpSocket.connect(new InetSocketAddress("127.0.0.1", 1234));
-
-      sendMessage(udpSocket, Wbuffer, "Hello from client");
     }
 
   public void connect() throws IOException, InterruptedException {
-    if(tcpSocket != null) Logger.printSucess("Connected to server!");
+    if(tcpSocket != null || udpSocket != null) Logger.printSucess("Connected to server!");
     //while(true) handleClient();
   }
 

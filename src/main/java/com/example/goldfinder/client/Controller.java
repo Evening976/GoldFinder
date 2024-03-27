@@ -13,17 +13,12 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 
-import static com.example.goldfinder.server.AppServer.COLUMN_COUNT;
-import static com.example.goldfinder.server.AppServer.ROW_COUNT;
-
 public class Controller {
 
     @FXML
     Canvas gridCanvas;
     @FXML
     Label score;
-
-
     @FXML
     private Timeline timeline;
 
@@ -39,8 +34,8 @@ public class Controller {
     int vParallax = 0;
     int hParallax = 0;
 
-    //public static int COLUMN_COUNT = AppServer.COLUMN_COUNT * 2;
-    //public static int ROW_COUNT = AppServer.ROW_COUNT * 2;
+    public static int COLUMN_COUNT = AppServer.COLUMN_COUNT * 2;
+    public static int ROW_COUNT = AppServer.ROW_COUNT * 2;
 
     public void initialize() {
         this.gridView = new GridView(gridCanvas, COLUMN_COUNT, ROW_COUNT);
@@ -52,8 +47,8 @@ public class Controller {
         client = new ClientBoi(ConnectionMode.TCP);
         score.setText("0");
         gridView.repaint(hParallax, vParallax);
-        column = 5;
-        row = 5;
+        column = COLUMN_COUNT / 2;
+        row = ROW_COUNT / 2;
         gridView.paintPlayer(column, row, 0);
         timeline.play();
     }
@@ -83,7 +78,7 @@ public class Controller {
         int _col = column;
         int _row = row; //pour éviter les problèmes de concurrence
         String resp = client.updateClient(_col, _row);
-        System.out.println(resp);
+        //System.out.println(resp);
         String[] parts = resp.split(" ");
         for (String p : parts) {
             String[] subparts = p.split(":");
@@ -92,55 +87,55 @@ public class Controller {
                     if (subparts[1].equals("WALL")) {
                         gridView.setHWall(_col, _row);
                     } else if (subparts[1].equals("GOLD")) {
-                        if (subparts[1].equals("GOLD")) gridView.setGoldAt(_col, _row - 1);
+                        gridView.setGoldAt(_col, _row - 1);
                     } else if (subparts[1].startsWith("PLAYER")) {
-                        gridView.paintPlayer(_col, _row - 1, Integer.parseInt(subparts[1].substring(6)));
+                        gridView.paintPlayer(_col, _row - 1, Integer.parseInt(subparts[1].substring(subparts[1].length() - 1)));
                     }
                 }
                 case "down" -> {
                     if (subparts[1].equals("WALL")) {
                         gridView.setHWall(_col, _row + 1);
                     } else if (subparts[1].equals("GOLD")) {
-                        if (subparts[1].equals("GOLD")) gridView.setGoldAt(_col,_row + 1);
+                        gridView.setGoldAt(_col,_row + 1);
                     } else if (subparts[1].startsWith("PLAYER")) {
-                        gridView.paintPlayer(_col, _row + 1, Integer.parseInt(subparts[1].substring(6)));
+                        gridView.paintPlayer(_col, _row + 1, Integer.parseInt(subparts[1].substring(subparts[1].length() - 1)));
                     }
                 }
                 case "left" -> {
                     if (subparts[1].equals("WALL")) {
                         gridView.setVWall(_col, _row);
                     } else if (subparts[1].equals("GOLD")){
-                        if (subparts[1].equals("GOLD")) gridView.setGoldAt(_col - 1, _row);
+                        gridView.setGoldAt(_col - 1, _row);
                     } else if (subparts[1].startsWith("PLAYER")) {
-                        gridView.paintPlayer(_col - 1, _row, Integer.parseInt(subparts[1].substring(6)));
+                        gridView.paintPlayer(_col - 1, _row, Integer.parseInt(subparts[1].substring(subparts[1].length() - 1)));
                     }
                 }
                 case "right" -> {
                     if (subparts[1].equals("WALL")) {
                         gridView.setVWall(_col + 1, _row);
                     } else if (subparts[1].equals("GOLD")) {
-                        if (subparts[1].equals("GOLD")) gridView.setGoldAt(_col + 1, _row);
+                        gridView.setGoldAt(_col + 1, _row);
                     } else if (subparts[1].startsWith("PLAYER")) {
-                        gridView.paintPlayer(_col + 1, _row, Integer.parseInt(subparts[1].substring(6)));
+                        gridView.paintPlayer(_col + 1, _row, Integer.parseInt(subparts[1].substring(subparts[1].length() - 1)));
                     }
                 }
             }
         }
         gridView.repaint(hParallax, vParallax);
-        gridView.paintPlayer(5, 5, 0);
+        gridView.paintPlayer(COLUMN_COUNT/2, ROW_COUNT/2, 0);
     }
 
     public void handleMove(KeyEvent keyEvent) {
         String resp = "";
         if (!client.isPlaying()) return;
         switch (keyEvent.getCode()) {
-            case Z -> {
+            case W -> {
                 if ((resp = client.sendCommand(new Move_Command(), "UP")).startsWith("VALID_MOVE")) {
                     row = Math.max(0, row - 1);
                     vParallax++;
                 }
             }
-            case Q -> {
+            case A -> {
                 if ((resp = client.sendCommand(new Move_Command(), "LEFT")).startsWith("VALID_MOVE")){
                     column = Math.max(0, column - 1);
                     hParallax++;
@@ -156,6 +151,7 @@ public class Controller {
                 if ((resp = client.sendCommand(new Move_Command(), "RIGHT")).startsWith("VALID_MOVE")) {
                     column = Math.min(COLUMN_COUNT - 1, column + 1);
                     hParallax--;
+
                 }
             }
             default -> {
@@ -166,8 +162,10 @@ public class Controller {
             gridView.goldAt[column][row] = false;
             score.setText(String.valueOf(Integer.parseInt(score.getText()) + 1));
         }
+        System.out.println("Player pos : " + column + " " + row);
+        System.out.println("Max pos : " + COLUMN_COUNT + " " + ROW_COUNT);
         gridView.repaint(hParallax, vParallax);
-        gridView.paintPlayer(5, 5, 0);
+        gridView.paintPlayer(COLUMN_COUNT/2, ROW_COUNT/2, 0);
     }
 }
 

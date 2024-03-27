@@ -5,6 +5,11 @@ import com.example.goldfinder.client.ClientBoi;
 
 public class Game_End implements IClientCommand{
     @Override
+    public String getName() {
+        return "GAME_END";
+    }
+
+    @Override
     public String run(ClientBoi boi, String params) {
         AppClient.getController().initialize();
         return null;

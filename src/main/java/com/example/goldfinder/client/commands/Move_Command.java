@@ -4,6 +4,11 @@ import com.example.goldfinder.client.ClientBoi;
 
 public class Move_Command implements IClientCommand{
     @Override
+    public String getName() {
+        return "MOVE";
+    }
+
+    @Override
     public String run(ClientBoi boi, String params) {
         if(!boi.isPlaying()) return "";
         switch(params){

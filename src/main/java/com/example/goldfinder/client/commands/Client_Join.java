@@ -4,6 +4,11 @@ import com.example.goldfinder.client.ClientBoi;
 
 public class Client_Join implements IClientCommand{
     @Override
+    public String getName() {
+        return "GAME_JOIN";
+    }
+
+    @Override
     public String run(ClientBoi boi, String params) {
         if(boi.isPlaying()) return "You are already in a game!";
         boi.sendMessage("GAME_JOIN " + params);

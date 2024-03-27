@@ -5,6 +5,11 @@ import com.example.goldfinder.client.ClientBoi;
 public class Valid_Move implements IClientCommand{
 
     @Override
+    public String getName() {
+        return null;
+    }
+
+    @Override
     public String run(ClientBoi boi, String params) {
         return null;
     }

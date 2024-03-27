@@ -16,6 +16,7 @@ public class Dir implements IServerCommand {
         this.player = p;
         this.game = g;
         String dir = "INVALID_MOVE";
+
         switch (params[0].toUpperCase()) {
             case "UP" -> {
                 dir = game.getUp(p.getxPos(), p.getyPos());
