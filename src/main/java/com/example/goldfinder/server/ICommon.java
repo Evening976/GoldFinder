@@ -1,12 +1,12 @@
 package com.example.goldfinder.server;
 
+import com.example.utils.ConnectionMode;
 import com.example.utils.Logger;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
-import java.nio.channels.SelectableChannel;
 import java.nio.channels.SocketChannel;
 
 public abstract class ICommon {
@@ -14,22 +14,25 @@ public abstract class ICommon {
     protected DatagramChannel udpSocket;
     private final ByteBuffer rBuffer = ByteBuffer.allocate(1024);
 
-    public synchronized String receiveMessage(SelectableChannel client) {
+    public synchronized String receiveMessage(ConnectionMode mode){
         try {
-            if (client instanceof SocketChannel) {
-                return receiveTCPMessage((SocketChannel) client);
+            if(mode == ConnectionMode.TCP) {
+                return receiveTCPMessage(tcpSocket);
             } else {
-                return receiveUDPMessage((DatagramChannel) client);
+                return receiveUDPMessage(udpSocket);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public synchronized int sendMessage(SelectableChannel client, ByteBuffer buffer, String message) {
+    public synchronized int sendMessage(ConnectionMode mode, ByteBuffer buffer, String message) {
         try {
-            if (client instanceof SocketChannel){return sendTCPMessage((SocketChannel) client, buffer, message);}
-            else { return sendUDPMessage((DatagramChannel) client, buffer, message);}
+            if(mode == ConnectionMode.TCP) {
+                return sendTCPMessage(tcpSocket, buffer, message);
+            } else {
+                return sendUDPMessage(udpSocket, buffer, message);
+            }
         }
         catch (IOException e) {
             Logger.printError("Could not send message : ");
@@ -63,7 +66,7 @@ public abstract class ICommon {
 
         return "";
     }
-    private synchronized int sendTCPMessage(SocketChannel client, ByteBuffer buffer, String message) throws IOException {
+    synchronized int sendTCPMessage(SocketChannel client, ByteBuffer buffer, String message) throws IOException {
         ByteBuffer z = ByteBuffer.allocate(128);
         z.clear();
         z.put(message.getBytes());
@@ -71,7 +74,7 @@ public abstract class ICommon {
         return client.write(z);
     }
 
-    private synchronized int sendUDPMessage(DatagramChannel client, ByteBuffer buffer, String message) throws IOException {
+    synchronized int sendUDPMessage(DatagramChannel client, ByteBuffer buffer, String message) throws IOException {
         buffer.clear();
         buffer.put(message.getBytes());
         buffer.flip();

@@ -1,17 +1,19 @@
 package com.example.utils;
 
-import com.example.utils.ConnectionMode;
-
 import java.io.Serializable;
+import java.nio.channels.SelectableChannel;
 
 public class Player implements Serializable {
     Short gameID = null;
+    short id;
     String name;
     ConnectionMode connectionMode;
+    SelectableChannel client;
     int goldCollected;
     int xPos, yPos;
 
-    public Player(String name, ConnectionMode connectionMode, int xPos, int yPos) {
+    public Player(SelectableChannel client, String name, ConnectionMode connectionMode, int xPos, int yPos) {
+        this.client = client;
         this.name = name;
         this.connectionMode = connectionMode;
         goldCollected = 0;
@@ -32,12 +34,20 @@ public class Player implements Serializable {
         return connectionMode;
     }
 
-    public void attachToGame(Short gameID) {
+    public void attachToGame(Short gameID, short id) {
         this.gameID = gameID;
+        this.id = id;
     }
 
     public Short getGameID() {
         return gameID;
+    }
+    public short getPlayerID() {
+        return id;
+    }
+
+    public SelectableChannel getClient() {
+        return client;
     }
 
     public void collectGold() {

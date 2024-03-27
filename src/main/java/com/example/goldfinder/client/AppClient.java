@@ -38,7 +38,6 @@ public class AppClient extends javafx.application.Application {
         view = loader.load();
         controller = loader.getController();
         view.setOnKeyPressed(controller::handleMove);
-        //controller.initialize();
     }
 
     private void showScene() {

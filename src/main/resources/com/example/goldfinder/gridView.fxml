@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 
 <AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.goldfinder.client.Controller">
-    <HBox prefHeight="800.0" prefWidth="879.0" styleClass="background" stylesheets="@DarkTheme.css" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
+    <HBox prefHeight="800.0" prefWidth="1000.0" styleClass="background" stylesheets="@DarkTheme.css" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
         <VBox prefWidth="200">
             <Separator maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="24.0" prefWidth="200.0" />
             <Label alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="24.0" prefWidth="200.0" text="Score" />
@@ -15,10 +15,11 @@
             <ToggleButton fx:id="restartToggleButton" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" onAction="#restartButtonAction" prefHeight="24.0" prefWidth="200.0" styleClass="button" text="Restart" />
             <Label text="Name :" />
             <TextField fx:id="playerName" />
+         <Label fx:id="score1" alignment="CENTER" contentDisplay="TEXT_ONLY" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="24.0" prefWidth="200.0" text="TCP/UDP" />
+         <ChoiceBox fx:id="connectionMode" prefWidth="150.0" />
         </VBox>
         <Canvas fx:id="gridCanvas" height="900.0" width="900.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
         </Canvas>
 
     </HBox>
-    <TextField fx:id="debugCommand" />
 </AnchorPane>

@@ -59,14 +59,12 @@ public abstract class IClient extends ICommon {
     //while(true) handleClient();
   }
 
-  public abstract String updateClient(int xpos, int ypos) throws IOException, InterruptedException;
+  public abstract String updateSurrounding(int xpos, int ypos) throws IOException, InterruptedException;
 
 
   protected void handleRead() throws IOException {
     String msg;
-    if(mode == ConnectionMode.TCP) msg = receiveMessage(tcpSocket);
-    else msg = receiveMessage(udpSocket);
-
+    msg = receiveMessage(mode);
     if (!msg.isEmpty())
       out.println(Logger.getBlue("> : ") + msg);
   }

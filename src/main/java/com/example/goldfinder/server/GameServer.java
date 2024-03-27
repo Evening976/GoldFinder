@@ -19,9 +19,11 @@ public class GameServer extends IServer {
     private final GameMap games;
     int playerID = 0;
 
+    private final int MAX_PLAYERS = 4;
+
     public GameServer(int port) throws IOException {
         super(port);
-        games = new GameMap(4, 10);
+        games = new GameMap(MAX_PLAYERS, 10);
     }
 
     public void startServer() throws IOException {
@@ -63,12 +65,12 @@ public class GameServer extends IServer {
 
     private void handleTCPRead(SelectionKey key) throws IOException {
         if (key.attachment() == null) {
-            key.attach(new Player("Player" + playerID++, ConnectionMode.TCP, 0, 0));
+            key.attach(new Player(key.channel(), "Player" + playerID++, ConnectionMode.TCP, 0, 0));
         }
 
         String msg = receiveTCPMessage((SocketChannel) key.channel());
         if (!msg.isEmpty()) {
-            Logger.printDebug(((Player) key.attachment()).getName() + " Received TCP message: " + msg);
+            Logger.printDebug(((Player) key.attachment()).getName() + "("+((Player) key.attachment()).getPlayerID()  + ") Received TCP message: " + msg);
             handleCommand(key, msg);
         }
     }
@@ -77,7 +79,7 @@ public class GameServer extends IServer {
         InetSocketAddress senderAddress = (InetSocketAddress) ((DatagramChannel) key.channel()).receive(getrBuffer());
         System.out.println("Received UDP message from " + senderAddress);
         if (!attachedPlayers.containsKey(senderAddress)) {
-            attachedPlayers.put(senderAddress, new Player("Player" + playerID++, ConnectionMode.UDP, 0, 0));
+            attachedPlayers.put(senderAddress, new Player(key.channel(), "Player" + playerID++, ConnectionMode.UDP, 0, 0));
         }
         key.attach(attachedPlayers.get(senderAddress));
 
@@ -112,18 +114,19 @@ public class GameServer extends IServer {
         return ((DatagramChannel) key.channel()).send(buffer, ((DatagramPacket) key.attachment()).getSocketAddress());
     }
 
-        private SelectionKey handleCommand(SelectionKey key, String msg) {
+    private SelectionKey handleCommand(SelectionKey key, String msg) {
         Player player = (Player) key.attachment();
         gdGame g = null;
 
-        if(player.getGameID() != null)
+        if (player.getGameID() != null)
             g = games.getByID(player.getGameID());
 
         IServerCommand currentCommand = ServerCommandParser.parseCommand(msg);
         if (currentCommand != null) {
-            if(g == null)
-                sendMessage(key.channel(), getrBuffer(), currentCommand.run(this, player, null, msg.split(" ")));
-            else sendMessage(key.channel(), getrBuffer(), currentCommand.run(this, player, games.getByID(player.getGameID()), msg.split(" ")));
+            if (g == null)
+                sendMessage(key.channel(), getrBuffer(), currentCommand.run(key.channel(), this, player, null, msg.split(" ")));
+            else
+                sendMessage(key.channel(), getrBuffer(), currentCommand.run(key.channel(), this, player, games.getByID(player.getGameID()), msg.split(" ")));
 
             player = currentCommand.getPlayer();
             games.setGame(player.getGameID(), currentCommand.getGame());
@@ -146,7 +149,7 @@ public class GameServer extends IServer {
         backBuffer.clear();
     }
 
-    public GameMap getGames(){
+    public GameMap getGames() {
         return games;
     }
 }

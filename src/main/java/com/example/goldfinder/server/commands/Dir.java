@@ -4,12 +4,14 @@ import com.example.utils.Player;
 import com.example.goldfinder.server.GameServer;
 import com.example.utils.gdGame;
 
+import java.nio.channels.SelectableChannel;
+
 public class Dir implements IServerCommand {
     Player player;
     gdGame game;
 
     @Override
-    public String run(GameServer server, Player p, gdGame g, String[] params) {
+    public String run(SelectableChannel client, GameServer server, Player p, gdGame g, String[] params) {
         int xPosIncrement = 0;
         int yPosIncrement = 0;
         boolean collectGold = false;

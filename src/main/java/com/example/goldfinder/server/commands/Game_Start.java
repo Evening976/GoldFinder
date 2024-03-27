@@ -1,31 +1,29 @@
 package com.example.goldfinder.server.commands;
 
-import com.example.utils.Player;
 import com.example.goldfinder.server.GameServer;
+import com.example.utils.Player;
 import com.example.utils.gdGame;
 
 import java.nio.channels.SelectableChannel;
 
-public class Surrounding implements IServerCommand {
-
-    Player player;
-    gdGame game;
-
+public class Game_Start implements IServerCommand{
     @Override
     public String run(SelectableChannel client, GameServer server, Player p, gdGame g, String[] params) {
-        this.player = p;
-        this.game = g;
-        System.out.println("Surrounding " + p + ": " + game.getSurrounding(p.getxPos(),p.getyPos()));
-        return game.getSurrounding(p.getxPos(),p.getyPos());
+        StringBuilder sb = new StringBuilder();
+        sb.append("GAME_START ");
+        for(Player player : g.getPlayers()){
+            sb.append(player.getName()).append(":").append(g.getPlayers().indexOf(player)).append(" ");
+        }
+        return sb.toString();
     }
 
     @Override
     public gdGame getGame() {
-        return game;
+        return null;
     }
 
     @Override
     public Player getPlayer() {
-        return player;
+        return null;
     }
 }

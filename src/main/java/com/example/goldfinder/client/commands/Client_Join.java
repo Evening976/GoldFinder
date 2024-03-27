@@ -12,12 +12,15 @@ public class Client_Join implements IClientCommand{
     public String run(ClientBoi boi, String params) {
         if(boi.isPlaying()) return "You are already in a game!";
         boi.sendMessage("GAME_JOIN " + params);
-        boi.setPlaying(true);
         return "";
     }
 
     @Override
     public String response(ClientBoi boi, String msg) {
+        if(msg.contains("GAME_START")){
+            boi.setPlaying(true);
+            return "Game started!";
+        }
         return msg;
     }
 }

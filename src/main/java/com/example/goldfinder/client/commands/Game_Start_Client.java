@@ -2,7 +2,7 @@ package com.example.goldfinder.client.commands;
 
 import com.example.goldfinder.client.ClientBoi;
 
-public class Game_Start implements IClientCommand{
+public class Game_Start_Client implements IClientCommand{
     @Override
     public String getName() {
         return null;
@@ -10,11 +10,13 @@ public class Game_Start implements IClientCommand{
 
     @Override
     public String run(ClientBoi boi, String params) {
-        return null;
+        System.out.println("Game started");
+        boi.setPlaying(true);
+        return "";
     }
 
     @Override
     public String response(ClientBoi boi, String msg) {
-        return null;
+        return "";
     }
 }

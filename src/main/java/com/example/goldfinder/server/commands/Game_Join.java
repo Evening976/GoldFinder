@@ -6,32 +6,47 @@ import com.example.utils.Logger;
 import com.example.utils.gdGame;
 import javafx.util.Pair;
 
-public class Game_Join implements IServerCommand {
-    Player player;
-    gdGame game;
-    @Override
-    public String run(GameServer server, Player player, gdGame game, String[] params) {
-        this.player = player;
+import java.nio.channels.SelectableChannel;
 
+public class Game_Join implements IServerCommand {
+    Player _player;
+    gdGame _game;
+    @Override
+    public String run(SelectableChannel client, GameServer server, Player player, gdGame game, String[] params) {
+        this._player = player;
         String playerName = params[1];
         player.setName(playerName);
         Pair<Short, gdGame> availableGame = server.getGames().getAvailable();
-        player.attachToGame(availableGame.getKey());
-        availableGame.getValue().addPlayer(this.player);
-        availableGame.getValue().spawnPlayer(player);
+        if(availableGame.getValue() == null){
+            return Logger.getDebugLog("No available games");
+        }
+        game = availableGame.getValue();
+        game.addPlayer(player);
+        player.attachToGame(availableGame.getKey(), (short) game.getPlayers().indexOf(player));
 
-        this.game = availableGame.getValue();
+        if(game.isRunning()){
+            for(Player p : game.getPlayers()){
+                if(p == player) continue;
+                server.sendMessage(p.getClient(), server.getrBuffer(), new Game_Start().run(null, server, p, game, new String[]{}));
+            }
+        }
 
+        _game = game;
+        _player = player;
+
+        if(game.isRunning()){
+            return new Game_Start().run(client, server, player, game, params);
+        }
         return Logger.getDebugLog("Player " + playerName + " joined game " + availableGame.getKey());
     }
 
     @Override
     public gdGame getGame() {
-        return game;
+        return _game;
     }
 
     @Override
     public Player getPlayer() {
-        return game.getPlayer(player);
+        return _game.getPlayer(_player);
     }
 }

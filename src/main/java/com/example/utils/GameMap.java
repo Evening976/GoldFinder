@@ -6,44 +6,44 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class GameMap {
-    Map<Pair<Boolean /*isRunning*/, Short /*Game ID*/>, gdGame> games = new HashMap<>();
+    Map<Short /*Game ID*/, gdGame> games = new HashMap<>();
     int maxPlayers = 4;
     int maxGames = 10;
 
     public GameMap() {
-        games.put(new Pair<>(true, (short) 0), new gdGame(4));
+        games.put((short) 0, new gdGame(maxPlayers));
     }
 
     public GameMap(int maxPlayers, int maxGames) {
         this.maxPlayers = maxPlayers;
         this.maxGames = maxGames;
-        new GameMap();
+        games.put((short) 0, new gdGame(maxPlayers));
     }
 
     public gdGame getByID(short gameID) {
-        for (Pair<Boolean, Short> key : games.keySet()) {
-            if (key.getValue() == gameID) {
-                return games.get(key);
+        for (Short id : games.keySet()) {
+            if (id == gameID) {
+                return games.get(id);
             }
         }
         return null;
     }
 
     public Pair<Short, gdGame> getAvailable() {
-        for (Pair<Boolean, Short> key : games.keySet()){
-            if (key.getKey() && !games.get(key).isReady()) {
-                return new Pair<>(key.getValue(), games.get(key));
+        for (Short key : games.keySet()){
+            if (!games.get(key).isRunning()) {
+                return new Pair<>(key, games.get(key));
             }
         }
 
-        if(games.size() >= maxGames) return null;
-
-        Pair<Boolean, Short> key = new Pair<>(false, (short) games.size());
+        Short key = (short)games.size();
         games.put(key, new gdGame(maxPlayers));
-        return new Pair<>(key.getValue(), games.get(key));
+        System.out.println("Game created with ID " + key);
+        //if(games.size() >= maxGames) return null;
+        return new Pair<>(key, games.get(key));
     }
 
     public void setGame(short gameID, gdGame game) {
-        games.put(new Pair<>(true, gameID), game);
+        games.put(gameID, game);
     }
 }
