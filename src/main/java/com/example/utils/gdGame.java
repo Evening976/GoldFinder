@@ -112,5 +112,6 @@ public class gdGame {
     @Override
     public String toString(){
         return "Game with " + players.size() + " players";
+
     }
 }

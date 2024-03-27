@@ -2,6 +2,7 @@ package com.example.goldfinder.client;
 
 import com.example.goldfinder.client.commands.Client_Join;
 import com.example.goldfinder.client.commands.Move_Command;
+import com.example.goldfinder.server.AppServer;
 import com.example.utils.ConnectionMode;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -38,6 +39,9 @@ public class Controller {
     int vParallax = 0;
     int hParallax = 0;
 
+    //public static int COLUMN_COUNT = AppServer.COLUMN_COUNT * 2;
+    //public static int ROW_COUNT = AppServer.ROW_COUNT * 2;
+
     public void initialize() {
         this.gridView = new GridView(gridCanvas, COLUMN_COUNT, ROW_COUNT);
 
@@ -47,9 +51,9 @@ public class Controller {
         timeline.getKeyFrames().add(kf);
         client = new ClientBoi(ConnectionMode.TCP);
         score.setText("0");
-        gridView.repaint();
-        column = 10;
-        row = 10;
+        gridView.repaint(hParallax, vParallax);
+        column = 5;
+        row = 5;
         gridView.paintPlayer(column, row, 0);
         timeline.play();
     }
@@ -88,7 +92,7 @@ public class Controller {
                     if (subparts[1].equals("WALL")) {
                         gridView.setHWall(_col, _row);
                     } else if (subparts[1].equals("GOLD")) {
-                        gridView.setGoldAt(_col, _row - 1);
+                        if (subparts[1].equals("GOLD")) gridView.setGoldAt(_col, _row - 1);
                     } else if (subparts[1].startsWith("PLAYER")) {
                         gridView.paintPlayer(_col, _row - 1, Integer.parseInt(subparts[1].substring(6)));
                     }
@@ -97,7 +101,7 @@ public class Controller {
                     if (subparts[1].equals("WALL")) {
                         gridView.setHWall(_col, _row + 1);
                     } else if (subparts[1].equals("GOLD")) {
-                        gridView.setGoldAt(_col,_row + 1);
+                        if (subparts[1].equals("GOLD")) gridView.setGoldAt(_col,_row + 1);
                     } else if (subparts[1].startsWith("PLAYER")) {
                         gridView.paintPlayer(_col, _row + 1, Integer.parseInt(subparts[1].substring(6)));
                     }
@@ -105,8 +109,8 @@ public class Controller {
                 case "left" -> {
                     if (subparts[1].equals("WALL")) {
                         gridView.setVWall(_col, _row);
-                    } else if (subparts[1].equals("GOLD")) {
-                        gridView.setGoldAt(_col - 1, _row);
+                    } else if (subparts[1].equals("GOLD")){
+                        if (subparts[1].equals("GOLD")) gridView.setGoldAt(_col - 1, _row);
                     } else if (subparts[1].startsWith("PLAYER")) {
                         gridView.paintPlayer(_col - 1, _row, Integer.parseInt(subparts[1].substring(6)));
                     }
@@ -115,36 +119,44 @@ public class Controller {
                     if (subparts[1].equals("WALL")) {
                         gridView.setVWall(_col + 1, _row);
                     } else if (subparts[1].equals("GOLD")) {
-                        gridView.setGoldAt(_col + 1, _row);
+                        if (subparts[1].equals("GOLD")) gridView.setGoldAt(_col + 1, _row);
                     } else if (subparts[1].startsWith("PLAYER")) {
                         gridView.paintPlayer(_col + 1, _row, Integer.parseInt(subparts[1].substring(6)));
                     }
                 }
             }
         }
-        gridView.repaint();
-        gridView.paintPlayer(column, row, 0);
+        gridView.repaint(hParallax, vParallax);
+        gridView.paintPlayer(5, 5, 0);
     }
 
     public void handleMove(KeyEvent keyEvent) {
         String resp = "";
         if (!client.isPlaying()) return;
         switch (keyEvent.getCode()) {
-            case W -> {
-                if ((resp = client.sendCommand(new Move_Command(), "UP")).startsWith("VALID_MOVE"))
+            case Z -> {
+                if ((resp = client.sendCommand(new Move_Command(), "UP")).startsWith("VALID_MOVE")) {
                     row = Math.max(0, row - 1);
+                    vParallax++;
+                }
             }
-            case A -> {
-                if ((resp = client.sendCommand(new Move_Command(), "LEFT")).startsWith("VALID_MOVE"))
+            case Q -> {
+                if ((resp = client.sendCommand(new Move_Command(), "LEFT")).startsWith("VALID_MOVE")){
                     column = Math.max(0, column - 1);
+                    hParallax++;
+                }
             }
             case S -> {
-                if ((resp = client.sendCommand(new Move_Command(), "DOWN")).startsWith("VALID_MOVE"))
+                if ((resp = client.sendCommand(new Move_Command(), "DOWN")).startsWith("VALID_MOVE")){
                     row = Math.min(ROW_COUNT - 1, row + 1);
+                    vParallax--;
+                }
             }
             case D -> {
-                if ((resp = client.sendCommand(new Move_Command(), "RIGHT")).startsWith("VALID_MOVE"))
+                if ((resp = client.sendCommand(new Move_Command(), "RIGHT")).startsWith("VALID_MOVE")) {
                     column = Math.min(COLUMN_COUNT - 1, column + 1);
+                    hParallax--;
+                }
             }
             default -> {
                 return;
@@ -154,8 +166,8 @@ public class Controller {
             gridView.goldAt[column][row] = false;
             score.setText(String.valueOf(Integer.parseInt(score.getText()) + 1));
         }
-        gridView.repaint();
-        gridView.paintPlayer(column, row, 0);
+        gridView.repaint(hParallax, vParallax);
+        gridView.paintPlayer(5, 5, 0);
     }
 }
 

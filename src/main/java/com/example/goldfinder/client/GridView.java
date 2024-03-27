@@ -18,21 +18,21 @@ public class GridView {
         hWall = new boolean[columnCount][rowCount+1];
     }
 
-    public void repaint(){
+    public void repaint(int hParallax, int vParallax){
         canvas.getGraphicsContext2D().clearRect(0,0,canvas.getWidth(),canvas.getHeight());
         for(int column =0; column<columnCount;column++)
             for(int row=0;row<rowCount;row++)
                 if(goldAt[column][row]) {
                     canvas.getGraphicsContext2D().setFill(Color.YELLOW);
-                    canvas.getGraphicsContext2D().fillOval(column * cellWidth(), row * cellHeight(), cellWidth(), cellHeight());
+                    canvas.getGraphicsContext2D().fillOval((column + hParallax) * cellWidth(), (row + vParallax) * cellHeight(), cellWidth(), cellHeight());
                 }
         canvas.getGraphicsContext2D().setStroke(Color.WHITE);
         for(int column =0; column<columnCount;column++)
             for(int row=0;row<rowCount;row++){
                     if(vWall[column][row])
-                        canvas.getGraphicsContext2D().strokeLine(column * cellWidth(), row * cellHeight(),column * cellWidth(), (row+1) * cellHeight());
+                        canvas.getGraphicsContext2D().strokeLine((column + hParallax) * cellWidth(), (row + vParallax) * cellHeight(),(column + hParallax) * cellWidth(), (vParallax + row +1) * cellHeight());
                 if(hWall[column][row])
-                    canvas.getGraphicsContext2D().strokeLine(column * cellWidth(), row * cellHeight(),(column+1) * cellWidth(), row * cellHeight());
+                    canvas.getGraphicsContext2D().strokeLine((column + hParallax) * cellWidth(), (row + vParallax) * cellHeight(),(hParallax + column +1) * cellWidth(), (row + vParallax) * cellHeight());
             }
 
     }
@@ -52,8 +52,12 @@ public class GridView {
             hWall[col][row] = true;
     }
 
-    private double cellWidth(){ return canvas.getWidth()/columnCount; }
-    private double cellHeight(){ return canvas.getHeight()/rowCount; }
+    private int cellWidth(){
+        //System.out.println(canvas.getWidth()/columnCount);
+        return (int) (canvas.getWidth()/columnCount); }
+    private int cellHeight(){
+        //System.out.println(canvas.getHeight()/rowCount);
+        return (int) (canvas.getHeight()/rowCount); }
 
     public void paintPlayer(int column, int row, int playerIndex) {
         canvas.getGraphicsContext2D().setFill(Color.BLUE);
