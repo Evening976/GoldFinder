@@ -101,7 +101,7 @@ public class gdGame {
         System.out.println("Player moved to " + p);
     }
 
-    public void removePlayer(Player player) {
+    public void removePlayer(AbstractPlayer player) {
         players.remove(player);
     }
 
