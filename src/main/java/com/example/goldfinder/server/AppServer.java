@@ -9,6 +9,7 @@ public class AppServer extends GameServer {
         super(port);
     }
 
+
     public static final int ROW_COUNT = 20;
     public static final int COLUMN_COUNT = 20;
     final static int serverPort = 1234;

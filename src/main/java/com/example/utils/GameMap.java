@@ -46,4 +46,18 @@ public class GameMap {
     public void setGame(short gameID, gdGame game) {
         games.put(gameID, game);
     }
+
+    public void removePlayer(Player p) {
+        System.out.println("Removing player " + p.getName());
+        for (Short key : games.keySet()) {
+            gdGame game = games.get(key);
+            if (game.getPlayers().contains(p)) {
+                game.removePlayer(p);
+                if (game.getPlayers().size() == 0) {
+                    games.remove(key);
+                }
+                return;
+            }
+        }
+    }
 }
