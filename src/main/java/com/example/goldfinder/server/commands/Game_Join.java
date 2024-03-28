@@ -49,4 +49,8 @@ public class Game_Join implements IServerCommand {
     public AbstractPlayer getPlayer() {
         return _game.getPlayer(_player);
     }
+
+    public String toString() {
+        return "Game_Join";
+    }
 }

@@ -2,6 +2,7 @@ package com.example.goldfinder.client;
 
 import com.example.goldfinder.ICommon;
 import com.example.utils.ConnectionMode;
+import com.example.utils.GameType;
 import com.example.utils.Logger;
 
 import java.io.IOException;
@@ -13,6 +14,7 @@ import static java.lang.System.exit;
 
 public abstract class IClient extends ICommon {
     ConnectionMode mode = ConnectionMode.TCP;
+    boolean isMultiplayer = true;
 
     public void connect() {
         Logger.printYellow("Trying to connect to server...");
@@ -28,6 +30,11 @@ public abstract class IClient extends ICommon {
 
     public void changeConnection(ConnectionMode mode) {
         this.mode = mode;
+    }
+
+    public void setGameType(GameType gameType) {
+        if (gameType == GameType.SINGLEPLAYER) isMultiplayer = false;
+        else isMultiplayer = true;
     }
     public abstract String updateSurrounding(int xpos, int ypos) throws IOException, InterruptedException;
 

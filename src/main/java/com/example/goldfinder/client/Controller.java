@@ -5,6 +5,7 @@ import com.example.goldfinder.client.commands.IClientCommand;
 import com.example.goldfinder.client.commands.Move_Command;
 import com.example.goldfinder.server.AppServer;
 import com.example.utils.ConnectionMode;
+import com.example.utils.GameType;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
@@ -24,6 +25,8 @@ public class Controller {
     Label score;
     @FXML
     ChoiceBox<String> connectionMode;
+    @FXML
+    ChoiceBox<String> gameType;
     @FXML
     TextField playerName;
     @FXML
@@ -49,7 +52,8 @@ public class Controller {
 
         gridView.paintPlayer(column, row);
 
-        initChoiceBox();
+        initConnectionMode();
+        initGameType();
         initTimeline();
     }
 
@@ -62,10 +66,22 @@ public class Controller {
         timeline.play();
     }
 
-    private void initChoiceBox(){
+    private void initConnectionMode(){
         connectionMode.getItems().add("TCP");
         connectionMode.getItems().add("UDP");
         connectionMode.setValue("TCP");
+    }
+
+    private void initGameType(){
+        gameType.getItems().add("SOLO");
+        gameType.getItems().add("MULTIPLAYER");
+        gameType.setValue("MULTIPLAYER");
+    }
+
+    private void initGameMode(){
+        gameType.getItems().add("GOLD_FINDER");
+        gameType.getItems().add("COPS_AND_ROBBERS");
+        gameType.setValue("GOLD_FINDER");
     }
 
     public void playToggleButtonAction() {
@@ -73,7 +89,9 @@ public class Controller {
         if (!client.isPlaying()) {
             if (!name.isEmpty()) {
                 client.changeConnection(ConnectionMode.valueOf(connectionMode.getValue()));
+                client.setGameType(GameType.valueOf(gameType.getValue()));
                 client.connect();
+                String z = client.sendCommand(new Client_Join(), name);
                 String r = client.sendCommand(new Client_Join(), name);
                 System.out.println("Response to game_join : " + r);
                 playerName.setDisable(true);
@@ -107,19 +125,18 @@ public class Controller {
         if (!client.isPlaying()) return;
         String resp = "";
         switch (keyEvent.getCode()) {
-            case W -> {
+            case Z -> {
                 if ((resp = client.sendCommand(new Move_Command(), "UP")).startsWith("VALID_MOVE")) {
                     row = Math.max(0, row - 1);
                     vParallax++;
                     gridView.emptyPlayers();
                 }
             }
-            case A -> {
+            case Q -> {
                 if ((resp = client.sendCommand(new Move_Command(), "LEFT")).startsWith("VALID_MOVE")){
                     column = Math.max(0, column - 1);
                     hParallax++;
                     gridView.emptyPlayers();
-
                 }
             }
             case S -> {
@@ -152,7 +169,6 @@ public class Controller {
 
     public void exitApplication() {
         System.out.println("Exiting...");
-        client.sendMessage("DISCONNECT");
         Platform.exit();
     }
 

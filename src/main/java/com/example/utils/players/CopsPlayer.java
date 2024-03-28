@@ -11,4 +11,14 @@ public class CopsPlayer extends AbstractPlayer {
         super(client, name, address, xPos, yPos);
     }
 
+    public void setCop(boolean isCop){
+        this.isCop = isCop;
+    }
+
+    public boolean isCop(){
+        return isCop;
+    }
+
+
+
 }
