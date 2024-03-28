@@ -1,5 +1,7 @@
 package com.example.goldfinder.client;
 
+import com.example.utils.Player;
+import com.example.utils.PlayerColor;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
@@ -50,6 +52,11 @@ public class GridView {
     public void setHWall(int col, int row){
         if(col >= 0 && col < columnCount && row >= 0 && row < rowCount+1)
             hWall[col][row] = true;
+    }
+
+    public void removeGoldAt(int col, int row){
+        if(col >= 0 && col < columnCount && row >= 0 && row < rowCount && goldAt[col][row])
+            goldAt[col][row] = false;
     }
 
     private int cellWidth(){

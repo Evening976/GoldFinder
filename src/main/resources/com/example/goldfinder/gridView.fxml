@@ -17,6 +17,8 @@
             <TextField fx:id="playerName" />
          <Label fx:id="score1" alignment="CENTER" contentDisplay="TEXT_ONLY" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="24.0" prefWidth="200.0" text="TCP/UDP" />
          <ChoiceBox fx:id="connectionMode" prefWidth="150.0" />
+         <Button fx:id="singleplayer" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" prefHeight="24.0" prefWidth="200.0" styleClass="button" text="Solo" />
+         <Button fx:id="multiplayer" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" prefHeight="24.0" prefWidth="200.0" styleClass="button" text="Multiplayer" />
         </VBox>
         <Canvas fx:id="gridCanvas" height="900.0" width="900.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
         </Canvas>

@@ -15,7 +15,9 @@ public class GridViewUpdater {
                         gridView.setGoldAt(_col, _row - 1);
                     } else if (subparts[1].startsWith("PLAYER")) {
                         gridView.paintPlayer(_col, _row - 1, Integer.parseInt(subparts[1].substring(subparts[1].length() - 1)));
-                        System.out.println(Integer.parseInt(subparts[1].substring(subparts[1].length() - 1)));
+                        System.out.println("PlayerID: "+Integer.parseInt(subparts[1].substring(subparts[1].length() - 1)));
+                    }else if (subparts[1].equals("EMPTY")) {
+                        gridView.removeGoldAt(_col, _row - 1);
                     }
                 }
                 case "down" -> {
@@ -25,7 +27,9 @@ public class GridViewUpdater {
                         gridView.setGoldAt(_col,_row + 1);
                     } else if (subparts[1].startsWith("PLAYER")) {
                         gridView.paintPlayer(_col, _row + 1, Integer.parseInt(subparts[1].substring(subparts[1].length() - 1)));
-                        System.out.println(Integer.parseInt(subparts[1].substring(subparts[1].length() - 1)));
+                        System.out.println("PlayerID: "+Integer.parseInt(subparts[1].substring(subparts[1].length() - 1)));
+                    } else if (subparts[1].equals("EMPTY")) {
+                        gridView.removeGoldAt(_col, _row + 1);
                     }
                 }
                 case "left" -> {
@@ -35,7 +39,9 @@ public class GridViewUpdater {
                         gridView.setGoldAt(_col - 1, _row);
                     } else if (subparts[1].startsWith("PLAYER")) {
                         gridView.paintPlayer(_col - 1, _row, Integer.parseInt(subparts[1].substring(subparts[1].length() - 1)));
-                        System.out.println(Integer.parseInt(subparts[1].substring(subparts[1].length() - 1)));
+                        System.out.println("PlayerID: "+Integer.parseInt(subparts[1].substring(subparts[1].length() - 1)));
+                    } else if (subparts[1].equals("EMPTY")) {
+                        gridView.removeGoldAt(_col - 1, _row );
                     }
                 }
                 case "right" -> {
@@ -45,7 +51,9 @@ public class GridViewUpdater {
                         gridView.setGoldAt(_col + 1, _row);
                     } else if (subparts[1].startsWith("PLAYER")) {
                         gridView.paintPlayer(_col + 1, _row, Integer.parseInt(subparts[1].substring(subparts[1].length() - 1)));
-                        System.out.println(Integer.parseInt(subparts[1].substring(subparts[1].length() - 1)));
+                        System.out.println("PlayerID: "+Integer.parseInt(subparts[1].substring(subparts[1].length() - 1)));
+                    }else if (subparts[1].equals("EMPTY")) {
+                        gridView.removeGoldAt(_col + 1, _row);
                     }
                 }
             }
