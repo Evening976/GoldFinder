@@ -23,9 +23,8 @@ public class GameServer extends IServer {
     private final Map<InetSocketAddress, AbstractPlayer> attachedPlayers = new HashMap<>();
     private final GameMap games;
     int playerID = 0;
-
     String GAMEMODE = "GOLD_FINDER";
-    private final int MAX_PLAYERS = 4;
+    private static final int MAX_PLAYERS = 4;
 
     public GameServer(int port) throws IOException {
         super(port);
@@ -59,6 +58,10 @@ public class GameServer extends IServer {
         }
     }
 
+    public GameMap getGames() {
+        return games;
+    }
+
     private void handleAccept(SelectionKey key) throws IOException {
         SocketChannel client = serverSocketChannel.accept();
         client.configureBlocking(false);
@@ -67,17 +70,25 @@ public class GameServer extends IServer {
 
 
     private void handleTCPRead(SelectionKey key) throws IOException {
-        if (key.attachment() == null) {
-            if(Objects.equals(GAMEMODE, "GOLD_FINDER"))
-                key.attach(new GFPlayer(key.channel(), "GFPlayer" + playerID++, ((SocketChannel)key.channel()).getRemoteAddress(), 0, 0));
+        InetSocketAddress senderAddress = (InetSocketAddress) ((SocketChannel) key.channel()).getRemoteAddress();
+        if (!attachedPlayers.containsKey(senderAddress)) {
+            if (Objects.equals(GAMEMODE, "GOLD_FINDER"))
+                attachedPlayers.put(senderAddress, new GFPlayer(key.channel(), "Player" + playerID++, senderAddress, 0, 0));
             else
-                key.attach(new CopsPlayer(key.channel(), "CopsPlayer" + playerID++, ((SocketChannel)key.channel()).getRemoteAddress(), 0, 0));
+                attachedPlayers.put(senderAddress, new CopsPlayer(key.channel(), "Player" + playerID++, senderAddress, 0, 0));
+        }
+
+        if (key.attachment() == null) {
+            if (Objects.equals(GAMEMODE, "GOLD_FINDER"))
+                key.attach(new GFPlayer(key.channel(), "GFPlayer" + playerID++, senderAddress, 0, 0));
+            else
+                key.attach(new CopsPlayer(key.channel(), "CopsPlayer" + playerID++, senderAddress, 0, 0));
         }
 
         String msg = receiveTCPMessage((SocketChannel) key.channel());
         if (!msg.isEmpty()) {
-            Logger.printDebug(((AbstractPlayer) key.attachment()).getName() + "("+((AbstractPlayer) key.attachment()).getPlayerID()  + ") Received TCP message: " + msg);
-            handleCommand(key, msg);
+            SelectionKey k = handleCommands(key, msg);
+            attachedPlayers.put(senderAddress, (AbstractPlayer) k.attachment());
         }
     }
 
@@ -87,7 +98,7 @@ public class GameServer extends IServer {
         InetSocketAddress senderAddress = messageandIp.getKey();
 
         if (!attachedPlayers.containsKey(senderAddress)) {
-            if(Objects.equals(GAMEMODE, "GOLD_FINDER"))
+            if (Objects.equals(GAMEMODE, "GOLD_FINDER"))
                 attachedPlayers.put(senderAddress, new GFPlayer(key.channel(), "Player" + playerID++, senderAddress, 0, 0));
             else
                 attachedPlayers.put(senderAddress, new CopsPlayer(key.channel(), "Player" + playerID++, senderAddress, 0, 0));
@@ -95,18 +106,14 @@ public class GameServer extends IServer {
         key.attach(attachedPlayers.get(senderAddress));
 
         if (!msg.isEmpty()) {
-            System.out.println("Received UDP message from " + senderAddress);
-            Logger.printDebug(((AbstractPlayer) key.attachment()).getName() + " sent : " + msg);
-            SelectionKey k = handleCommand(key, msg);
+            SelectionKey k = handleCommands(key, msg);
             attachedPlayers.put(senderAddress, (AbstractPlayer) k.attachment());
         }
     }
 
-    private SelectionKey handleCommand(SelectionKey key, String msg) {
+    private SelectionKey handleCommands(SelectionKey key, String msg) {
         AbstractPlayer player = (AbstractPlayer) key.attachment();
         gdGame g = null;
-
-        System.out.println("Responding to : " + key.attachment());
 
         if (player.getGameID() != null)
             g = games.getByID(player.getGameID());
@@ -125,9 +132,5 @@ public class GameServer extends IServer {
         }
         key.attach(player);
         return key;
-    }
-
-    public GameMap getGames() {
-        return games;
     }
 }

@@ -5,6 +5,7 @@ import com.example.goldfinder.client.commands.SurroundingClient;
 import com.example.utils.CommandParsers.ClientCommandParser;
 
 public class ClientBoi extends IClient {
+    private boolean isConnected = false;
     private boolean isPlaying = false;
 
     public ClientBoi() {
@@ -12,6 +13,7 @@ public class ClientBoi extends IClient {
     }
 
     public IClientCommand updateClient(){
+        if(!isConnected) return null;
         String command = receiveMessage(mode);
         return ClientCommandParser.parseCommand(command);
     }
@@ -23,6 +25,8 @@ public class ClientBoi extends IClient {
     }
 
     public String sendCommand(IClientCommand command, String params) {
+        if(!isConnected) isConnected = true;
+
         System.out.println("Sending command : " + command.getName() + " " + params);
         command.run(this, params);
         String resp = "";
@@ -40,6 +44,7 @@ public class ClientBoi extends IClient {
     public boolean isPlaying() {
         return isPlaying;
     }
+
 
     public void setPlaying(boolean b) {
         isPlaying = b;
