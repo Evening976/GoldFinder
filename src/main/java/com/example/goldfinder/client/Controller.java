@@ -7,9 +7,11 @@ import com.example.goldfinder.server.AppServer;
 import com.example.utils.ConnectionMode;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -31,6 +33,9 @@ public class Controller {
     TextField playerName;
     @FXML
     TextField debugCommand;
+
+    @FXML
+    private Button exitApplicationButton;
 
     GridView gridView;
     int column, row;
@@ -114,14 +119,14 @@ public class Controller {
         if (!client.isPlaying()) return;
         String resp = "";
         switch (keyEvent.getCode()) {
-            case W -> {
+            case Z -> {
                 if ((resp = client.sendCommand(new Move_Command(), "UP")).startsWith("VALID_MOVE")) {
                     row = Math.max(0, row - 1);
                     vParallax++;
                     gridView.emptyPlayers();
                 }
             }
-            case A -> {
+            case Q -> {
                 if ((resp = client.sendCommand(new Move_Command(), "LEFT")).startsWith("VALID_MOVE")){
                     column = Math.max(0, column - 1);
                     hParallax++;
@@ -159,5 +164,10 @@ public class Controller {
         //gridView.paintPlayers(COLUMN_COUNT/2, ROW_COUNT/2);
         gridView.paintPlayer(COLUMN_COUNT/2, ROW_COUNT/2);
     }
+
+    public void exitApplication(ActionEvent actionEvent) {
+        Platform.exit();
+    }
+
 }
 
