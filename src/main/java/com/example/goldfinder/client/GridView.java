@@ -68,12 +68,6 @@ public class GridView {
         return (int) (canvas.getHeight() / rowCount);
     }
 
-
-    public void setPlayerPositions(Pair<Integer, Integer>... position) {
-        for(Pair<Integer, Integer> p : position){
-            playerPositions.put(p, PlayerColor.values()[playerPositions.size() + 1]);
-        }
-    }
     public void emptyPlayers(){
         playerPositions.clear();
     }

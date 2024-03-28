@@ -1,6 +1,6 @@
 package com.example.goldfinder.client;
 
-import com.example.goldfinder.server.ICommon;
+import com.example.goldfinder.ICommon;
 import com.example.utils.ConnectionMode;
 import com.example.utils.Logger;
 

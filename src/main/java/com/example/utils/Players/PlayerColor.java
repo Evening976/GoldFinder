@@ -3,7 +3,7 @@ package com.example.utils.Players;
 import javafx.scene.paint.Color;
 
 public enum PlayerColor {
-    BLUE(0),
+    ORANGE(0),
     RED (1),
     YELLOW (2),
     GREEN (3),
@@ -15,10 +15,10 @@ public enum PlayerColor {
     }
 
     public Color getColor(){
-        if(id == 0) return Color.BLUE;
+        if(id == 0) return Color.ORANGE;
         if(id == 1) return Color.RED;
-        if(id == 2) return Color.YELLOW;
+        if(id == 4) return Color.PINK;
         if(id == 3) return Color.GREEN;
-        return Color.PINK;
+        return Color.YELLOW;
     }
 }

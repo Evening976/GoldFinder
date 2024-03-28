@@ -1,4 +1,4 @@
-package com.example.goldfinder.server;
+package com.example.goldfinder;
 
 import com.example.utils.ConnectionMode;
 import com.example.utils.Logger;
@@ -53,7 +53,7 @@ public abstract class ICommon {
 
         return "";
     }
-    synchronized void sendTCPMessage(SocketChannel client, String message) throws IOException {
+    protected synchronized void sendTCPMessage(SocketChannel client, String message) throws IOException {
         ByteBuffer z = ByteBuffer.allocate(128);
         z.clear();
         z.put(message.getBytes());
