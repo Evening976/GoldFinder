@@ -1,9 +1,11 @@
 package com.example.goldfinder.client;
 
+import com.example.utils.PlayerColor;
+
 public class GridViewUpdater {
     public static GridView update(String[] command, GridView gridView, int _row, int _col) {
-        if(gridView == null) return null;
-        if(command == null) return gridView;
+        if (gridView == null) return null;
+        if (command == null) return gridView;
 
         for (String p : command) {
             String[] subparts = p.split(":");
@@ -14,28 +16,31 @@ public class GridViewUpdater {
                     } else if (subparts[1].equals("GOLD")) {
                         gridView.setGoldAt(_col, _row - 1);
                     } else if (subparts[1].startsWith("PLAYER")) {
-                        gridView.paintPlayer(_col, _row - 1, Integer.parseInt(subparts[1].substring(subparts[1].length() - 1)));
-                        System.out.println(Integer.parseInt(subparts[1].substring(subparts[1].length() - 1)));
+                        gridView.setPlayerPositions(_col, _row - 1, PlayerColor.values()[Integer.parseInt(subparts[1].substring(subparts[1].length() - 1))]);
+                    } else if (subparts[1].equals("EMPTY")) {
+                       gridView.setEmpty(_col, _row - 1);
                     }
                 }
                 case "down" -> {
                     if (subparts[1].equals("WALL")) {
                         gridView.setHWall(_col, _row + 1);
                     } else if (subparts[1].equals("GOLD")) {
-                        gridView.setGoldAt(_col,_row + 1);
+                        gridView.setGoldAt(_col, _row + 1);
                     } else if (subparts[1].startsWith("PLAYER")) {
-                        gridView.paintPlayer(_col, _row + 1, Integer.parseInt(subparts[1].substring(subparts[1].length() - 1)));
-                        System.out.println(Integer.parseInt(subparts[1].substring(subparts[1].length() - 1)));
+                        gridView.setPlayerPositions(_col, _row + 1, PlayerColor.values()[Integer.parseInt(subparts[1].substring(subparts[1].length() - 1))]);
+                    } else if (subparts[1].equals("EMPTY")) {
+                        gridView.setEmpty(_col, _row + 1);
                     }
                 }
                 case "left" -> {
                     if (subparts[1].equals("WALL")) {
                         gridView.setVWall(_col, _row);
-                    } else if (subparts[1].equals("GOLD")){
+                    } else if (subparts[1].equals("GOLD")) {
                         gridView.setGoldAt(_col - 1, _row);
                     } else if (subparts[1].startsWith("PLAYER")) {
-                        gridView.paintPlayer(_col - 1, _row, Integer.parseInt(subparts[1].substring(subparts[1].length() - 1)));
-                        System.out.println(Integer.parseInt(subparts[1].substring(subparts[1].length() - 1)));
+                        gridView.setPlayerPositions(_col - 1, _row, PlayerColor.values()[Integer.parseInt(subparts[1].substring(subparts[1].length() - 1))]);
+                    } else if (subparts[1].equals("EMPTY")) {
+                        gridView.setEmpty(_col - 1, _row);
                     }
                 }
                 case "right" -> {
@@ -44,8 +49,9 @@ public class GridViewUpdater {
                     } else if (subparts[1].equals("GOLD")) {
                         gridView.setGoldAt(_col + 1, _row);
                     } else if (subparts[1].startsWith("PLAYER")) {
-                        gridView.paintPlayer(_col + 1, _row, Integer.parseInt(subparts[1].substring(subparts[1].length() - 1)));
-                        System.out.println(Integer.parseInt(subparts[1].substring(subparts[1].length() - 1)));
+                        gridView.setPlayerPositions(_col + 1, _row, PlayerColor.values()[Integer.parseInt(subparts[1].substring(subparts[1].length() - 1))]);
+                    } else if (subparts[1].equals("EMPTY")) {
+                        gridView.setEmpty(_col + 1, _row);
                     }
                 }
             }

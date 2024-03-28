@@ -102,7 +102,7 @@ public class gdGame {
     }
 
     public void removePlayer(Player player) {
-        if (players.remove(player)) isRunning = false;
+        players.remove(player);
     }
 
     public List<Player> getPlayers() {

@@ -53,9 +53,7 @@ public class Controller {
         column = COLUMN_COUNT / 2;
         row = ROW_COUNT / 2;
 
-
-
-        gridView.paintPlayer(column, row, 0);
+        gridView.paintPlayer(column, row);
 
         timeline = new Timeline();
         KeyFrame kf = new KeyFrame(javafx.util.Duration.seconds(0.1), this::updateClient);
@@ -100,9 +98,8 @@ public class Controller {
     }
 
     public void updateClient(ActionEvent actionEvent) {
-        //if (!client.isPlaying()) return;
         int _col = column;
-        int _row = row; //pour éviter les problèmes de concurrence
+        int _row = row;
 
         IClientCommand inc_command = client.updateClient();
         if(inc_command != null) inc_command.run(client, "");
@@ -110,35 +107,42 @@ public class Controller {
         String resp = client.updateSurrounding(_col, _row);
         GridViewUpdater.update(resp.split(" "), gridView, _row, _col);
         gridView.repaint(hParallax, vParallax);
-        gridView.paintPlayer(COLUMN_COUNT/2, ROW_COUNT/2, 0);
+        gridView.paintPlayer(COLUMN_COUNT/2, ROW_COUNT/2);
     }
 
     public void handleMove(KeyEvent keyEvent) {
-        String resp = "";
         if (!client.isPlaying()) return;
+        String resp = "";
         switch (keyEvent.getCode()) {
             case W -> {
                 if ((resp = client.sendCommand(new Move_Command(), "UP")).startsWith("VALID_MOVE")) {
                     row = Math.max(0, row - 1);
                     vParallax++;
+                    gridView.emptyPlayers();
                 }
             }
             case A -> {
                 if ((resp = client.sendCommand(new Move_Command(), "LEFT")).startsWith("VALID_MOVE")){
                     column = Math.max(0, column - 1);
                     hParallax++;
+                    gridView.emptyPlayers();
+
                 }
             }
             case S -> {
                 if ((resp = client.sendCommand(new Move_Command(), "DOWN")).startsWith("VALID_MOVE")){
                     row = Math.min(ROW_COUNT - 1, row + 1);
                     vParallax--;
+                    gridView.emptyPlayers();
+
                 }
             }
             case D -> {
                 if ((resp = client.sendCommand(new Move_Command(), "RIGHT")).startsWith("VALID_MOVE")) {
                     column = Math.min(COLUMN_COUNT - 1, column + 1);
                     hParallax--;
+                    gridView.emptyPlayers();
+
                 }
             }
             default -> {
@@ -152,7 +156,8 @@ public class Controller {
         System.out.println("Player pos : " + column + " " + row);
         System.out.println("Max pos : " + COLUMN_COUNT + " " + ROW_COUNT);
         gridView.repaint(hParallax, vParallax);
-        gridView.paintPlayer(COLUMN_COUNT/2, ROW_COUNT/2, 0);
+        //gridView.paintPlayers(COLUMN_COUNT/2, ROW_COUNT/2);
+        gridView.paintPlayer(COLUMN_COUNT/2, ROW_COUNT/2);
     }
 }
 

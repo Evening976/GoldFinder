@@ -38,7 +38,6 @@ public class GameServer extends IServer {
                     if (key.isAcceptable()) {
                         handleAccept(key);
                     } else if (key.isReadable()) {
-                        System.out.println("Reading..." + key.channel());
                         if (key.channel() instanceof SocketChannel) handleTCPRead(key);
                         else handleUDPRead(key);
                     } else if (key.isWritable()) {
