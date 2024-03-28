@@ -11,7 +11,7 @@ public class ServerCommandParser {
             case "UP", "DOWN", "LEFT", "RIGHT" -> new Dir();
             case "LEADER" -> new Leaderboard();
             default -> {
-                System.out.println("Invalid command.");
+                System.out.println("Invalid command : " + command);
                 yield null;
             }
         };

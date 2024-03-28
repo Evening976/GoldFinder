@@ -1,11 +1,14 @@
 package com.example.goldfinder.server;
 
 import com.example.utils.Logger;
+import javafx.util.Pair;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.*;
+import java.nio.channels.spi.AbstractSelectableChannel;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,15 +30,42 @@ public abstract class IServer extends ICommon {
         udpSocket.register(selector, SelectionKey.OP_READ);
     }
 
-    public synchronized int sendMessage(SelectableChannel client, ByteBuffer buffer, String message) {
+    public synchronized void sendMessage(SelectableChannel client, String message, SocketAddress address) {
         try {
-            if (client instanceof SocketChannel){return sendTCPMessage((SocketChannel) client, buffer, message);}
-            else if(client instanceof DatagramChannel) { return sendUDPMessage((DatagramChannel) client, buffer, message);}
+            if (client instanceof SocketChannel){
+                sendTCPMessage((SocketChannel) client, message);
+            }
+            else if(client instanceof DatagramChannel) {
+                sendUDPMessage((DatagramChannel) client, message, address);
+            }
         }
         catch (IOException e) {
             Logger.printError("Could not send message : ");
             e.printStackTrace();
         }
-        return -1;
+    }
+
+
+    protected void sendUDPMessage(AbstractSelectableChannel client, String message, SocketAddress address) throws IOException {
+        ByteBuffer buffer = ByteBuffer.allocate(1024);
+        buffer.clear();
+        buffer.put(message.getBytes());
+        buffer.flip();
+        ((DatagramChannel) client).send(buffer, address);
+    }
+
+    protected Pair<InetSocketAddress, String> receiveUDPMessage(SelectionKey key) {
+        ByteBuffer buffer = ByteBuffer.allocate(1024);
+        buffer.clear();
+        try {
+            InetSocketAddress pp = (InetSocketAddress)((DatagramChannel) key.channel()).receive(buffer);
+            buffer.flip();
+            byte[] receivedBytes = new byte[buffer.remaining()];
+            buffer.get(receivedBytes);
+            return new Pair<>(pp, new String(receivedBytes));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return new Pair<>(new InetSocketAddress(1), "");
     }
 }

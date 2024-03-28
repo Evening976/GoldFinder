@@ -13,9 +13,6 @@ public class Dir implements IServerCommand {
 
     @Override
     public String run(SelectableChannel client, GameServer server, AbstractPlayer p, gdGame g, String[] params) {
-        int xPosIncrement = 0;
-        int yPosIncrement = 0;
-        boolean collectGold = false;
         this.player = p;
         this.game = g;
         String dir = "INVALID_MOVE";

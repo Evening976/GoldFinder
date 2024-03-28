@@ -4,7 +4,6 @@ import com.example.utils.ConnectionMode;
 import com.example.utils.Logger;
 
 import java.io.IOException;
-import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
 import java.nio.channels.SocketChannel;
@@ -13,43 +12,30 @@ import java.nio.charset.StandardCharsets;
 public abstract class ICommon {
     protected SocketChannel tcpSocket;
     protected DatagramChannel udpSocket;
-    private final ByteBuffer rBuffer = ByteBuffer.allocate(1024);
 
     public synchronized String receiveMessage(ConnectionMode mode){
         try {
             if(mode == ConnectionMode.TCP) {
                 return receiveTCPMessage(tcpSocket);
             } else {
-                return receiveUDPMessage(udpSocket, getrBuffer());
+                return receiveUDPMessage(udpSocket);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public synchronized int sendMessage(ConnectionMode mode, ByteBuffer buffer, String message) {
+    public synchronized void sendMessage(ConnectionMode mode, String message) {
         try {
             if(mode == ConnectionMode.TCP) {
-                return sendTCPMessage(tcpSocket, buffer, message);
+                sendTCPMessage(tcpSocket, message);
             } else {
-                return sendUDPMessage(udpSocket, buffer, message);
+                sendUDPMessage(udpSocket, message);
             }
         }
         catch (IOException e) {
             Logger.printError("Could not send message : ");
             e.printStackTrace();
-        }
-        return -1;
-    }
-
-    public synchronized ByteBuffer getrBuffer() {
-        return rBuffer;
-    }
-
-    protected void closeSocket() {
-        try {
-            tcpSocket.close();
-        } catch (IOException ignored) {
         }
     }
 
@@ -67,15 +53,16 @@ public abstract class ICommon {
 
         return "";
     }
-    synchronized int sendTCPMessage(SocketChannel client, ByteBuffer buffer, String message) throws IOException {
+    synchronized void sendTCPMessage(SocketChannel client, String message) throws IOException {
         ByteBuffer z = ByteBuffer.allocate(128);
         z.clear();
         z.put(message.getBytes());
         z.flip();
-        return client.write(z);
+        client.write(z);
     }
 
-    synchronized int sendUDPMessage(DatagramChannel client, ByteBuffer buffer, String message) throws IOException {
+    synchronized void sendUDPMessage(DatagramChannel client, String message) throws IOException {
+        ByteBuffer buffer = ByteBuffer.allocate(128);
         buffer.clear();
         buffer.put(message.getBytes());
         buffer.flip();
@@ -85,12 +72,11 @@ public abstract class ICommon {
         p.put(message.getBytes());
         p.flip();
         System.out.println("Sending UDP message : " + StandardCharsets.UTF_8.decode(p).toString());
-        return client.send(buffer, new InetSocketAddress("127.0.0.1", 1234));
+        client.send(buffer, client.getRemoteAddress());
     }
 
-
-    String receiveUDPMessage(DatagramChannel client, ByteBuffer buffer) {
-        //buffer = ByteBuffer.allocate(1024);
+    String receiveUDPMessage(DatagramChannel client) {
+        ByteBuffer buffer = ByteBuffer.allocate(128);
         buffer.clear();
         try {
             client.receive(buffer);

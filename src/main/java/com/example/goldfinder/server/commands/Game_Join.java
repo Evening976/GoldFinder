@@ -1,10 +1,9 @@
 package com.example.goldfinder.server.commands;
 
-import com.example.utils.Players.AbstractPlayer;
-import com.example.utils.Players.GFPlayer;
 import com.example.goldfinder.server.GameServer;
-import com.example.utils.Logger;
 import com.example.utils.Games.gdGame;
+import com.example.utils.Logger;
+import com.example.utils.Players.AbstractPlayer;
 import javafx.util.Pair;
 
 import java.nio.channels.SelectableChannel;
@@ -28,7 +27,7 @@ public class Game_Join implements IServerCommand {
         if(game.isRunning()){
             for(AbstractPlayer p : game.getPlayers()){
                 if(p == player) continue;
-                server.sendMessage(p.getClient(), server.getrBuffer(), new Game_Start().run(null, server, p, game, new String[]{}));
+                server.sendMessage(p.getClient(), new Game_Start().run(null, server, p, game, new String[]{}), p.getAddress());
             }
         }
 

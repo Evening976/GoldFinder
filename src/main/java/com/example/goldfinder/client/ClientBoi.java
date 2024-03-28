@@ -3,20 +3,12 @@ package com.example.goldfinder.client;
 import com.example.goldfinder.client.commands.IClientCommand;
 import com.example.goldfinder.client.commands.SurroundingClient;
 import com.example.utils.CommandParsers.ClientCommandParser;
-import com.example.utils.ConnectionMode;
-
-import java.io.IOException;
 
 public class ClientBoi extends IClient {
     private boolean isPlaying = false;
 
-    public ClientBoi(ConnectionMode mode) {
-        super(mode);
-        try {
-            connect();
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
-        }
+    public ClientBoi() {
+        super();
     }
 
     public IClientCommand updateClient(){
@@ -31,6 +23,7 @@ public class ClientBoi extends IClient {
     }
 
     public String sendCommand(IClientCommand command, String params) {
+        System.out.println("Sending command : " + command.getName() + " " + params);
         command.run(this, params);
         String resp = "";
         while (true) {
@@ -41,7 +34,7 @@ public class ClientBoi extends IClient {
     }
 
     public void sendMessage(String msg) {
-        sendMessage(mode, Wbuffer, msg);
+        sendMessage(mode, msg);
     }
 
     public boolean isPlaying() {

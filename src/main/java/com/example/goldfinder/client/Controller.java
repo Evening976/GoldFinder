@@ -11,7 +11,6 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -24,32 +23,22 @@ public class Controller {
     @FXML
     Label score;
     @FXML
-    private Timeline timeline;
-
-    @FXML
     ChoiceBox<String> connectionMode;
-
     @FXML
     TextField playerName;
     @FXML
     TextField debugCommand;
-
-    @FXML
-    private Button exitApplicationButton;
-
     GridView gridView;
-    int column, row;
     ClientBoi client;
-
     int vParallax = 0;
     int hParallax = 0;
-
+    int column, row;
     public static int COLUMN_COUNT = AppServer.COLUMN_COUNT * 2;
     public static int ROW_COUNT = AppServer.ROW_COUNT * 2;
 
     public void initialize() {
         this.gridView = new GridView(gridCanvas, COLUMN_COUNT, ROW_COUNT);
-        client = new ClientBoi(ConnectionMode.UDP);
+        client = new ClientBoi();
 
         score.setText("0");
 
@@ -60,20 +49,17 @@ public class Controller {
 
         gridView.paintPlayer(column, row);
 
-
-
-        timeline = new Timeline();
-        KeyFrame kf = new KeyFrame(javafx.util.Duration.seconds(0.1), this::updateClient);
-        timeline.setCycleCount(Timeline.INDEFINITE);
-        timeline.getKeyFrames().add(kf);
-        timeline.play();
-
         initChoiceBox();
         initTimeline();
     }
 
 
     private void initTimeline(){
+        Timeline timeline = new Timeline();
+        KeyFrame kf = new KeyFrame(javafx.util.Duration.seconds(0.1), this::updateClient);
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.getKeyFrames().add(kf);
+        timeline.play();
     }
 
     private void initChoiceBox(){
@@ -82,12 +68,12 @@ public class Controller {
         connectionMode.setValue("TCP");
     }
 
-    public void playToggleButtonAction(ActionEvent actionEvent) {
+    public void playToggleButtonAction() {
         String name = playerName.getText();
         if (!client.isPlaying()) {
             if (!name.isEmpty()) {
-                ConnectionMode m = ConnectionMode.valueOf(connectionMode.getValue());
-                System.out.println("Connection mode : " + m);
+                client.changeConnection(ConnectionMode.valueOf(connectionMode.getValue()));
+                client.connect();
                 String r = client.sendCommand(new Client_Join(), name);
                 System.out.println("Response to game_join : " + r);
                 playerName.setDisable(true);
@@ -121,14 +107,14 @@ public class Controller {
         if (!client.isPlaying()) return;
         String resp = "";
         switch (keyEvent.getCode()) {
-            case Z -> {
+            case W -> {
                 if ((resp = client.sendCommand(new Move_Command(), "UP")).startsWith("VALID_MOVE")) {
                     row = Math.max(0, row - 1);
                     vParallax++;
                     gridView.emptyPlayers();
                 }
             }
-            case Q -> {
+            case A -> {
                 if ((resp = client.sendCommand(new Move_Command(), "LEFT")).startsWith("VALID_MOVE")){
                     column = Math.max(0, column - 1);
                     hParallax++;
@@ -160,14 +146,12 @@ public class Controller {
             gridView.goldAt[column][row] = false;
             score.setText(String.valueOf(Integer.parseInt(score.getText()) + 1));
         }
-        System.out.println("Player pos : " + column + " " + row);
-        System.out.println("Max pos : " + COLUMN_COUNT + " " + ROW_COUNT);
         gridView.repaint(hParallax, vParallax);
-        //gridView.paintPlayers(COLUMN_COUNT/2, ROW_COUNT/2);
         gridView.paintPlayer(COLUMN_COUNT/2, ROW_COUNT/2);
     }
 
-    public void exitApplication(ActionEvent actionEvent) {
+    public void exitApplication() {
+        System.out.println("Exiting...");
         client.sendMessage("DISCONNECT");
         Platform.exit();
     }
