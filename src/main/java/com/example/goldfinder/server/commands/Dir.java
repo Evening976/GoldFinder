@@ -1,17 +1,18 @@
 package com.example.goldfinder.server.commands;
 
-import com.example.utils.Player;
+import com.example.utils.Players.AbstractPlayer;
 import com.example.goldfinder.server.GameServer;
-import com.example.utils.gdGame;
+import com.example.utils.Games.gdGame;
+import com.example.utils.Players.GFPlayer;
 
 import java.nio.channels.SelectableChannel;
 
 public class Dir implements IServerCommand {
-    Player player;
+    AbstractPlayer player;
     gdGame game;
 
     @Override
-    public String run(SelectableChannel client, GameServer server, Player p, gdGame g, String[] params) {
+    public String run(SelectableChannel client, GameServer server, AbstractPlayer p, gdGame g, String[] params) {
         int xPosIncrement = 0;
         int yPosIncrement = 0;
         boolean collectGold = false;
@@ -26,7 +27,7 @@ public class Dir implements IServerCommand {
                     game.movePlayer(p, 0, -1);
                     if (dir.contains("GOLD")) {
                         System.out.println("COLLECTED GOLD");
-                        game.collectGold(p);
+                        game.collectGold((GFPlayer) p);
                     }
                 }
             }
@@ -36,7 +37,7 @@ public class Dir implements IServerCommand {
                     game.movePlayer(p, 0, 1);
                     if (dir.contains("GOLD")) {
                         System.out.println("COLLECTED GOLD");
-                        game.collectGold(p);
+                        game.collectGold((GFPlayer) p);
                     }
                 }
             }
@@ -45,7 +46,7 @@ public class Dir implements IServerCommand {
                 if (dir.contains("EMPTY") || dir.contains("GOLD")) {
                     game.movePlayer(p, -1, 0);
                     if (dir.contains("GOLD")) {
-                        game.collectGold(p);
+                        game.collectGold((GFPlayer) p);
                     }
                 }
             }
@@ -54,7 +55,7 @@ public class Dir implements IServerCommand {
                 if (dir.contains("EMPTY") || dir.contains("GOLD")) {
                     game.movePlayer(p, 1, 0);
                     if (dir.contains("GOLD")) {
-                        game.collectGold(p);
+                        game.collectGold((GFPlayer) p);
                     }
                 }
             }
@@ -77,7 +78,7 @@ public class Dir implements IServerCommand {
     }
 
     @Override
-    public Player getPlayer() {
+    public AbstractPlayer getPlayer() {
         return game.getPlayer(player);
     }
 }

@@ -1,4 +1,6 @@
-package com.example.utils;
+package com.example.utils.Players;
+
+import com.example.utils.ConnectionMode;
 
 import java.io.Serializable;
 import java.nio.channels.SelectableChannel;

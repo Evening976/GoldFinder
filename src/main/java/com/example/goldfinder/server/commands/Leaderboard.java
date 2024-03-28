@@ -1,14 +1,14 @@
 package com.example.goldfinder.server.commands;
 
-import com.example.utils.Player;
+import com.example.utils.Players.AbstractPlayer;
 import com.example.goldfinder.server.GameServer;
-import com.example.utils.gdGame;
+import com.example.utils.Games.gdGame;
 
 import java.nio.channels.SelectableChannel;
 
 public class Leaderboard implements IServerCommand {
     @Override
-    public String run(SelectableChannel client, GameServer server, Player p, gdGame g, String[] params) {
+    public String run(SelectableChannel client, GameServer server, AbstractPlayer p, gdGame g, String[] params) {
         return null;
     }
 
@@ -18,7 +18,7 @@ public class Leaderboard implements IServerCommand {
     }
 
     @Override
-    public Player getPlayer() {
+    public AbstractPlayer getPlayer() {
         return null;
     }
 }

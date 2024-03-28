@@ -60,6 +60,8 @@ public class Controller {
 
         gridView.paintPlayer(column, row);
 
+
+
         timeline = new Timeline();
         KeyFrame kf = new KeyFrame(javafx.util.Duration.seconds(0.1), this::updateClient);
         timeline.setCycleCount(Timeline.INDEFINITE);
@@ -166,6 +168,7 @@ public class Controller {
     }
 
     public void exitApplication(ActionEvent actionEvent) {
+        client.sendMessage("DISCONNECT");
         Platform.exit();
     }
 

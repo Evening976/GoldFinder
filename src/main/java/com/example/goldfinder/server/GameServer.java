@@ -2,6 +2,12 @@ package com.example.goldfinder.server;
 
 import com.example.goldfinder.server.commands.IServerCommand;
 import com.example.utils.*;
+import com.example.utils.CommandParsers.ServerCommandParser;
+import com.example.utils.Games.GameMap;
+import com.example.utils.Games.gdGame;
+import com.example.utils.Players.AbstractPlayer;
+import com.example.utils.Players.CopsPlayer;
+import com.example.utils.Players.GFPlayer;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -13,12 +19,14 @@ import java.nio.channels.SocketChannel;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Objects;
 
 public class GameServer extends IServer {
-    private final Map<InetSocketAddress, Player> attachedPlayers = new HashMap<>();
+    private final Map<InetSocketAddress, AbstractPlayer> attachedPlayers = new HashMap<>();
     private final GameMap games;
     int playerID = 0;
 
+    String GAMEMODE = "GOLD_FINDER";
     private final int MAX_PLAYERS = 4;
 
     public GameServer(int port) throws IOException {
@@ -45,7 +53,7 @@ public class GameServer extends IServer {
                     }
                     selectedKeys.remove();
                 } catch (IOException e) {
-                    Player p = (Player) key.attachment();
+                    GFPlayer p = (GFPlayer) key.attachment();
                     if (p.getGameID() != null) games.getByID(p.getGameID()).removePlayer(p);
                     key.channel().close();
                     key.cancel();
@@ -64,12 +72,15 @@ public class GameServer extends IServer {
 
     private void handleTCPRead(SelectionKey key) throws IOException {
         if (key.attachment() == null) {
-            key.attach(new Player(key.channel(), "Player" + playerID++, ConnectionMode.TCP, 0, 0));
+            if(Objects.equals(GAMEMODE, "GOLD_FINDER"))
+                key.attach(new GFPlayer(key.channel(), "GFPlayer" + playerID++, ConnectionMode.TCP, 0, 0));
+            else
+                key.attach(new CopsPlayer(key.channel(), "CopsPlayer" + playerID++, ConnectionMode.TCP, 0, 0));
         }
 
         String msg = receiveTCPMessage((SocketChannel) key.channel());
         if (!msg.isEmpty()) {
-            Logger.printDebug(((Player) key.attachment()).getName() + "("+((Player) key.attachment()).getPlayerID()  + ") Received TCP message: " + msg);
+            Logger.printDebug(((AbstractPlayer) key.attachment()).getName() + "("+((AbstractPlayer) key.attachment()).getPlayerID()  + ") Received TCP message: " + msg);
             handleCommand(key, msg);
         }
     }
@@ -78,16 +89,19 @@ public class GameServer extends IServer {
         InetSocketAddress senderAddress = (InetSocketAddress) ((DatagramChannel) key.channel()).receive(getrBuffer());
         System.out.println("Received UDP message from " + senderAddress);
         if (!attachedPlayers.containsKey(senderAddress)) {
-            attachedPlayers.put(senderAddress, new Player(key.channel(), "Player" + playerID++, ConnectionMode.UDP, 0, 0));
+            if(Objects.equals(GAMEMODE, "GOLD_FINDER"))
+                attachedPlayers.put(senderAddress, new GFPlayer(key.channel(), "Player" + playerID++, ConnectionMode.UDP, 0, 0));
+            else
+                attachedPlayers.put(senderAddress, new CopsPlayer(key.channel(), "Player" + playerID++, ConnectionMode.UDP, 0, 0));
         }
         key.attach(attachedPlayers.get(senderAddress));
 
         String msg = receiveUDPMessage(key);
         System.out.println("Received UDP message: " + msg);
         if (!msg.isEmpty()) {
-            Logger.printDebug(((Player) key.attachment()).getName() + " Received UDP message: " + msg);
+            Logger.printDebug(((AbstractPlayer) key.attachment()).getName() + " Received UDP message: " + msg);
             SelectionKey k = handleCommand(key, msg);
-            attachedPlayers.put(senderAddress, (Player) k.attachment());
+            attachedPlayers.put(senderAddress, (AbstractPlayer) k.attachment());
         }
     }
 
@@ -114,7 +128,7 @@ public class GameServer extends IServer {
     }
 
     private SelectionKey handleCommand(SelectionKey key, String msg) {
-        Player player = (Player) key.attachment();
+        AbstractPlayer player = (AbstractPlayer) key.attachment();
         gdGame g = null;
 
         if (player.getGameID() != null)
