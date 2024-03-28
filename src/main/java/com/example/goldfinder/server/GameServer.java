@@ -1,13 +1,13 @@
 package com.example.goldfinder.server;
 
 import com.example.goldfinder.server.commands.IServerCommand;
-import com.example.utils.CommandParsers.ServerCommandParser;
-import com.example.utils.Games.GameMap;
-import com.example.utils.Games.gdGame;
+import com.example.utils.commandParsers.ServerCommandParser;
+import com.example.utils.games.GameMap;
+import com.example.utils.games.gdGame;
 import com.example.utils.Logger;
-import com.example.utils.Players.AbstractPlayer;
-import com.example.utils.Players.CopsPlayer;
-import com.example.utils.Players.GFPlayer;
+import com.example.utils.players.AbstractPlayer;
+import com.example.utils.players.CopsPlayer;
+import com.example.utils.players.GFPlayer;
 import javafx.util.Pair;
 
 import java.io.IOException;

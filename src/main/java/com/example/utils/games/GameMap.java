@@ -1,7 +1,6 @@
-package com.example.utils.Games;
+package com.example.utils.games;
 
-import com.example.utils.Games.gdGame;
-import com.example.utils.Players.GFPlayer;
+import com.example.utils.players.GFPlayer;
 import javafx.util.Pair;
 
 import java.util.HashMap;

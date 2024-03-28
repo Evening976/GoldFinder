@@ -1,4 +1,4 @@
-package com.example.utils.Players;
+package com.example.utils.players;
 
 import java.net.SocketAddress;
 import java.nio.channels.SelectableChannel;

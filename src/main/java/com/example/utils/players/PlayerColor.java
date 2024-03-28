@@ -1,4 +1,4 @@
-package com.example.utils.Players;
+package com.example.utils.players;
 
 import javafx.scene.paint.Color;
 

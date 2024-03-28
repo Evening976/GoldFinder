@@ -1,6 +1,6 @@
 package com.example.goldfinder.client;
 
-import com.example.utils.Players.PlayerColor;
+import com.example.utils.players.PlayerColor;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.util.Pair;

@@ -1,20 +1,25 @@
-package com.example.utils.Games;
+package com.example.utils.games;
 
 import com.example.goldfinder.server.Grid;
-import com.example.utils.Players.AbstractPlayer;
-import com.example.utils.Players.GFPlayer;
+import com.example.utils.players.AbstractPlayer;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class gdGame extends Game{
+public abstract class Game {
+    boolean isRunning = false;
+    int maxPlayers;
+    List<AbstractPlayer> players;
+    Grid grid;
 
-    public gdGame(int maxPlayers) {
-        super(maxPlayers);
+    public Game(int maxPlayers) {
+        this.maxPlayers = maxPlayers;
+        this.players = new ArrayList<>();
+        this.grid = new Grid(20, 20, new Random());
     }
 
-    public void addPlayer(GFPlayer player) {
+    public void addPlayer(AbstractPlayer player) {
         if (!isRunning) {
             players.add(player);
             spawnPlayer(player);
@@ -73,7 +78,7 @@ public class gdGame extends Game{
         return "EMPTY ";
     }
 
-    private void spawnPlayer(GFPlayer p) {
+    private void spawnPlayer(AbstractPlayer p) {
         while (true) {
             int xpos = (int) (Math.random() * grid.getColumnCount());
             int ypos = (int) (Math.random() * grid.getRowCount());
@@ -84,24 +89,16 @@ public class gdGame extends Game{
         }
     }
 
-    public void collectGold(GFPlayer p) {
-        if (grid.hasGold(p.getxPos(), p.getyPos())) {
-            p.collectGold();
-            grid.removeGold(p.getxPos(), p.getyPos());
-        }
-    }
-
-
-    public void movePlayer(GFPlayer p, int xpos, int ypos) {
+    public void movePlayer(AbstractPlayer p, int xpos, int ypos) {
         players.get(players.indexOf(p)).move(xpos, ypos);
         System.out.println("Player moved to " + p);
     }
 
-    public void removePlayer(GFPlayer player) {
+    public void removePlayer(AbstractPlayer player) {
         players.remove(player);
     }
 
-    public AbstractPlayer getPlayer(GFPlayer p) {
+    public AbstractPlayer getPlayer(AbstractPlayer p) {
         return players.get(players.indexOf(p));
     }
 
@@ -112,5 +109,9 @@ public class gdGame extends Game{
     @Override
     public String toString() {
         return "Game with " + players.size() + " players";
+
+    }
+    public List<AbstractPlayer> getPlayers() {
+        return players;
     }
 }

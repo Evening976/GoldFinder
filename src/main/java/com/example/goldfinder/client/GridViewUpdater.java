@@ -1,6 +1,6 @@
 package com.example.goldfinder.client;
 
-import com.example.utils.Players.PlayerColor;
+import com.example.utils.players.PlayerColor;
 
 public class GridViewUpdater {
     public static GridView update(String[] command, GridView gridView, int _row, int _col) {

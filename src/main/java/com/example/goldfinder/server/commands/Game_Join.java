@@ -1,9 +1,9 @@
 package com.example.goldfinder.server.commands;
 
 import com.example.goldfinder.server.GameServer;
-import com.example.utils.Games.gdGame;
+import com.example.utils.games.gdGame;
 import com.example.utils.Logger;
-import com.example.utils.Players.AbstractPlayer;
+import com.example.utils.players.AbstractPlayer;
 import javafx.util.Pair;
 
 import java.nio.channels.SelectableChannel;
