@@ -2,7 +2,6 @@ package com.example.utils.Players;
 
 import com.example.utils.ConnectionMode;
 
-import java.io.Serializable;
 import java.nio.channels.SelectableChannel;
 
 public abstract class AbstractPlayer {
@@ -11,14 +10,14 @@ public abstract class AbstractPlayer {
     String name;
     ConnectionMode connectionMode;
     SelectableChannel client;
-    int goldCollected;
+    int score;
     int xPos, yPos;
 
     public AbstractPlayer(SelectableChannel client, String name, ConnectionMode connectionMode, int xPos, int yPos) {
         this.client = client;
         this.name = name;
         this.connectionMode = connectionMode;
-        goldCollected = 0;
+        score = 0;
         this.xPos = xPos;
         this.yPos = yPos;
     }
@@ -51,7 +50,7 @@ public abstract class AbstractPlayer {
         return client;
     }
     public void collectGold() {
-        goldCollected++;
+        score++;
     }
     public void setName(String playerName) {
         this.name = playerName;
