@@ -8,6 +8,7 @@ import com.example.utils.Games.gdGame;
 import com.example.utils.Players.AbstractPlayer;
 import com.example.utils.Players.CopsPlayer;
 import com.example.utils.Players.GFPlayer;
+import javafx.util.Pair;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -86,8 +87,11 @@ public class GameServer extends IServer {
     }
 
     private void handleUDPRead(SelectionKey key) throws IOException {
-        InetSocketAddress senderAddress = (InetSocketAddress) ((DatagramChannel) key.channel()).receive(getrBuffer());
+        Pair<InetSocketAddress, String> messageandIp = receiveUDPMessage(key);
+        String msg = messageandIp.getValue();
+        InetSocketAddress senderAddress = messageandIp.getKey();
         System.out.println("Received UDP message from " + senderAddress);
+
         if (!attachedPlayers.containsKey(senderAddress)) {
             if(Objects.equals(GAMEMODE, "GOLD_FINDER"))
                 attachedPlayers.put(senderAddress, new GFPlayer(key.channel(), "Player" + playerID++, ConnectionMode.UDP, 0, 0));
@@ -96,7 +100,6 @@ public class GameServer extends IServer {
         }
         key.attach(attachedPlayers.get(senderAddress));
 
-        String msg = receiveUDPMessage(key);
         System.out.println("Received UDP message: " + msg);
         if (!msg.isEmpty()) {
             Logger.printDebug(((AbstractPlayer) key.attachment()).getName() + " Received UDP message: " + msg);
@@ -105,18 +108,19 @@ public class GameServer extends IServer {
         }
     }
 
-    private String receiveUDPMessage(SelectionKey key) {
+    private Pair<InetSocketAddress, String> receiveUDPMessage(SelectionKey key) {
         ByteBuffer buffer = ByteBuffer.allocate(1024);
         buffer.clear();
         try {
-            ((DatagramChannel) key.channel()).receive(buffer);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+            InetSocketAddress pp = (InetSocketAddress)((DatagramChannel) key.channel()).receive(buffer);
         buffer.flip();
         byte[] receivedBytes = new byte[buffer.remaining()];
         buffer.get(receivedBytes);
-        return new String(receivedBytes);
+        return new Pair<>(pp, new String(receivedBytes));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return new Pair<>(new InetSocketAddress(1), "");
     }
 
     private synchronized int sendUDPMessage(SelectionKey key, String message) throws IOException {

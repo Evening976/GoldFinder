@@ -14,7 +14,7 @@ import static java.lang.System.exit;
 import static java.lang.System.out;
 
 public abstract class IClient extends ICommon {
-  ByteBuffer Wbuffer = ByteBuffer.allocate(128);
+  ByteBuffer Wbuffer = ByteBuffer.allocate(1024);
   ConnectionMode mode;
   Thread readerThread;
 

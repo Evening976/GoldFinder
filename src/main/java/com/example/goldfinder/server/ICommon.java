@@ -8,6 +8,7 @@ import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
 import java.nio.channels.SocketChannel;
+import java.nio.charset.StandardCharsets;
 
 public abstract class ICommon {
     protected SocketChannel tcpSocket;
@@ -19,7 +20,7 @@ public abstract class ICommon {
             if(mode == ConnectionMode.TCP) {
                 return receiveTCPMessage(tcpSocket);
             } else {
-                return receiveUDPMessage(udpSocket);
+                return receiveUDPMessage(udpSocket, getrBuffer());
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -78,12 +79,18 @@ public abstract class ICommon {
         buffer.clear();
         buffer.put(message.getBytes());
         buffer.flip();
+
+        ByteBuffer p = ByteBuffer.allocate(128);
+        p.clear();
+        p.put(message.getBytes());
+        p.flip();
+        System.out.println("Sending UDP message : " + StandardCharsets.UTF_8.decode(p).toString());
         return client.send(buffer, new InetSocketAddress("127.0.0.1", 1234));
     }
 
 
-    private String receiveUDPMessage(DatagramChannel client) {
-        ByteBuffer buffer = ByteBuffer.allocate(1024);
+    String receiveUDPMessage(DatagramChannel client, ByteBuffer buffer) {
+        //buffer = ByteBuffer.allocate(1024);
         buffer.clear();
         try {
             client.receive(buffer);
@@ -91,8 +98,7 @@ public abstract class ICommon {
             e.printStackTrace();
         }
         buffer.flip();
-        byte[] receivedBytes = new byte[buffer.remaining()];
-        buffer.get(receivedBytes);
+        String receivedBytes = StandardCharsets.UTF_8.decode(buffer).toString();
         return new String(receivedBytes);
     }
 }

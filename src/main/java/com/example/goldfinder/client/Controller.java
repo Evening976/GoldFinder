@@ -49,7 +49,7 @@ public class Controller {
 
     public void initialize() {
         this.gridView = new GridView(gridCanvas, COLUMN_COUNT, ROW_COUNT);
-        client = new ClientBoi(ConnectionMode.TCP);
+        client = new ClientBoi(ConnectionMode.UDP);
 
         score.setText("0");
 
