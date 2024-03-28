@@ -2,7 +2,7 @@ package com.example.goldfinder.client;
 
 import com.example.goldfinder.client.commands.IClientCommand;
 import com.example.goldfinder.client.commands.SurroundingClient;
-import com.example.utils.ClientCommandParser;
+import com.example.utils.CommandParsers.ClientCommandParser;
 import com.example.utils.ConnectionMode;
 
 import java.io.IOException;

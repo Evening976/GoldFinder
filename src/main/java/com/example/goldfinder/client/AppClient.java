@@ -37,6 +37,7 @@ public class AppClient extends javafx.application.Application {
         loader.setLocation(location);
         view = loader.load();
         controller = loader.getController();
+        primaryStage.setOnCloseRequest(event -> controller.exitApplication(null));
         view.setOnKeyPressed(controller::handleMove);
     }
 

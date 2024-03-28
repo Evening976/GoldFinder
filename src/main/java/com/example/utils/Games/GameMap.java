@@ -1,5 +1,7 @@
-package com.example.utils;
+package com.example.utils.Games;
 
+import com.example.utils.Games.gdGame;
+import com.example.utils.Players.GFPlayer;
 import javafx.util.Pair;
 
 import java.util.HashMap;
@@ -47,12 +49,13 @@ public class GameMap {
         games.put(gameID, game);
     }
 
-    public void removePlayer(AbstractPlayer p) {
+    public void removePlayer(GFPlayer p) {
+        System.out.println("Removing player " + p.getName());
         for (Short key : games.keySet()) {
             gdGame game = games.get(key);
             if (game.getPlayers().contains(p)) {
                 game.removePlayer(p);
-                if (game.getPlayers().size() == 0) {
+                if (game.getPlayers().isEmpty()) {
                     games.remove(key);
                 }
                 return;

@@ -1,31 +1,26 @@
 package com.example.goldfinder.server.commands;
 
-import com.example.utils.Players.AbstractPlayer;
 import com.example.goldfinder.server.GameServer;
+import com.example.utils.Players.AbstractPlayer;
 import com.example.utils.Games.gdGame;
 
 import java.nio.channels.SelectableChannel;
 
-public class Surrounding implements IServerCommand {
-
-    AbstractPlayer player;
-    gdGame game;
-
+public class Disconnect implements IServerCommand{
     @Override
     public String run(SelectableChannel client, GameServer server, AbstractPlayer p, gdGame g, String[] params) {
-        this.player = p;
-        this.game = g;
-        System.out.println("Surrounding " + p + ": " + game.getSurrounding(p.getxPos(),p.getyPos()));
-        return game.getSurrounding(p.getxPos(),p.getyPos());
+        g.removePlayer(p);
+        //server.
+        return "DISCONNECTED";
     }
 
     @Override
     public gdGame getGame() {
-        return game;
+        return null;
     }
 
     @Override
     public AbstractPlayer getPlayer() {
-        return player;
+        return null;
     }
 }

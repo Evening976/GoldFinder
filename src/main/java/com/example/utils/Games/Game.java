@@ -1,24 +1,27 @@
-package com.example.utils;
+package com.example.utils.Games;
 
 import com.example.goldfinder.server.Grid;
+import com.example.utils.Players.AbstractPlayer;
+import com.example.utils.Players.GFPlayer;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 
-public class gdGame {
+public abstract class Game {
     boolean isRunning = false;
     int maxPlayers;
-    List<Player> players;
+    List<AbstractPlayer> players;
     Grid grid;
 
-    public gdGame(int maxPlayers) {
+    public Game(int maxPlayers) {
         this.maxPlayers = maxPlayers;
         this.players = new ArrayList<>();
         this.grid = new Grid(20, 20, new Random());
     }
 
-    public void addPlayer(Player player) {
+    public void addPlayer(AbstractPlayer player) {
         if (!isRunning) {
             players.add(player);
             spawnPlayer(player);
@@ -35,7 +38,7 @@ public class gdGame {
 
     private boolean isFree(int xpos, int ypos) {
         boolean p = !grid.hasGold(xpos, ypos) && !grid.downWall(xpos, ypos) && !grid.upWall(xpos, ypos) && !grid.leftWall(xpos, ypos) && !grid.rightWall(xpos, ypos);
-        for (Player player : players) {
+        for (AbstractPlayer player : players) {
             if (player.getxPos() == xpos && player.getyPos() == ypos) return false;
         }
         return p;
@@ -43,7 +46,7 @@ public class gdGame {
 
     public String getUp(int xpos, int ypos) {
         if (grid.upWall(xpos, ypos) || ypos == 0) return "WALL ";
-        for (Player p : players) {
+        for (AbstractPlayer p : players) {
             if (p.getxPos() == xpos && p.getyPos() == ypos - 1) return "PLAYER" + players.indexOf(p) + " ";
         }
         if (grid.hasGold(xpos, ypos - 1)) return "GOLD ";
@@ -52,7 +55,7 @@ public class gdGame {
 
     public String getDown(int xpos, int ypos) {
         if (grid.downWall(xpos, ypos) || ypos == grid.getRowCount()) return "WALL ";
-        for (Player p : players) {
+        for (AbstractPlayer p : players) {
             if (p.getxPos() == xpos && p.getyPos() == ypos + 1) return "PLAYER" + players.indexOf(p) + " ";
         }
         if (grid.hasGold(xpos, ypos + 1)) return "GOLD ";
@@ -61,7 +64,7 @@ public class gdGame {
 
     public String getLeft(int xpos, int ypos) {
         if (grid.leftWall(xpos, ypos) || xpos == 0) return "WALL ";
-        for (Player p : players) {
+        for (AbstractPlayer p : players) {
             if (p.getxPos() == xpos - 1 && p.getyPos() == ypos) return "PLAYER" + players.indexOf(p) + " ";
         }
         if (grid.hasGold(xpos - 1, ypos)) return "GOLD ";
@@ -70,14 +73,14 @@ public class gdGame {
 
     public String getRight(int xpos, int ypos) {
         if (grid.rightWall(xpos, ypos) || xpos == grid.getColumnCount()) return "WALL ";
-        for (Player p : players) {
+        for (AbstractPlayer p : players) {
             if (p.getxPos() == xpos + 1 && p.getyPos() == ypos) return "PLAYER" + players.indexOf(p) + " ";
         }
         if (grid.hasGold(xpos + 1, ypos)) return "GOLD ";
         return "EMPTY ";
     }
 
-    private void spawnPlayer(Player p) {
+    private void spawnPlayer(AbstractPlayer p) {
         while (true) {
             int xpos = (int) (Math.random() * grid.getColumnCount());
             int ypos = (int) (Math.random() * grid.getRowCount());
@@ -88,15 +91,7 @@ public class gdGame {
         }
     }
 
-    public void collectGold(Player p) {
-        if (grid.hasGold(p.getxPos(), p.getyPos())) {
-            p.collectGold();
-            grid.removeGold(p.getxPos(), p.getyPos());
-        }
-    }
-
-
-    public void movePlayer(Player p, int xpos, int ypos) {
+    public void movePlayer(AbstractPlayer p, int xpos, int ypos) {
         players.get(players.indexOf(p)).move(xpos, ypos);
         System.out.println("Player moved to " + p);
     }
@@ -105,11 +100,7 @@ public class gdGame {
         players.remove(player);
     }
 
-    public List<Player> getPlayers() {
-        return players;
-    }
-
-    public Player getPlayer(Player p) {
+    public AbstractPlayer getPlayer(AbstractPlayer p) {
         return players.get(players.indexOf(p));
     }
 
@@ -121,5 +112,8 @@ public class gdGame {
     public String toString() {
         return "Game with " + players.size() + " players";
 
+    }
+    public List<AbstractPlayer> getPlayers() {
+        return players;
     }
 }

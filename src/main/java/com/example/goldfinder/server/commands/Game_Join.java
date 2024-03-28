@@ -1,18 +1,19 @@
 package com.example.goldfinder.server.commands;
 
-import com.example.utils.Player;
+import com.example.utils.Players.AbstractPlayer;
+import com.example.utils.Players.GFPlayer;
 import com.example.goldfinder.server.GameServer;
 import com.example.utils.Logger;
-import com.example.utils.gdGame;
+import com.example.utils.Games.gdGame;
 import javafx.util.Pair;
 
 import java.nio.channels.SelectableChannel;
 
 public class Game_Join implements IServerCommand {
-    Player _player;
+    AbstractPlayer _player;
     gdGame _game;
     @Override
-    public String run(SelectableChannel client, GameServer server, Player player, gdGame game, String[] params) {
+    public String run(SelectableChannel client, GameServer server, AbstractPlayer player, gdGame game, String[] params) {
         this._player = player;
         String playerName = params[1];
         player.setName(playerName);
@@ -25,7 +26,7 @@ public class Game_Join implements IServerCommand {
         player.attachToGame(availableGame.getKey(), (short) game.getPlayers().indexOf(player));
 
         if(game.isRunning()){
-            for(Player p : game.getPlayers()){
+            for(AbstractPlayer p : game.getPlayers()){
                 if(p == player) continue;
                 server.sendMessage(p.getClient(), server.getrBuffer(), new Game_Start().run(null, server, p, game, new String[]{}));
             }
@@ -46,7 +47,7 @@ public class Game_Join implements IServerCommand {
     }
 
     @Override
-    public Player getPlayer() {
+    public AbstractPlayer getPlayer() {
         return _game.getPlayer(_player);
     }
 }

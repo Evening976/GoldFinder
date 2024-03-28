@@ -1,12 +1,10 @@
 package com.example.goldfinder.client;
 
-import com.example.utils.PlayerColor;
+import com.example.utils.Players.PlayerColor;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.util.Pair;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 
 public class GridView {
