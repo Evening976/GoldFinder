@@ -11,7 +11,7 @@ public class Game_End implements IClientCommand{
 
     @Override
     public String run(ClientBoi boi, String params) {
-        AppClient.getController().initialize();
+        AppClient.getController().restartButtonAction(null);
         return null;
     }
 
