@@ -1,15 +1,16 @@
 package com.example.goldfinder.server.commands;
 
 import com.example.goldfinder.server.GameServer;
-import com.example.utils.Players.AbstractPlayer;
-import com.example.utils.Players.GFPlayer;
-import com.example.utils.Games.gdGame;
+import com.example.utils.games.AbstractGame;
+import com.example.utils.players.AbstractPlayer;
+import com.example.utils.games.GFGame;
 
+import java.net.InetSocketAddress;
 import java.nio.channels.SelectableChannel;
 
 public class Game_Start implements IServerCommand{
     @Override
-    public String run(SelectableChannel client, GameServer server, AbstractPlayer p, gdGame g, String[] params) {
+    public String run(SelectableChannel client, GameServer server, AbstractPlayer p, AbstractGame g, InetSocketAddress addr, String[] params) {
         StringBuilder sb = new StringBuilder();
         sb.append("GAME_START ");
         for(AbstractPlayer player : g.getPlayers()){
@@ -19,7 +20,7 @@ public class Game_Start implements IServerCommand{
     }
 
     @Override
-    public gdGame getGame() {
+    public GFGame getGame() {
         return null;
     }
 

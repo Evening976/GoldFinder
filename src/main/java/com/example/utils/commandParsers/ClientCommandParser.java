@@ -1,4 +1,4 @@
-package com.example.utils.CommandParsers;
+package com.example.utils.commandParsers;
 
 import com.example.goldfinder.client.commands.*;
 

@@ -1,33 +1,25 @@
 package com.example.goldfinder.server;
 
 import com.example.goldfinder.server.commands.IServerCommand;
-import com.example.utils.*;
-import com.example.utils.CommandParsers.ServerCommandParser;
-import com.example.utils.Games.GameMap;
-import com.example.utils.Games.gdGame;
-import com.example.utils.Players.AbstractPlayer;
-import com.example.utils.Players.CopsPlayer;
-import com.example.utils.Players.GFPlayer;
+import com.example.utils.Logger;
+import com.example.utils.commandParsers.ServerCommandParser;
+import com.example.utils.games.AbstractGame;
+import com.example.utils.games.GameMap;
+import com.example.utils.players.AbstractPlayer;
+import javafx.util.Pair;
 
 import java.io.IOException;
-import java.net.DatagramPacket;
 import java.net.InetSocketAddress;
-import java.nio.ByteBuffer;
-import java.nio.channels.DatagramChannel;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.SocketChannel;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Objects;
 
 public class GameServer extends IServer {
     private final Map<InetSocketAddress, AbstractPlayer> attachedPlayers = new HashMap<>();
     private final GameMap games;
-    int playerID = 0;
-
-    String GAMEMODE = "GOLD_FINDER";
-    private final int MAX_PLAYERS = 4;
+    private static final int MAX_PLAYERS = 4;
 
     public GameServer(int port) throws IOException {
         super(port);
@@ -48,12 +40,10 @@ public class GameServer extends IServer {
                     } else if (key.isReadable()) {
                         if (key.channel() instanceof SocketChannel) handleTCPRead(key);
                         else handleUDPRead(key);
-                    } else if (key.isWritable()) {
-                        handleBackBuffer((SocketChannel) key.channel(), getrBuffer());
                     }
                     selectedKeys.remove();
                 } catch (IOException e) {
-                    GFPlayer p = (GFPlayer) key.attachment();
+                    AbstractPlayer p = (AbstractPlayer) key.attachment();
                     if (p.getGameID() != null) games.getByID(p.getGameID()).removePlayer(p);
                     key.channel().close();
                     key.cancel();
@@ -61,6 +51,10 @@ public class GameServer extends IServer {
                 }
             }
         }
+    }
+
+    public GameMap getGames() {
+        return games;
     }
 
     private void handleAccept(SelectionKey key) throws IOException {
@@ -71,98 +65,44 @@ public class GameServer extends IServer {
 
 
     private void handleTCPRead(SelectionKey key) throws IOException {
-        if (key.attachment() == null) {
-            if(Objects.equals(GAMEMODE, "GOLD_FINDER"))
-                key.attach(new GFPlayer(key.channel(), "GFPlayer" + playerID++, ConnectionMode.TCP, 0, 0));
-            else
-                key.attach(new CopsPlayer(key.channel(), "CopsPlayer" + playerID++, ConnectionMode.TCP, 0, 0));
-        }
-
+        InetSocketAddress senderAddress = (InetSocketAddress) ((SocketChannel) key.channel()).getRemoteAddress();
         String msg = receiveTCPMessage((SocketChannel) key.channel());
         if (!msg.isEmpty()) {
-            Logger.printDebug(((AbstractPlayer) key.attachment()).getName() + "("+((AbstractPlayer) key.attachment()).getPlayerID()  + ") Received TCP message: " + msg);
-            handleCommand(key, msg);
-        }
-    }
-
-    private void handleUDPRead(SelectionKey key) throws IOException {
-        InetSocketAddress senderAddress = (InetSocketAddress) ((DatagramChannel) key.channel()).receive(getrBuffer());
-        System.out.println("Received UDP message from " + senderAddress);
-        if (!attachedPlayers.containsKey(senderAddress)) {
-            if(Objects.equals(GAMEMODE, "GOLD_FINDER"))
-                attachedPlayers.put(senderAddress, new GFPlayer(key.channel(), "Player" + playerID++, ConnectionMode.UDP, 0, 0));
-            else
-                attachedPlayers.put(senderAddress, new CopsPlayer(key.channel(), "Player" + playerID++, ConnectionMode.UDP, 0, 0));
-        }
-        key.attach(attachedPlayers.get(senderAddress));
-
-        String msg = receiveUDPMessage(key);
-        System.out.println("Received UDP message: " + msg);
-        if (!msg.isEmpty()) {
-            Logger.printDebug(((AbstractPlayer) key.attachment()).getName() + " Received UDP message: " + msg);
-            SelectionKey k = handleCommand(key, msg);
+            SelectionKey k = handleCommands(key, msg, senderAddress);
             attachedPlayers.put(senderAddress, (AbstractPlayer) k.attachment());
         }
     }
 
-    private String receiveUDPMessage(SelectionKey key) {
-        ByteBuffer buffer = ByteBuffer.allocate(1024);
-        buffer.clear();
-        try {
-            ((DatagramChannel) key.channel()).receive(buffer);
-        } catch (IOException e) {
-            e.printStackTrace();
+    private void handleUDPRead(SelectionKey key) throws IOException {
+        Pair<InetSocketAddress, String> messageandIp = receiveUDPMessage(key);
+        String msg = messageandIp.getValue();
+        InetSocketAddress senderAddress = messageandIp.getKey();
+
+        if (attachedPlayers.containsKey(senderAddress)) {
+            key.attach(attachedPlayers.get(senderAddress));
         }
-        buffer.flip();
-        byte[] receivedBytes = new byte[buffer.remaining()];
-        buffer.get(receivedBytes);
-        return new String(receivedBytes);
+
+        if (!msg.isEmpty()) {
+            SelectionKey k = handleCommands(key, msg, senderAddress);
+            attachedPlayers.put(senderAddress, (AbstractPlayer) k.attachment());
+        }
     }
 
-    private synchronized int sendUDPMessage(SelectionKey key, String message) throws IOException {
-        ByteBuffer buffer = ByteBuffer.allocate(1024);
-        buffer.clear();
-        buffer.put(message.getBytes());
-        buffer.flip();
-        return ((DatagramChannel) key.channel()).send(buffer, ((DatagramPacket) key.attachment()).getSocketAddress());
-    }
-
-    private SelectionKey handleCommand(SelectionKey key, String msg) {
+    private SelectionKey handleCommands(SelectionKey key, String msg, InetSocketAddress... senderAddress) {
         AbstractPlayer player = (AbstractPlayer) key.attachment();
-        gdGame g = null;
-
-        if (player.getGameID() != null)
-            g = games.getByID(player.getGameID());
+        AbstractGame g = player == null ? null : games.getByID(player.getGameID());
 
         IServerCommand currentCommand = ServerCommandParser.parseCommand(msg);
         if (currentCommand != null) {
-            if (g == null)
-                sendMessage(key.channel(), getrBuffer(), currentCommand.run(key.channel(), this, player, null, msg.split(" ")));
-            else
-                sendMessage(key.channel(), getrBuffer(), currentCommand.run(key.channel(), this, player, games.getByID(player.getGameID()), msg.split(" ")));
-
+            String response = currentCommand.run(key.channel(), this, player, g, senderAddress[0], msg.split(" "));
             player = currentCommand.getPlayer();
             games.setGame(player.getGameID(), currentCommand.getGame());
+
+            sendMessage(key.channel(), response, player.getAddress());
 
             System.out.println("Game server data : " + player + " game : " + games.getByID(player.getGameID()));
         }
         key.attach(player);
         return key;
-    }
-
-    private void handleBackBuffer(SocketChannel client, ByteBuffer buffer) throws IOException {
-        if (backBuffer.isEmpty()) {
-            return;
-        }
-
-        Logger.printDebug("Sending message w/ backbuffer");
-        for (String message : backBuffer) {
-            sendMessage(client, buffer, message);
-        }
-        backBuffer.clear();
-    }
-
-    public GameMap getGames() {
-        return games;
     }
 }

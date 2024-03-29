@@ -1,22 +1,20 @@
-package com.example.utils.Players;
+package com.example.utils.players;
 
-import com.example.utils.ConnectionMode;
-
+import java.net.SocketAddress;
 import java.nio.channels.SelectableChannel;
 
 public abstract class AbstractPlayer {
     Short gameID = null;
     short id;
     String name;
-    ConnectionMode connectionMode;
+    SocketAddress address;
     SelectableChannel client;
     int score;
     int xPos, yPos;
 
-    public AbstractPlayer(SelectableChannel client, String name, ConnectionMode connectionMode, int xPos, int yPos) {
-        this.client = client;
+    public AbstractPlayer(SelectableChannel client, String name, int xPos, int yPos) {
         this.name = name;
-        this.connectionMode = connectionMode;
+        this.client = client;
         score = 0;
         this.xPos = xPos;
         this.yPos = yPos;
@@ -31,8 +29,12 @@ public abstract class AbstractPlayer {
         return name;
     }
 
-    public ConnectionMode getConnectionMode() {
-        return connectionMode;
+    public void setAddress(SocketAddress address) {
+        this.address = address;
+    }
+
+    public SocketAddress getAddress() {
+        return address;
     }
 
     public void attachToGame(Short gameID, short id) {

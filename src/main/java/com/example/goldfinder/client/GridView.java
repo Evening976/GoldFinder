@@ -1,6 +1,6 @@
 package com.example.goldfinder.client;
 
-import com.example.utils.Players.PlayerColor;
+import com.example.utils.players.PlayerColor;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.util.Pair;
@@ -68,12 +68,6 @@ public class GridView {
         return (int) (canvas.getHeight() / rowCount);
     }
 
-
-    public void setPlayerPositions(Pair<Integer, Integer>... position) {
-        for(Pair<Integer, Integer> p : position){
-            playerPositions.put(p, PlayerColor.values()[playerPositions.size() + 1]);
-        }
-    }
     public void emptyPlayers(){
         playerPositions.clear();
     }
