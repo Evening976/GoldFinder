@@ -3,6 +3,7 @@ package com.example.utils.games;
 import com.example.goldfinder.server.Grid;
 import com.example.utils.players.AbstractPlayer;
 import com.example.utils.players.GFPlayer;
+import javafx.application.Platform;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -99,5 +100,11 @@ public abstract class AbstractGame {
     }
     public List<AbstractPlayer> getPlayers() {
         return players;
+    }
+
+    public void restartGame(){
+        for (AbstractPlayer player : getPlayers()){
+            System.out.println("Restarting game");
+        }
     }
 }

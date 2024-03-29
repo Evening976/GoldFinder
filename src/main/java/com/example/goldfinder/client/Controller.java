@@ -16,6 +16,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 
+import static java.lang.System.exit;
+
 public class Controller {
 
     @FXML
@@ -56,7 +58,6 @@ public class Controller {
         initTimeline();
     }
 
-
     private void initTimeline(){
         Timeline timeline = new Timeline();
         KeyFrame kf = new KeyFrame(javafx.util.Duration.seconds(0.1), this::updateClient);
@@ -94,11 +95,21 @@ public class Controller {
     }
 
     public void restartButtonAction(ActionEvent actionEvent) {
-        //TODO:Restart game on this press
-        String command = debugCommand.getText();
-        if (!command.isEmpty()) {
-            client.sendMessage(command);
-        }
+        client.clean();
+
+        this.gridView = new GridView(gridCanvas, COLUMN_COUNT, ROW_COUNT);
+        client = new ClientBoi();
+
+        score.setText("0");
+
+        gridView.repaint(hParallax, vParallax);
+
+        column = COLUMN_COUNT / 2;
+        row = ROW_COUNT / 2;
+
+        gridView.paintPlayer(column, row);
+
+        connectionMode.setDisable(false);
     }
 
     public void updateClient(ActionEvent actionEvent) {
@@ -129,6 +140,7 @@ public class Controller {
         System.out.println("Exiting...");
         Platform.exit();
     }
+
 
 }
 

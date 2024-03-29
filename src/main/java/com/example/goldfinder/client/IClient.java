@@ -41,7 +41,6 @@ public abstract class IClient extends ICommon {
         try {
             if (tcpSocket != null) tcpSocket.close();
             if (udpSocket != null) udpSocket.close();
-            exit(0);
         } catch (Exception e) {
             e.printStackTrace();
         }

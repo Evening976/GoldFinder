@@ -20,7 +20,7 @@
          <Label fx:id="gameTypelabel" alignment="CENTER" contentDisplay="TEXT_ONLY" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="24.0" prefWidth="200.0" text="Solo/Multiplayer" />
          <ChoiceBox fx:id="gameType" prefWidth="150.0" />
          <Separator prefWidth="200.0" />
-         <Button mnemonicParsing="false" maxHeight="-Infinity" maxWidth="-Infinity" prefWidth="200.0" prefHeight="24.0" styleClass="button" onAction="#exitApplication" text="Exit" />
+         <Button maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" onAction="#exitApplication" prefHeight="24.0" prefWidth="200.0" styleClass="button" text="Exit" />
         </VBox>
         <Canvas fx:id="gridCanvas" height="900.0" width="900.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
         </Canvas>

@@ -1,8 +1,11 @@
 package com.example.goldfinder.client;
 
+import com.example.goldfinder.client.commands.Game_End;
 import com.example.goldfinder.client.commands.IClientCommand;
 import com.example.goldfinder.client.commands.SurroundingClient;
 import com.example.utils.commandParsers.ClientCommandParser;
+
+import static java.lang.System.exit;
 
 public class ClientBoi extends IClient {
     private boolean isConnected = false;
@@ -36,6 +39,8 @@ public class ClientBoi extends IClient {
             }
         }
     }
+
+
 
     public void sendMessage(String msg) {
         sendMessage(mode, msg);
