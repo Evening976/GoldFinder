@@ -2,6 +2,7 @@ module com.example.goldfinder {
     requires javafx.controls;
     requires javafx.fxml;
     requires javafx.base;
+    requires java.desktop;
 
     opens com.example.goldfinder.client to javafx.fxml;
     exports com.example.goldfinder.client;

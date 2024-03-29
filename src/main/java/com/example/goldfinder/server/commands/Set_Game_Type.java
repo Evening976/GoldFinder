@@ -1,16 +1,17 @@
 package com.example.goldfinder.server.commands;
 
 import com.example.goldfinder.server.GameServer;
-import com.example.utils.games.gdGame;
+import com.example.utils.games.AbstractGame;
+import com.example.utils.games.GFGame;
 import com.example.utils.players.AbstractPlayer;
 
 import java.nio.channels.SelectableChannel;
 
 public class Set_Game_Type implements IServerCommand{
     AbstractPlayer _player;
-    gdGame _game;
+    GFGame _game;
     @Override
-    public String run(SelectableChannel client, GameServer server, AbstractPlayer p, gdGame g, String[] params) {
+    public String run(SelectableChannel client, GameServer server, AbstractPlayer p, AbstractGame g, String[] params) {
         return null;
         //TO DO
 
@@ -18,7 +19,7 @@ public class Set_Game_Type implements IServerCommand{
     }
 
     @Override
-    public gdGame getGame() {
+    public AbstractGame getGame() {
         return null;
         //TO DO
     }

@@ -2,7 +2,6 @@ package com.example.goldfinder.client;
 
 import com.example.goldfinder.client.commands.Client_Join;
 import com.example.goldfinder.client.commands.IClientCommand;
-import com.example.goldfinder.client.commands.Move_Command;
 import com.example.goldfinder.server.AppServer;
 import com.example.utils.ConnectionMode;
 import com.example.utils.GameType;
@@ -53,7 +52,7 @@ public class Controller {
         gridView.paintPlayer(column, row);
 
         initConnectionMode();
-        initGameType();
+        initGameMode();
         initTimeline();
     }
 
@@ -72,14 +71,9 @@ public class Controller {
         connectionMode.setValue("TCP");
     }
 
-    private void initGameType(){
-        gameType.getItems().add("SOLO");
-        gameType.getItems().add("MULTIPLAYER");
-        gameType.setValue("MULTIPLAYER");
-    }
-
     private void initGameMode(){
         gameType.getItems().add("GOLD_FINDER");
+        gameType.getItems().add("GOLD_FINDER_SOLO");
         gameType.getItems().add("COPS_AND_ROBBERS");
         gameType.setValue("GOLD_FINDER");
     }
@@ -91,8 +85,7 @@ public class Controller {
                 client.changeConnection(ConnectionMode.valueOf(connectionMode.getValue()));
                 client.setGameType(GameType.valueOf(gameType.getValue()));
                 client.connect();
-                String z = client.sendCommand(new Client_Join(), name);
-                String r = client.sendCommand(new Client_Join(), name);
+                String r = client.sendCommand(new Client_Join(), name + GameType.getGameType(gameType.getValue()));
                 System.out.println("Response to game_join : " + r);
                 playerName.setDisable(true);
                 connectionMode.setDisable(true);
@@ -123,43 +116,8 @@ public class Controller {
 
     public void handleMove(KeyEvent keyEvent) {
         if (!client.isPlaying()) return;
-        String resp = "";
-        switch (keyEvent.getCode()) {
-            case Z -> {
-                if ((resp = client.sendCommand(new Move_Command(), "UP")).startsWith("VALID_MOVE")) {
-                    row = Math.max(0, row - 1);
-                    vParallax++;
-                    gridView.emptyPlayers();
-                }
-            }
-            case Q -> {
-                if ((resp = client.sendCommand(new Move_Command(), "LEFT")).startsWith("VALID_MOVE")){
-                    column = Math.max(0, column - 1);
-                    hParallax++;
-                    gridView.emptyPlayers();
-                }
-            }
-            case S -> {
-                if ((resp = client.sendCommand(new Move_Command(), "DOWN")).startsWith("VALID_MOVE")){
-                    row = Math.min(ROW_COUNT - 1, row + 1);
-                    vParallax--;
-                    gridView.emptyPlayers();
 
-                }
-            }
-            case D -> {
-                if ((resp = client.sendCommand(new Move_Command(), "RIGHT")).startsWith("VALID_MOVE")) {
-                    column = Math.min(COLUMN_COUNT - 1, column + 1);
-                    hParallax--;
-                    gridView.emptyPlayers();
-
-                }
-            }
-            default -> {
-                return;
-            }
-        }
-        if (resp.endsWith("GOLD")) {
+        if (GridViewUpdater.handleKeyEvent(keyEvent, gridView, this, client).endsWith("GOLD")) {
             gridView.goldAt[column][row] = false;
             score.setText(String.valueOf(Integer.parseInt(score.getText()) + 1));
         }

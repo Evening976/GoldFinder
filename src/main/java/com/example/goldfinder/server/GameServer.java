@@ -1,13 +1,11 @@
 package com.example.goldfinder.server;
 
 import com.example.goldfinder.server.commands.IServerCommand;
-import com.example.utils.commandParsers.ServerCommandParser;
-import com.example.utils.games.GameMap;
-import com.example.utils.games.gdGame;
 import com.example.utils.Logger;
+import com.example.utils.commandParsers.ServerCommandParser;
+import com.example.utils.games.AbstractGame;
+import com.example.utils.games.GameMap;
 import com.example.utils.players.AbstractPlayer;
-import com.example.utils.players.CopsPlayer;
-import com.example.utils.players.GFPlayer;
 import javafx.util.Pair;
 
 import java.io.IOException;
@@ -17,7 +15,6 @@ import java.nio.channels.SocketChannel;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Objects;
 
 public class GameServer extends IServer {
     private final Map<InetSocketAddress, AbstractPlayer> attachedPlayers = new HashMap<>();
@@ -48,7 +45,7 @@ public class GameServer extends IServer {
                     }
                     selectedKeys.remove();
                 } catch (IOException e) {
-                    GFPlayer p = (GFPlayer) key.attachment();
+                    AbstractPlayer p = (AbstractPlayer) key.attachment();
                     if (p.getGameID() != null) games.getByID(p.getGameID()).removePlayer(p);
                     key.channel().close();
                     key.cancel();
@@ -71,19 +68,19 @@ public class GameServer extends IServer {
 
     private void handleTCPRead(SelectionKey key) throws IOException {
         InetSocketAddress senderAddress = (InetSocketAddress) ((SocketChannel) key.channel()).getRemoteAddress();
-        if (!attachedPlayers.containsKey(senderAddress)) {
-            if (Objects.equals(GAMEMODE, "GOLD_FINDER"))
-                attachedPlayers.put(senderAddress, new GFPlayer(key.channel(), "Player" + playerID++, senderAddress, 0, 0));
-            else
-                attachedPlayers.put(senderAddress, new CopsPlayer(key.channel(), "Player" + playerID++, senderAddress, 0, 0));
-        }
-
-        if (key.attachment() == null) {
-            if (Objects.equals(GAMEMODE, "GOLD_FINDER"))
-                key.attach(new GFPlayer(key.channel(), "GFPlayer" + playerID++, senderAddress, 0, 0));
-            else
-                key.attach(new CopsPlayer(key.channel(), "CopsPlayer" + playerID++, senderAddress, 0, 0));
-        }
+//        if (!attachedPlayers.containsKey(senderAddress)) {
+//            if (Objects.equals(GAMEMODE, "GOLD_FINDER"))
+//                attachedPlayers.put(senderAddress, new GFPlayer(key.channel(), "Player" + playerID++, senderAddress, 0, 0));
+//            else
+//                attachedPlayers.put(senderAddress, new CRPlayer(key.channel(), "Player" + playerID++, senderAddress, 0, 0));
+//        }
+//
+//        if (key.attachment() == null) {
+//            if (Objects.equals(GAMEMODE, "GOLD_FINDER"))
+//                key.attach(new GFPlayer(key.channel(), "GFPlayer" + playerID++, senderAddress, 0, 0));
+//            else
+//                key.attach(new CRPlayer(key.channel(), "CopsPlayer" + playerID++, senderAddress, 0, 0));
+//        }
 
         String msg = receiveTCPMessage((SocketChannel) key.channel());
         if (!msg.isEmpty()) {
@@ -98,10 +95,7 @@ public class GameServer extends IServer {
         InetSocketAddress senderAddress = messageandIp.getKey();
 
         if (!attachedPlayers.containsKey(senderAddress)) {
-            if (Objects.equals(GAMEMODE, "GOLD_FINDER"))
-                attachedPlayers.put(senderAddress, new GFPlayer(key.channel(), "Player" + playerID++, senderAddress, 0, 0));
-            else
-                attachedPlayers.put(senderAddress, new CopsPlayer(key.channel(), "Player" + playerID++, senderAddress, 0, 0));
+            attachedPlayers.put(senderAddress, null);
         }
         key.attach(attachedPlayers.get(senderAddress));
 
@@ -113,20 +107,14 @@ public class GameServer extends IServer {
 
     private SelectionKey handleCommands(SelectionKey key, String msg) {
         AbstractPlayer player = (AbstractPlayer) key.attachment();
-        gdGame g = null;
-
-        if (player.getGameID() != null)
-            g = games.getByID(player.getGameID());
+        AbstractGame g = player == null ? null : games.getByID(player.getGameID());
 
         IServerCommand currentCommand = ServerCommandParser.parseCommand(msg);
         if (currentCommand != null) {
-            if (g == null)
-                sendMessage(key.channel(), currentCommand.run(key.channel(), this, player, null, msg.split(" ")), player.getAddress());
-            else
-                sendMessage(key.channel(), currentCommand.run(key.channel(), this, player, games.getByID(player.getGameID()), msg.split(" ")), player.getAddress());
-
+            String response = currentCommand.run(key.channel(), this, player, g, msg.split(" "));
             player = currentCommand.getPlayer();
             games.setGame(player.getGameID(), currentCommand.getGame());
+            sendMessage(key.channel(), response, player.getAddress());
 
             System.out.println("Game server data : " + player + " game : " + games.getByID(player.getGameID()));
         }

@@ -1,18 +1,17 @@
 package com.example.goldfinder.server.commands;
 
-import com.example.utils.players.AbstractPlayer;
 import com.example.goldfinder.server.GameServer;
-import com.example.utils.games.gdGame;
+import com.example.utils.games.AbstractGame;
+import com.example.utils.players.AbstractPlayer;
 
 import java.nio.channels.SelectableChannel;
 
 public class Surrounding implements IServerCommand {
-
     AbstractPlayer player;
-    gdGame game;
+    AbstractGame game;
 
     @Override
-    public String run(SelectableChannel client, GameServer server, AbstractPlayer p, gdGame g, String[] params) {
+    public String run(SelectableChannel client, GameServer server, AbstractPlayer p, AbstractGame g, String[] params) {
         this.player = p;
         this.game = g;
         System.out.println("Surrounding " + p + ": " + game.getSurrounding(p.getxPos(),p.getyPos()));
@@ -20,7 +19,7 @@ public class Surrounding implements IServerCommand {
     }
 
     @Override
-    public gdGame getGame() {
+    public AbstractGame getGame() {
         return game;
     }
 

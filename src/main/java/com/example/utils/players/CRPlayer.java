@@ -1,14 +1,13 @@
 package com.example.utils.players;
 
-import java.net.SocketAddress;
 import java.nio.channels.SelectableChannel;
 
-public class CopsPlayer extends AbstractPlayer {
+public class CRPlayer extends AbstractPlayer {
 
     boolean isCop;
 
-    public CopsPlayer(SelectableChannel client, String name, SocketAddress address, int xPos, int yPos){
-        super(client, name, address, xPos, yPos);
+    public CRPlayer(SelectableChannel client,String name, int xPos, int yPos){
+        super(client, name, xPos, yPos);
     }
 
     public void setCop(boolean isCop){

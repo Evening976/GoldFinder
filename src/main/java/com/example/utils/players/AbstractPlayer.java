@@ -7,15 +7,14 @@ public abstract class AbstractPlayer {
     Short gameID = null;
     short id;
     String name;
-    final SocketAddress address;
+    SocketAddress address;
     SelectableChannel client;
     int score;
     int xPos, yPos;
 
-    public AbstractPlayer(SelectableChannel client, String name, SocketAddress address, int xPos, int yPos) {
-        this.client = client;
+    public AbstractPlayer(SelectableChannel client, String name, int xPos, int yPos) {
         this.name = name;
-        this.address = address;
+        this.client = client;
         score = 0;
         this.xPos = xPos;
         this.yPos = yPos;
@@ -28,6 +27,10 @@ public abstract class AbstractPlayer {
 
     public String getName() {
         return name;
+    }
+
+    public void setAddress(SocketAddress address) {
+        this.address = address;
     }
 
     public SocketAddress getAddress() {

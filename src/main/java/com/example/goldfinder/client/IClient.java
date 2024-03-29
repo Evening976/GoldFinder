@@ -14,7 +14,7 @@ import static java.lang.System.exit;
 
 public abstract class IClient extends ICommon {
     ConnectionMode mode = ConnectionMode.TCP;
-    boolean isMultiplayer = true;
+    GameType gameType = GameType.GOLD_FINDER_SOLO;
 
     public void connect() {
         Logger.printYellow("Trying to connect to server...");
@@ -33,8 +33,7 @@ public abstract class IClient extends ICommon {
     }
 
     public void setGameType(GameType gameType) {
-        if (gameType == GameType.SINGLEPLAYER) isMultiplayer = false;
-        else isMultiplayer = true;
+        this.gameType = gameType;
     }
     public abstract String updateSurrounding(int xpos, int ypos) throws IOException, InterruptedException;
 

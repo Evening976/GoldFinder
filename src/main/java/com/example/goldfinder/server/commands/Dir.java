@@ -1,18 +1,17 @@
 package com.example.goldfinder.server.commands;
 
-import com.example.utils.players.AbstractPlayer;
 import com.example.goldfinder.server.GameServer;
-import com.example.utils.games.gdGame;
+import com.example.utils.games.AbstractGame;
+import com.example.utils.players.AbstractPlayer;
 import com.example.utils.players.GFPlayer;
 
 import java.nio.channels.SelectableChannel;
 
 public class Dir implements IServerCommand {
     AbstractPlayer player;
-    gdGame game;
-
+    AbstractGame game;
     @Override
-    public String run(SelectableChannel client, GameServer server, AbstractPlayer p, gdGame g, String[] params) {
+    public String run(SelectableChannel client, GameServer server, AbstractPlayer p, AbstractGame g, String[] params) {
         this.player = p;
         this.game = g;
         String dir = "INVALID_MOVE";
@@ -23,7 +22,6 @@ public class Dir implements IServerCommand {
                 if (dir.contains("EMPTY") || dir.contains("GOLD")) {
                     game.movePlayer(p, 0, -1);
                     if (dir.contains("GOLD")) {
-                        System.out.println("COLLECTED GOLD");
                         game.collectGold((GFPlayer) p);
                     }
                 }
@@ -33,7 +31,6 @@ public class Dir implements IServerCommand {
                 if (dir.contains("EMPTY") || dir.contains("GOLD")) {
                     game.movePlayer(p, 0, 1);
                     if (dir.contains("GOLD")) {
-                        System.out.println("COLLECTED GOLD");
                         game.collectGold((GFPlayer) p);
                     }
                 }
@@ -57,7 +54,6 @@ public class Dir implements IServerCommand {
                 }
             }
         }
-        ;
 
         System.out.println(dir);
 
@@ -70,7 +66,7 @@ public class Dir implements IServerCommand {
     }
 
     @Override
-    public gdGame getGame() {
+    public AbstractGame getGame() {
         return game;
     }
 

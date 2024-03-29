@@ -2,18 +2,19 @@ package com.example.utils.games;
 
 import com.example.goldfinder.server.Grid;
 import com.example.utils.players.AbstractPlayer;
+import com.example.utils.players.GFPlayer;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public abstract class Game {
+public abstract class AbstractGame {
     boolean isRunning = false;
     int maxPlayers;
     List<AbstractPlayer> players;
     Grid grid;
 
-    public Game(int maxPlayers) {
+    public AbstractGame(int maxPlayers) {
         this.maxPlayers = maxPlayers;
         this.players = new ArrayList<>();
         this.grid = new Grid(20, 20, new Random());
@@ -23,6 +24,7 @@ public abstract class Game {
         if (!isRunning) {
             players.add(player);
             spawnPlayer(player);
+            System.out.println("spawned");
             System.out.println("Player added to game " + this + " " + players.size() + "/" + maxPlayers);
             if (players.size() == maxPlayers) {
                 isRunning = true;
@@ -34,55 +36,34 @@ public abstract class Game {
         return "up:" + getUp(xpos, ypos) + "down:" + getDown(xpos, ypos) + "left:" + getLeft(xpos, ypos) + "right:" + getRight(xpos, ypos);
     }
 
-    private boolean isFree(int xpos, int ypos) {
-        boolean p = !grid.hasGold(xpos, ypos) && !grid.downWall(xpos, ypos) && !grid.upWall(xpos, ypos) && !grid.leftWall(xpos, ypos) && !grid.rightWall(xpos, ypos);
+    protected boolean isFree(int xpos, int ypos){
+        System.out.println("isFree");
+        boolean a = !grid.downWall(xpos, ypos);
+        boolean b = !grid.upWall(xpos, ypos);
+        boolean c = !grid.leftWall(xpos, ypos);
+        boolean d = !grid.rightWall(xpos, ypos);
+        System.out.println("a: " + a + " b: " + b + " c: " + c + " d: " + d);
+        boolean p =  a && b && c && d;
         for (AbstractPlayer player : players) {
             if (player.getxPos() == xpos && player.getyPos() == ypos) return false;
         }
         return p;
     }
 
-    public String getUp(int xpos, int ypos) {
-        if (grid.upWall(xpos, ypos) || ypos == 0) return "WALL ";
-        for (AbstractPlayer p : players) {
-            if (p.getxPos() == xpos && p.getyPos() == ypos - 1) return "PLAYER" + players.indexOf(p) + " ";
-        }
-        if (grid.hasGold(xpos, ypos - 1)) return "GOLD ";
-        return "EMPTY ";
-    }
+    public abstract String getUp(int xpos, int ypos);
 
-    public String getDown(int xpos, int ypos) {
-        if (grid.downWall(xpos, ypos) || ypos == grid.getRowCount()) return "WALL ";
-        for (AbstractPlayer p : players) {
-            if (p.getxPos() == xpos && p.getyPos() == ypos + 1) return "PLAYER" + players.indexOf(p) + " ";
-        }
-        if (grid.hasGold(xpos, ypos + 1)) return "GOLD ";
-        return "EMPTY ";
-    }
+    public abstract String getDown(int xpos, int ypos);
 
-    public String getLeft(int xpos, int ypos) {
-        if (grid.leftWall(xpos, ypos) || xpos == 0) return "WALL ";
-        for (AbstractPlayer p : players) {
-            if (p.getxPos() == xpos - 1 && p.getyPos() == ypos) return "PLAYER" + players.indexOf(p) + " ";
-        }
-        if (grid.hasGold(xpos - 1, ypos)) return "GOLD ";
-        return "EMPTY ";
-    }
+    public abstract String getLeft(int xpos, int ypos);
 
-    public String getRight(int xpos, int ypos) {
-        if (grid.rightWall(xpos, ypos) || xpos == grid.getColumnCount()) return "WALL ";
-        for (AbstractPlayer p : players) {
-            if (p.getxPos() == xpos + 1 && p.getyPos() == ypos) return "PLAYER" + players.indexOf(p) + " ";
-        }
-        if (grid.hasGold(xpos + 1, ypos)) return "GOLD ";
-        return "EMPTY ";
-    }
+    public abstract String getRight(int xpos, int ypos);
 
     private void spawnPlayer(AbstractPlayer p) {
         while (true) {
             int xpos = (int) (Math.random() * grid.getColumnCount());
             int ypos = (int) (Math.random() * grid.getRowCount());
-            if (isFree(xpos, ypos)) {
+            boolean isFree = isFree(xpos, ypos);
+            if (isFree) {
                 p.move(xpos, ypos);
                 break;
             }
@@ -91,7 +72,6 @@ public abstract class Game {
 
     public void movePlayer(AbstractPlayer p, int xpos, int ypos) {
         players.get(players.indexOf(p)).move(xpos, ypos);
-        System.out.println("Player moved to " + p);
     }
 
     public void removePlayer(AbstractPlayer player) {
@@ -102,8 +82,19 @@ public abstract class Game {
         return players.get(players.indexOf(p));
     }
 
+    public void collectGold(GFPlayer p) {
+        if (grid.hasGold(p.getxPos(), p.getyPos())) {
+            p.collectGold();
+            grid.removeGold(p.getxPos(), p.getyPos());
+        }
+    }
+
     public boolean isRunning() {
         return isRunning;
+    }
+
+    public boolean isSolo() {
+        return maxPlayers == 1;
     }
 
     @Override
