@@ -7,25 +7,20 @@ import com.example.utils.players.AbstractPlayer;
 import java.net.InetSocketAddress;
 import java.nio.channels.SelectableChannel;
 
-public class Surrounding implements IServerCommand {
-    AbstractPlayer player;
-    AbstractGame game;
-
+public class Game_End implements IServerCommand{
     @Override
     public String run(SelectableChannel client, GameServer server, AbstractPlayer p, AbstractGame g, InetSocketAddress addr, String[] params) {
-        this.player = p;
-        this.game = g;
-        //System.out.println("Surrounding " + p + ": " + game.getSurrounding(p.getxPos(),p.getyPos()));
-        return game.getSurrounding(p.getxPos(),p.getyPos());
+
+        return "GAME_END";
     }
 
     @Override
     public AbstractGame getGame() {
-        return game;
+        return null;
     }
 
     @Override
     public AbstractPlayer getPlayer() {
-        return player;
+        return null;
     }
 }

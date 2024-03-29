@@ -30,7 +30,12 @@ public class GameMap {
     }
 
     public Pair<Short, AbstractGame> getAvailable(AbstractGame game, boolean solo) {
+        System.out.println(games.size());
         for (Short key : games.keySet()) {
+            if(games.get(key).hasEnded()){
+                games.remove(key);
+                continue;
+            }
             if (!games.get(key).isRunning() && games.get(key).isSolo() == solo && game.getClass() == games.get(key).getClass()) {
                 return new Pair<>(key, games.get(key));
             }
@@ -49,6 +54,10 @@ public class GameMap {
 
         System.out.println("Game created with ID " + key);
         return new Pair<>(key, games.get(key));
+    }
+
+    public void setGameEnded(short gameID) {
+        games.remove(gameID);
     }
 
     public void setGame(short gameID, AbstractGame game) {

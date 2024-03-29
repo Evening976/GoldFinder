@@ -15,8 +15,8 @@ public class GridView {
 
     public GridView(Canvas canvas, int columnCount, int rowCount) {
         this.canvas = canvas;
-        this.columnCount = columnCount;
-        this.rowCount = rowCount;
+        this.columnCount = columnCount += 1;
+        this.rowCount = rowCount += 1;
         goldAt = new boolean[columnCount][rowCount];
         vWall = new boolean[columnCount + 1][rowCount];
         hWall = new boolean[columnCount][rowCount + 1];
@@ -24,9 +24,9 @@ public class GridView {
 
     public void repaint(int hParallax, int vParallax) {
         canvas.getGraphicsContext2D().clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        for(Pair<Integer, Integer> player : playerPositions.keySet()){
+        for (Pair<Integer, Integer> player : playerPositions.keySet()) {
             canvas.getGraphicsContext2D().setFill(playerPositions.get(player).getColor());
-            canvas.getGraphicsContext2D().fillRect((player.getKey() + hParallax)* cellWidth(), (player.getValue() + vParallax) * cellHeight(), cellWidth(), cellHeight());
+            canvas.getGraphicsContext2D().fillRect((player.getKey() + hParallax) * cellWidth(), (player.getValue() + vParallax) * cellHeight(), cellWidth(), cellHeight());
         }
         for (int column = 0; column < columnCount; column++)
             for (int row = 0; row < rowCount; row++)
@@ -35,13 +35,16 @@ public class GridView {
                     canvas.getGraphicsContext2D().fillOval((column + hParallax) * cellWidth(), (row + vParallax) * cellHeight(), cellWidth(), cellHeight());
                 }
         canvas.getGraphicsContext2D().setStroke(Color.WHITE);
-        for (int column = 0; column < columnCount; column++)
+        for (int column = 0; column < columnCount; column++) {
             for (int row = 0; row < rowCount; row++) {
-                if (vWall[column][row])
+                if (vWall[column][row]) {
                     canvas.getGraphicsContext2D().strokeLine((column + hParallax) * cellWidth(), (row + vParallax) * cellHeight(), (column + hParallax) * cellWidth(), (vParallax + row + 1) * cellHeight());
-                if (hWall[column][row])
+                }
+                if (hWall[column][row]) {
                     canvas.getGraphicsContext2D().strokeLine((column + hParallax) * cellWidth(), (row + vParallax) * cellHeight(), (hParallax + column + 1) * cellWidth(), (row + vParallax) * cellHeight());
+                }
             }
+        }
 
     }
 
@@ -51,13 +54,18 @@ public class GridView {
     }
 
     public void setVWall(int col, int row) {
-        if (col >= 0 && col < columnCount + 1 && row >= 0 && row < rowCount)
+        if (col >= 0 && col < columnCount + 1 && row >= 0 && row < rowCount) {
             vWall[col][row] = true;
+        }
     }
 
     public void setHWall(int col, int row) {
-        if (col >= 0 && col < columnCount && row >= 0 && row < rowCount + 1)
+        System.out.println("Setting wall at " + col + " " + row);
+        System.out.println("Column count: " + columnCount + " Row count: " + rowCount);
+        if (col >= 0 && col < columnCount && row >= 0 && row < rowCount + 1) {
             hWall[col][row] = true;
+            System.out.println("Wall set at " + col + " " + row);
+        }
     }
 
     private int cellWidth() {
@@ -68,13 +76,13 @@ public class GridView {
         return (int) (canvas.getHeight() / rowCount);
     }
 
-    public void emptyPlayers(){
+    public void emptyPlayers() {
         playerPositions.clear();
     }
 
     public void setEmpty(int col, int row) {
         goldAt[col][row] = false;
-        if(playerPositions.get(new Pair<>(col, row)) != null){
+        if (playerPositions.get(new Pair<>(col, row)) != null) {
             playerPositions.remove(new Pair<>(col, row));
         }
     }

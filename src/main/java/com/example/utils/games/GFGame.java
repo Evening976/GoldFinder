@@ -3,6 +3,8 @@ package com.example.utils.games;
 import com.example.utils.players.AbstractPlayer;
 
 public class GFGame extends AbstractGame {
+    int maxCells = 0;
+    boolean[][] discoveredCells;
     boolean isSolo = false;
     public GFGame(){
         super(1);
@@ -60,6 +62,27 @@ public class GFGame extends AbstractGame {
     public boolean isSolo() {
         return isSolo;
     }
+
+    public void setDiscoveredCell(int xpos, int ypos){
+        if(discoveredCells == null) {
+            discoveredCells = new boolean[grid.getColumnCount()][grid.getRowCount()];
+        }
+        if(!discoveredCells[xpos][ypos]) {
+            discoveredCells[xpos][ypos] = true;
+            maxCells++;
+        }
+    }
+
+
+    public int getMaxCells() {
+        return grid.getColumnCount() * grid.getRowCount();
+    }
+
+    public int getDiscoveredCells() {
+        return maxCells;
+    }
+
+
     @Override
     public String toString() {
         return "Goldfinder game with " + players.size() + " players";

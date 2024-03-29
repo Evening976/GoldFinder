@@ -58,7 +58,7 @@ public class Controller {
         initTimeline();
     }
 
-    private void initTimeline(){
+    private void initTimeline() {
         Timeline timeline = new Timeline();
         KeyFrame kf = new KeyFrame(javafx.util.Duration.seconds(0.1), this::updateClient);
         timeline.setCycleCount(Timeline.INDEFINITE);
@@ -66,13 +66,13 @@ public class Controller {
         timeline.play();
     }
 
-    private void initConnectionMode(){
+    private void initConnectionMode() {
         connectionMode.getItems().add("TCP");
         connectionMode.getItems().add("UDP");
         connectionMode.setValue("TCP");
     }
 
-    private void initGameMode(){
+    private void initGameMode() {
         gameType.getItems().add("GOLD_FINDER");
         gameType.getItems().add("GOLD_FINDER_SOLO");
         gameType.getItems().add("COPS_AND_ROBBERS");
@@ -96,33 +96,31 @@ public class Controller {
 
     public void restartButtonAction(ActionEvent actionEvent) {
         client.clean();
+        score.setText("0");
+        vParallax = 0;
+        hParallax = 0;
+        column = COLUMN_COUNT / 2;
+        row = ROW_COUNT / 2;
 
         this.gridView = new GridView(gridCanvas, COLUMN_COUNT, ROW_COUNT);
         client = new ClientBoi();
 
-        score.setText("0");
-
         gridView.repaint(hParallax, vParallax);
-
-        column = COLUMN_COUNT / 2;
-        row = ROW_COUNT / 2;
-
         gridView.paintPlayer(column, row);
-
         connectionMode.setDisable(false);
     }
 
     public void updateClient(ActionEvent actionEvent) {
-        int _col = column;
-        int _row = row;
+//        int _col = column;
+//        int _row = row;
 
         IClientCommand inc_command = client.updateClient();
-        if(inc_command != null) inc_command.run(client, "");
+        if (inc_command != null) inc_command.run(client, "");
 
-        String resp = client.updateSurrounding(_col, _row);
-        GridViewUpdater.update(resp.split(" "), gridView, _row, _col);
+        String resp = client.updateSurrounding(column, row);
+        GridViewUpdater.update(resp.split(" "), gridView, row, column);
         gridView.repaint(hParallax, vParallax);
-        gridView.paintPlayer(COLUMN_COUNT/2, ROW_COUNT/2);
+        gridView.paintPlayer(COLUMN_COUNT / 2, ROW_COUNT / 2);
     }
 
     public void handleMove(KeyEvent keyEvent) {
@@ -133,7 +131,7 @@ public class Controller {
             score.setText(String.valueOf(Integer.parseInt(score.getText()) + 1));
         }
         gridView.repaint(hParallax, vParallax);
-        gridView.paintPlayer(COLUMN_COUNT/2, ROW_COUNT/2);
+        gridView.paintPlayer(COLUMN_COUNT / 2, ROW_COUNT / 2);
     }
 
     public void exitApplication() {

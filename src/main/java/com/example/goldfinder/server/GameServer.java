@@ -97,9 +97,7 @@ public class GameServer extends IServer {
             String response = currentCommand.run(key.channel(), this, player, g, senderAddress[0], msg.split(" "));
             player = currentCommand.getPlayer();
             games.setGame(player.getGameID(), currentCommand.getGame());
-
             sendMessage(key.channel(), response, player.getAddress());
-
             System.out.println("Game server data : " + player + " game : " + games.getByID(player.getGameID()));
         }
         key.attach(player);

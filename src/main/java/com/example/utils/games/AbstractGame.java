@@ -1,5 +1,6 @@
 package com.example.utils.games;
 
+import com.example.goldfinder.server.AppServer;
 import com.example.goldfinder.server.Grid;
 import com.example.utils.players.AbstractPlayer;
 import com.example.utils.players.GFPlayer;
@@ -11,6 +12,7 @@ import java.util.Random;
 
 public abstract class AbstractGame {
     boolean isRunning = false;
+    boolean hasEnded = false;
     int maxPlayers;
     List<AbstractPlayer> players;
     Grid grid;
@@ -18,7 +20,7 @@ public abstract class AbstractGame {
     public AbstractGame(int maxPlayers) {
         this.maxPlayers = maxPlayers;
         this.players = new ArrayList<>();
-        this.grid = new Grid(20, 20, new Random());
+        this.grid = new Grid(AppServer.COLUMN_COUNT, AppServer.ROW_COUNT, new Random());
     }
 
     public void addPlayer(AbstractPlayer player) {
@@ -39,11 +41,11 @@ public abstract class AbstractGame {
 
     protected boolean isFree(int xpos, int ypos){
         System.out.println("isFree");
-        boolean p =  !grid.downWall(xpos, ypos) && !grid.upWall(xpos, ypos) && !grid.leftWall(xpos, ypos) && !grid.rightWall(xpos, ypos);
+        //boolean p =  !grid.downWall(xpos, ypos) && !grid.upWall(xpos, ypos) && !grid.leftWall(xpos, ypos) && !grid.rightWall(xpos, ypos);
         for (AbstractPlayer player : players) {
             if (player.getxPos() == xpos && player.getyPos() == ypos) return false;
         }
-        return p;
+        return true;
     }
 
     public abstract String getUp(int xpos, int ypos);
@@ -102,9 +104,17 @@ public abstract class AbstractGame {
         return players;
     }
 
+    public void setHasEnded(boolean hasEnded) {
+        this.hasEnded = hasEnded;
+    }
+
     public void restartGame(){
         for (AbstractPlayer player : getPlayers()){
             System.out.println("Restarting game");
         }
+    }
+
+    public boolean hasEnded() {
+        return hasEnded;
     }
 }

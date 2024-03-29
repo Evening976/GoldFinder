@@ -19,7 +19,6 @@ public class AppClient extends javafx.application.Application {
     private void initializePrimaryStage(Stage primaryStage) {
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle(APP_NAME);
-        this.primaryStage.setOnCloseRequest(event -> Platform.exit());
         this.primaryStage.setResizable(true);
         this.primaryStage.sizeToScene();
     }
