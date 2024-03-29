@@ -17,10 +17,9 @@ import java.util.Iterator;
 import java.util.Map;
 
 public class GameServer extends IServer {
+    private InetSocketAddress currentAddress;
     private final Map<InetSocketAddress, AbstractPlayer> attachedPlayers = new HashMap<>();
     private final GameMap games;
-    int playerID = 0;
-    String GAMEMODE = "GOLD_FINDER";
     private static final int MAX_PLAYERS = 4;
 
     public GameServer(int port) throws IOException {
@@ -67,24 +66,10 @@ public class GameServer extends IServer {
 
 
     private void handleTCPRead(SelectionKey key) throws IOException {
-        InetSocketAddress senderAddress = (InetSocketAddress) ((SocketChannel) key.channel()).getRemoteAddress();
-//        if (!attachedPlayers.containsKey(senderAddress)) {
-//            if (Objects.equals(GAMEMODE, "GOLD_FINDER"))
-//                attachedPlayers.put(senderAddress, new GFPlayer(key.channel(), "Player" + playerID++, senderAddress, 0, 0));
-//            else
-//                attachedPlayers.put(senderAddress, new CRPlayer(key.channel(), "Player" + playerID++, senderAddress, 0, 0));
-//        }
-//
-//        if (key.attachment() == null) {
-//            if (Objects.equals(GAMEMODE, "GOLD_FINDER"))
-//                key.attach(new GFPlayer(key.channel(), "GFPlayer" + playerID++, senderAddress, 0, 0));
-//            else
-//                key.attach(new CRPlayer(key.channel(), "CopsPlayer" + playerID++, senderAddress, 0, 0));
-//        }
-
+        InetSocketAddress senderAddress = currentAddress = (InetSocketAddress) ((SocketChannel) key.channel()).getRemoteAddress();
         String msg = receiveTCPMessage((SocketChannel) key.channel());
         if (!msg.isEmpty()) {
-            SelectionKey k = handleCommands(key, msg);
+            SelectionKey k = handleCommands(key, msg, senderAddress);
             attachedPlayers.put(senderAddress, (AbstractPlayer) k.attachment());
         }
     }
@@ -92,28 +77,28 @@ public class GameServer extends IServer {
     private void handleUDPRead(SelectionKey key) throws IOException {
         Pair<InetSocketAddress, String> messageandIp = receiveUDPMessage(key);
         String msg = messageandIp.getValue();
-        InetSocketAddress senderAddress = messageandIp.getKey();
+        InetSocketAddress senderAddress = currentAddress = messageandIp.getKey();
 
-        if (!attachedPlayers.containsKey(senderAddress)) {
-            attachedPlayers.put(senderAddress, null);
+        if (attachedPlayers.containsKey(senderAddress)) {
+            key.attach(attachedPlayers.get(senderAddress));
         }
-        key.attach(attachedPlayers.get(senderAddress));
 
         if (!msg.isEmpty()) {
-            SelectionKey k = handleCommands(key, msg);
+            SelectionKey k = handleCommands(key, msg, senderAddress);
             attachedPlayers.put(senderAddress, (AbstractPlayer) k.attachment());
         }
     }
 
-    private SelectionKey handleCommands(SelectionKey key, String msg) {
+    private SelectionKey handleCommands(SelectionKey key, String msg, InetSocketAddress... senderAddress) {
         AbstractPlayer player = (AbstractPlayer) key.attachment();
         AbstractGame g = player == null ? null : games.getByID(player.getGameID());
 
         IServerCommand currentCommand = ServerCommandParser.parseCommand(msg);
         if (currentCommand != null) {
-            String response = currentCommand.run(key.channel(), this, player, g, msg.split(" "));
+            String response = currentCommand.run(key.channel(), this, player, g, senderAddress[0], msg.split(" "));
             player = currentCommand.getPlayer();
             games.setGame(player.getGameID(), currentCommand.getGame());
+
             sendMessage(key.channel(), response, player.getAddress());
 
             System.out.println("Game server data : " + player + " game : " + games.getByID(player.getGameID()));

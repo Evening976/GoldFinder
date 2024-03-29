@@ -5,13 +5,14 @@ import com.example.utils.games.AbstractGame;
 import com.example.utils.players.AbstractPlayer;
 import com.example.utils.players.GFPlayer;
 
+import java.net.InetSocketAddress;
 import java.nio.channels.SelectableChannel;
 
 public class Dir implements IServerCommand {
     AbstractPlayer player;
     AbstractGame game;
     @Override
-    public String run(SelectableChannel client, GameServer server, AbstractPlayer p, AbstractGame g, String[] params) {
+    public String run(SelectableChannel client, GameServer server, AbstractPlayer p, AbstractGame g, InetSocketAddress addr, String[] params) {
         this.player = p;
         this.game = g;
         String dir = "INVALID_MOVE";

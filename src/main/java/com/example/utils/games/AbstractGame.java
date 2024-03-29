@@ -38,12 +38,7 @@ public abstract class AbstractGame {
 
     protected boolean isFree(int xpos, int ypos){
         System.out.println("isFree");
-        boolean a = !grid.downWall(xpos, ypos);
-        boolean b = !grid.upWall(xpos, ypos);
-        boolean c = !grid.leftWall(xpos, ypos);
-        boolean d = !grid.rightWall(xpos, ypos);
-        System.out.println("a: " + a + " b: " + b + " c: " + c + " d: " + d);
-        boolean p =  a && b && c && d;
+        boolean p =  !grid.downWall(xpos, ypos) && !grid.upWall(xpos, ypos) && !grid.leftWall(xpos, ypos) && !grid.rightWall(xpos, ypos);
         for (AbstractPlayer player : players) {
             if (player.getxPos() == xpos && player.getyPos() == ypos) return false;
         }

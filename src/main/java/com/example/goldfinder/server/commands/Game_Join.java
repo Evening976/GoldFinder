@@ -10,6 +10,7 @@ import com.example.utils.players.CRPlayer;
 import com.example.utils.players.GFPlayer;
 import javafx.util.Pair;
 
+import java.net.InetSocketAddress;
 import java.nio.channels.SelectableChannel;
 import java.util.Objects;
 
@@ -18,7 +19,7 @@ public class Game_Join implements IServerCommand {
     AbstractGame _game;
 
     @Override
-    public String run(SelectableChannel client, GameServer server, AbstractPlayer player, AbstractGame game, String[] params) {
+    public String run(SelectableChannel client, GameServer server, AbstractPlayer player, AbstractGame game, InetSocketAddress addr, String[] params) {
         String playerName = params[1];
         Pair<Short, AbstractGame> availableGame;
         if (Objects.equals(params[2], "COPS_AND_ROBBERS")) {
@@ -30,24 +31,27 @@ public class Game_Join implements IServerCommand {
                 availableGame = server.getGames().getAvailable(new GFGame(), false);
             else availableGame = server.getGames().getAvailable(new GFGame(), true);
         }
+        player.setAddress(addr);
 
         game = availableGame.getValue();
         game.addPlayer(player);
         player.attachToGame(availableGame.getKey(), (short) game.getPlayers().indexOf(player));
 
-        if (game.isRunning()) {
-            for (AbstractPlayer p : game.getPlayers()) {
-                if (p == player) continue;
-                server.sendMessage(p.getClient(), new Game_Start().run(null, server, p, game, new String[]{}), p.getAddress());
-            }
-        }
+
 
         _game = game;
         _player = player;
 
+
         if (game.isRunning()) {
-            return new Game_Start().run(client, server, player, game, params);
+            for (AbstractPlayer p : game.getPlayers()) {
+                server.sendMessage(p.getClient(), new Game_Start().run(p.getClient(), server, p, game, (InetSocketAddress) p.getAddress(), new String[]{}), p.getAddress());
+            }
         }
+
+//        if (game.isRunning()) {
+//            return new Game_Start().run(client, server, player, game, null,params);
+//        }
         return Logger.getBlue("Player " + playerName + " joined game " + availableGame.getKey());
     }
 
