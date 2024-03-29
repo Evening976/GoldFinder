@@ -52,7 +52,6 @@ public abstract class IServer extends ICommon {
         buffer.clear();
         buffer.put(message.getBytes());
         buffer.flip();
-        //System.out.println();
         ((DatagramChannel) client).send(buffer, address);
     }
 

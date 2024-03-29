@@ -37,8 +37,6 @@ public class Game_Join implements IServerCommand {
         game.addPlayer(player);
         player.attachToGame(availableGame.getKey(), (short) game.getPlayers().indexOf(player));
 
-
-
         _game = game;
         _player = player;
 
@@ -49,9 +47,6 @@ public class Game_Join implements IServerCommand {
             }
         }
 
-//        if (game.isRunning()) {
-//            return new Game_Start().run(client, server, player, game, null,params);
-//        }
         return Logger.getBlue("Player " + playerName + " joined game " + availableGame.getKey());
     }
 

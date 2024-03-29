@@ -17,7 +17,6 @@ import java.util.Iterator;
 import java.util.Map;
 
 public class GameServer extends IServer {
-    private InetSocketAddress currentAddress;
     private final Map<InetSocketAddress, AbstractPlayer> attachedPlayers = new HashMap<>();
     private final GameMap games;
     private static final int MAX_PLAYERS = 4;
@@ -66,7 +65,7 @@ public class GameServer extends IServer {
 
 
     private void handleTCPRead(SelectionKey key) throws IOException {
-        InetSocketAddress senderAddress = currentAddress = (InetSocketAddress) ((SocketChannel) key.channel()).getRemoteAddress();
+        InetSocketAddress senderAddress = (InetSocketAddress) ((SocketChannel) key.channel()).getRemoteAddress();
         String msg = receiveTCPMessage((SocketChannel) key.channel());
         if (!msg.isEmpty()) {
             SelectionKey k = handleCommands(key, msg, senderAddress);
@@ -77,7 +76,7 @@ public class GameServer extends IServer {
     private void handleUDPRead(SelectionKey key) throws IOException {
         Pair<InetSocketAddress, String> messageandIp = receiveUDPMessage(key);
         String msg = messageandIp.getValue();
-        InetSocketAddress senderAddress = currentAddress = messageandIp.getKey();
+        InetSocketAddress senderAddress = messageandIp.getKey();
 
         if (attachedPlayers.containsKey(senderAddress)) {
             key.attach(attachedPlayers.get(senderAddress));
