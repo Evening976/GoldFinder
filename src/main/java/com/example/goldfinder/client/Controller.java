@@ -14,6 +14,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.input.KeyEvent;
 
 import static java.lang.System.exit;
@@ -32,6 +33,8 @@ public class Controller {
     TextField playerName;
     @FXML
     TextField debugCommand;
+    @FXML
+    ToggleButton playToggleButton;
     GridView gridView;
     ClientBoi client;
     int vParallax = 0;
@@ -76,7 +79,7 @@ public class Controller {
         gameType.getItems().add("GOLD_FINDER");
         gameType.getItems().add("GOLD_FINDER_SOLO");
         gameType.getItems().add("COPS_AND_ROBBERS");
-        gameType.setValue("GOLD_FINDER");
+        gameType.setValue("COPS_AND_ROBBERS");
     }
 
     public void playToggleButtonAction() {
@@ -90,6 +93,7 @@ public class Controller {
                 System.out.println("Response to game_join : " + r);
                 playerName.setDisable(true);
                 connectionMode.setDisable(true);
+                playToggleButton.setDisable(true);
             }
         }
     }
@@ -108,12 +112,10 @@ public class Controller {
         gridView.repaint(hParallax, vParallax);
         gridView.paintPlayer(column, row);
         connectionMode.setDisable(false);
+        playToggleButton.setDisable(false);
     }
 
     public void updateClient(ActionEvent actionEvent) {
-//        int _col = column;
-//        int _row = row;
-
         IClientCommand inc_command = client.updateClient();
         if (inc_command != null) inc_command.run(client, "");
 

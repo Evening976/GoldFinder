@@ -18,6 +18,7 @@ public class ClientBoi extends IClient {
     public IClientCommand updateClient(){
         if(!isConnected) return null;
         String command = receiveMessage(mode);
+        System.out.println("Received command : " + command);
         return ClientCommandParser.parseCommand(command);
     }
 

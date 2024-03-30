@@ -1,6 +1,7 @@
 package com.example.utils.games;
 
 import com.example.utils.players.AbstractPlayer;
+import com.example.utils.players.GFPlayer;
 
 public class GFGame extends AbstractGame {
     int maxCells = 0;
@@ -56,7 +57,29 @@ public class GFGame extends AbstractGame {
         if (grid.hasGold(xpos + 1, ypos)) return "GOLD ";
         return "EMPTY ";
     }
-//    public GFPlayer getPlayer(GFPlayer p) {
+
+    @Override
+    protected void spawnPlayer(AbstractPlayer p) {
+        while (true) {
+            int xpos = (int) (Math.random() * grid.getColumnCount());
+            int ypos = (int) (Math.random() * grid.getRowCount());
+            boolean isFree = isFree(xpos, ypos);
+            if (isFree) {
+                p.move(xpos, ypos);
+                setDiscoveredCell(xpos, ypos);
+                break;
+            }
+        }
+    }
+
+    public void collectGold(AbstractPlayer p) {
+        if (grid.hasGold(p.getxPos(), p.getyPos())) {
+            p.collectGold();
+            grid.removeGold(p.getxPos(), p.getyPos());
+        }
+    }
+
+    //    public GFPlayer getPlayer(GFPlayer p) {
 //        return (GFPlayer) players.get(players.indexOf(p));
 //    }
     public boolean isSolo() {

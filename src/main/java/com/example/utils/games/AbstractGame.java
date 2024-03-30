@@ -56,20 +56,11 @@ public abstract class AbstractGame {
 
     public abstract String getRight(int xpos, int ypos);
 
-    private void spawnPlayer(AbstractPlayer p) {
-        while (true) {
-            int xpos = (int) (Math.random() * grid.getColumnCount());
-            int ypos = (int) (Math.random() * grid.getRowCount());
-            boolean isFree = isFree(xpos, ypos);
-            if (isFree) {
-                p.move(xpos, ypos);
-                break;
-            }
-        }
-    }
+    protected abstract void spawnPlayer(AbstractPlayer p);
 
     public void movePlayer(AbstractPlayer p, int xpos, int ypos) {
         players.get(players.indexOf(p)).move(xpos, ypos);
+
     }
 
     public void removePlayer(AbstractPlayer player) {
@@ -80,12 +71,7 @@ public abstract class AbstractGame {
         return players.get(players.indexOf(p));
     }
 
-    public void collectGold(GFPlayer p) {
-        if (grid.hasGold(p.getxPos(), p.getyPos())) {
-            p.collectGold();
-            grid.removeGold(p.getxPos(), p.getyPos());
-        }
-    }
+    public abstract void collectGold(AbstractPlayer p);
 
     public boolean isRunning() {
         return isRunning;

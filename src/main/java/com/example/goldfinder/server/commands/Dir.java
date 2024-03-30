@@ -4,6 +4,7 @@ import com.example.goldfinder.client.commands.Game_End;
 import com.example.goldfinder.server.GameServer;
 import com.example.utils.games.*;
 import com.example.utils.players.AbstractPlayer;
+import com.example.utils.players.CRPlayer;
 import com.example.utils.players.GFPlayer;
 
 import java.net.InetSocketAddress;
@@ -21,34 +22,57 @@ public class Dir implements IServerCommand {
         switch (params[0].toUpperCase()) {
             case "UP" -> {
                 dir = game.getUp(p.getxPos(), p.getyPos());
-                if (dir.contains("EMPTY") || dir.contains("GOLD")) {
-                    game.movePlayer(p, 0, -1);
-                    handleGFGame(server, p, g, dir);
+                if (dir.contains("EMPTY") || dir.contains("GOLD") || dir.contains("ROBBER")) {
+                    if (game instanceof CRGame || p instanceof CRPlayer) {
+                        game.movePlayer(p, 0, -1);
+                        handleCRGame(server, p, g, dir);
+                    }
+                    else if (game instanceof GFGame || p instanceof GFPlayer) {
+                        game.movePlayer(p, 0, -1);
+                        handleGFGame(server, p, g, dir);
+                    }
                 }
             }
             case "DOWN" -> {
                 dir = game.getDown(p.getxPos(), p.getyPos());
-                if (dir.contains("EMPTY") || dir.contains("GOLD")) {
-                    game.movePlayer(p, 0, 1);
-                    handleGFGame(server, p, g, dir);
+                if (dir.contains("EMPTY") || dir.contains("GOLD") || dir.contains("ROBBER")) {
+                    if (game instanceof CRGame || p instanceof CRPlayer) {
+                        game.movePlayer(p, 0, 1);
+                        handleCRGame(server, p, g, dir);
+                    }
+                    else if (game instanceof GFGame || p instanceof GFPlayer) {
+                        game.movePlayer(p, 0, 1);
+                        handleGFGame(server, p, g, dir);
+                    }
                 }
             }
             case "LEFT" -> {
                 dir = game.getLeft(p.getxPos(), p.getyPos());
-                if (dir.contains("EMPTY") || dir.contains("GOLD")) {
-                    game.movePlayer(p, -1, 0);
-                    handleGFGame(server, p, g, dir);
+                if (dir.contains("EMPTY") || dir.contains("GOLD") || dir.contains("ROBBER")) {
+                    if (game instanceof CRGame || p instanceof CRPlayer) {
+                        game.movePlayer(p, -1, 0);
+                        handleCRGame(server, p, g, dir);
+                    }
+                    else if (game instanceof GFGame || p instanceof GFPlayer) {
+                        game.movePlayer(p, -1, 0);
+                        handleGFGame(server, p, g, dir);
+                    }
                 }
             }
             case "RIGHT" -> {
                 dir = game.getRight(p.getxPos(), p.getyPos());
-                if (dir.contains("EMPTY") || dir.contains("GOLD")) {
-                    game.movePlayer(p, 1, 0);
-                    handleGFGame(server ,p, g, dir);
+                if (dir.contains("EMPTY") || dir.contains("GOLD") || dir.contains("ROBBER")) {
+                    if (game instanceof CRGame || p instanceof CRPlayer) {
+                        game.movePlayer(p, 1, 0);
+                        handleCRGame(server, p, g, dir);
+                    }
+                    else if (game instanceof GFGame || p instanceof GFPlayer) {
+                        game.movePlayer(p, 1, 0);
+                        handleGFGame(server, p, g, dir);
+                    }
                 }
             }
         }
-
 
         if(game.hasEnded()){
             return "GAME_END";
@@ -62,7 +86,7 @@ public class Dir implements IServerCommand {
         return "INVALID_MOVE";
     }
 
-    private void handleGFGame(GameServer server,AbstractPlayer p, AbstractGame g,String dir) {
+    private void handleGFGame(GameServer server, AbstractPlayer p, AbstractGame g,String dir) {
         System.out.println(p.getxPos() + " " + p.getyPos() + " " + dir);
         System.out.println(g.getPlayer(p).getxPos() + " " + g.getPlayer(p).getyPos() + " " + dir);
         if(game instanceof GFGame || p instanceof GFPlayer) {
@@ -77,6 +101,18 @@ public class Dir implements IServerCommand {
                             "GAME_END", abstractPlayer.getAddress());
                     game.setHasEnded(true);
                 }
+            }
+        }
+    }
+
+    public void handleCRGame(GameServer server, AbstractPlayer p, AbstractGame g, String dir) {
+        if(game instanceof CRGame || p instanceof CRPlayer) {
+            if (dir.contains("GOLD")) {
+                System.out.println("Gold collected!");
+                game.collectGold(p);
+            }
+            if (dir.contains("ROBBER")) {
+                ((CRGame) game).catchRobber();
             }
         }
     }
