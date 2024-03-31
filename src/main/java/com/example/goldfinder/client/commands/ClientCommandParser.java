@@ -9,7 +9,6 @@ public class ClientCommandParser {
             case "VALID_MOVE" -> new Valid_Move();
             case "SCORE" -> new Score();
             case "REDIRECT" -> new Redirect();
-            case "DISCONNECT" -> new Client_Disconnect();
             default -> {
                 System.out.println("Invalid command received : " + command); yield null;}
         };

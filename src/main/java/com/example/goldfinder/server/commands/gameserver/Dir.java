@@ -156,8 +156,7 @@ public class Dir implements GameServerCommand {
         for(AbstractPlayer robber : ((CRGame)g).getRobbers().keySet()) {
             if(((CRGame)g).getRobbers().get(robber).equals("CAUGHT")) {
                 robberCount--;
-                System.out.println("CAUGHT");
-                server.sendMessage(robber.getClient(), "DISCONNECT ", robber.getAddress());
+                server.sendMessage(robber.getClient(), "GAME_END ", robber.getAddress());
             }
 
         }

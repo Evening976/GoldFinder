@@ -14,7 +14,7 @@ public class CRGame extends AbstractGame{
     int goldCount;
 
     public CRGame(int maxPlayers) {
-        super(2);
+        super(maxPlayers);
         this.cops = new ArrayList<>();
         this.robbers = new HashMap<>();
         this.goldCount = countGold();
