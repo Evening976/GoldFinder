@@ -13,14 +13,8 @@ public class CRGame extends AbstractGame{
     Map<AbstractPlayer, String> robbers;
     int goldCount;
 
-    public CRGame(){
-        super(2);
-        this.cops = new ArrayList<>();
-        this.robbers = new HashMap<>();
-    }
-
     public CRGame(int maxPlayers) {
-        super(maxPlayers);
+        super(2);
         this.cops = new ArrayList<>();
         this.robbers = new HashMap<>();
         this.goldCount = countGold();
@@ -30,10 +24,11 @@ public class CRGame extends AbstractGame{
         while (true) {
             int xpos = (int) (Math.random() * grid.getColumnCount());
             int ypos = (int) (Math.random() * grid.getRowCount());
-            if (cops.size() < maxPlayers / 2 || cops.isEmpty()) {
+            if (cops.isEmpty() || cops.size() < maxPlayers / 2) {
+                System.out.println(cops.size() + " cops");
                 setCop((CRPlayer) p);
             } else {
-                setRobber( (CRPlayer) p);
+                setRobber((CRPlayer) p);
             }
             boolean isFree = isFree(xpos, ypos);
             if (isFree) {
@@ -132,7 +127,6 @@ public class CRGame extends AbstractGame{
                     if (isPlayerACop(xpos, ypos)) {
                         return "ALLY ";
                     } else {
-                        System.out.println("je ne suis pas un policier");
                         return "ENEMY ";
                     }
                 } else {
@@ -146,10 +140,6 @@ public class CRGame extends AbstractGame{
         }
         if (grid.hasGold(xpos + 1, ypos)) return "GOLD ";
         return "EMPTY ";
-    }
-
-    public void catchRobber() {
-        System.out.println("Robber caught!");
     }
 
     public void setCop(CRPlayer p) {
@@ -185,6 +175,7 @@ public class CRGame extends AbstractGame{
     public void catchRobber(AbstractPlayer cop, AbstractPlayer robber) {
         cop.collectGold();
         robbers.put(robber,"CAUGHT");
+        removePlayer(robber);
         System.out.println("catching robber");
     }
 

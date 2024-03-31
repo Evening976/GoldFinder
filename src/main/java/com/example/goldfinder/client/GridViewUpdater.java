@@ -57,10 +57,8 @@ public class GridViewUpdater {
                     } else if (subparts[1].startsWith("PLAYER")) {
                         gridView.setPlayerPositions(_col - 1, _row, PlayerColor.values()[Integer.parseInt(subparts[1].substring(subparts[1].length() - 1))]);
                     }else if (subparts[1].startsWith("ENEMY")){
-                        System.out.println("ici, enemy");
                         gridView.setPlayerPositions(_col - 1, _row, PlayerColor.RED);
                     }else if (subparts[1].startsWith("ALLY")){
-                        System.out.println("ici, ally");
                         gridView.setPlayerPositions(_col - 1, _row, PlayerColor.BLUE);
                     } else if (subparts[1].equals("EMPTY")) {
                         gridView.setEmpty(_col - 1, _row);
@@ -74,10 +72,8 @@ public class GridViewUpdater {
                     } else if (subparts[1].startsWith("PLAYER")) {
                         gridView.setPlayerPositions(_col + 1, _row, PlayerColor.values()[Integer.parseInt(subparts[1].substring(subparts[1].length() - 1))]);
                     }else if (subparts[1].startsWith("ENEMY")){
-                        System.out.println("ici, enemy");
                         gridView.setPlayerPositions(_col + 1, _row, PlayerColor.RED);
                     }else if (subparts[1].startsWith("ALLY")){
-                        System.out.println("ici, ally");
                         gridView.setPlayerPositions(_col + 1, _row, PlayerColor.BLUE);
                     } else if (subparts[1].equals("EMPTY")) {
                         gridView.setEmpty(_col + 1, _row);

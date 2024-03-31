@@ -94,9 +94,4 @@ public class GridView {
         canvas.getGraphicsContext2D().setFill(Color.BLUE);
         canvas.getGraphicsContext2D().fillRect(column * cellWidth(), row * cellHeight(), cellWidth(), cellHeight());
     }
-
-    public void paintOpponent(int column, int row) {
-        canvas.getGraphicsContext2D().setFill(Color.RED);
-        canvas.getGraphicsContext2D().fillRect(column * cellWidth(), row * cellHeight(), cellWidth(), cellHeight());
-    }
 }

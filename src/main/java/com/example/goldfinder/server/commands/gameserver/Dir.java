@@ -25,6 +25,7 @@ public class Dir implements GameServerCommand {
                         if (dir.contains("ENEMY")) {
                             if (((CRPlayer) p).isCop()) {
                                 ((CRGame) game).catchRobber(p, game.getPlayerFromCoordinates(p.getxPos(), p.getyPos() - 1));
+                                //game.movePlayer(p, 0, -1);
                                 handleCRGame(server, p, g, dir);
                             }
                         } else{
@@ -45,6 +46,7 @@ public class Dir implements GameServerCommand {
                         if (dir.contains("ENEMY")) {
                             if (((CRPlayer) p).isCop()) {
                                 ((CRGame) game).catchRobber(p, game.getPlayerFromCoordinates(p.getxPos(), p.getyPos() + 1));
+                                //game.movePlayer(p, 0, 1);
                                 handleCRGame(server, p, g, dir);
                             }
                         } else {
@@ -65,6 +67,7 @@ public class Dir implements GameServerCommand {
                         if (dir.contains("ENEMY")) {
                             if (((CRPlayer) p).isCop()) {
                                 ((CRGame) game).catchRobber(p, game.getPlayerFromCoordinates(p.getxPos()-1, p.getyPos()));
+                                //game.movePlayer(p, -1, 0);
                                 handleCRGame(server, p, g, dir);
                             }
                         } else{
@@ -86,6 +89,7 @@ public class Dir implements GameServerCommand {
                         if (dir.contains("ENEMY")) {
                             if (((CRPlayer) p).isCop()) {
                                 ((CRGame) game).catchRobber(p, game.getPlayerFromCoordinates(p.getxPos() + 1, p.getyPos()));
+                                //game.movePlayer(p, 1, 0);
                                 handleCRGame(server, p, g, dir);
                             }
                         } else{
@@ -133,8 +137,6 @@ public class Dir implements GameServerCommand {
     }
 
     public void handleCRGame(GameServer server, AbstractPlayer p, AbstractGame g, String dir) {
-        System.out.println("handling the game");
-
         if(game instanceof CRGame || p instanceof CRPlayer) {
             if (dir.contains("GOLD")) {
                 System.out.println("Gold collected!");
@@ -150,12 +152,14 @@ public class Dir implements GameServerCommand {
             }
         }
 
-
         int robberCount = ((CRGame)g).getRobbers().size();
         for(AbstractPlayer robber : ((CRGame)g).getRobbers().keySet()) {
             if(((CRGame)g).getRobbers().get(robber).equals("CAUGHT")) {
                 robberCount--;
+                System.out.println("CAUGHT");
+                server.sendMessage(robber.getClient(), "DISCONNECT ", robber.getAddress());
             }
+
         }
 
 
