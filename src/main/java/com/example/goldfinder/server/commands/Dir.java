@@ -135,12 +135,22 @@ public class Dir implements IServerCommand {
 
     public void handleCRGame(GameServer server, AbstractPlayer p, AbstractGame g, String dir) {
         System.out.println("handling the game");
+
         if(game instanceof CRGame || p instanceof CRPlayer) {
             if (dir.contains("GOLD")) {
                 System.out.println("Gold collected!");
                 game.collectGold(p);
+                if (((CRGame) game).getGoldCount() == 0) {
+                    for(AbstractPlayer abstractPlayer : game.getPlayers()) {
+                        System.out.println("Game ended");
+                        server.sendMessage(abstractPlayer.getClient(),
+                                "GAME_END", abstractPlayer.getAddress());
+                        game.setHasEnded(true);
+                    }
+                }
             }
         }
+
 
         int robberCount = ((CRGame)g).getRobbers().size();
         for(AbstractPlayer robber : ((CRGame)g).getRobbers().keySet()) {
@@ -148,11 +158,11 @@ public class Dir implements IServerCommand {
                 robberCount--;
             }
         }
-        System.out.println("checkjing");
-        System.out.println("robbercount: " + robberCount);
+
+
         if (robberCount == 0) {
             for(AbstractPlayer abstractPlayer : game.getPlayers()) {
-                System.out.println("Game ended");
+                System.out.println("Game ended COPS WIN!");
                 server.sendMessage(abstractPlayer.getClient(),
                         "GAME_END", abstractPlayer.getAddress());
                 game.setHasEnded(true);

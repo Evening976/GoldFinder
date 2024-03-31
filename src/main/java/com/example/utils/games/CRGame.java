@@ -11,10 +11,19 @@ import java.util.Map;
 public class CRGame extends AbstractGame{
     List<AbstractPlayer> cops;
     Map<AbstractPlayer, String> robbers;
-    public CRGame(int maxPlayers) {
+    int goldCount;
+
+    public CRGame(){
         super(2);
         this.cops = new ArrayList<>();
         this.robbers = new HashMap<>();
+    }
+
+    public CRGame(int maxPlayers) {
+        super(maxPlayers);
+        this.cops = new ArrayList<>();
+        this.robbers = new HashMap<>();
+        this.goldCount = countGold();
     }
 
     protected void spawnPlayer(AbstractPlayer p) {
@@ -164,6 +173,7 @@ public class CRGame extends AbstractGame{
     public void collectGold(AbstractPlayer p) {
         if (grid.hasGold(p.getxPos(), p.getyPos()) && !((CRPlayer) p).isCop()) {
             p.collectGold();
+            goldCount--;
             grid.removeGold(p.getxPos(), p.getyPos());
         }
     }
@@ -176,5 +186,21 @@ public class CRGame extends AbstractGame{
         cop.collectGold();
         robbers.put(robber,"CAUGHT");
         System.out.println("catching robber");
+    }
+
+    private int countGold(){
+        int count = 0;
+        for (int i = 0; i < grid.getColumnCount(); i++) {
+            for (int j = 0; j < grid.getRowCount(); j++) {
+                if (grid.hasGold(i, j)) {
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+
+    public int getGoldCount(){
+        return goldCount;
     }
 }
