@@ -59,21 +59,12 @@ public class GameServer extends IServer {
         return games;
     }
 
-    public InetSocketAddress getAddr(ConnectionMode mode){
+    public InetSocketAddress getAddr(ConnectionMode mode) {
         try {
-            if(mode == ConnectionMode.TCP){
-                System.out.println(InetAddress.getLocalHost().getHostAddress());
-                System.out.println("TCP port : " + serverSocketChannel.socket().getLocalPort());
-                return new InetSocketAddress(InetAddress.getLocalHost().getHostAddress(), serverSocketChannel.socket().getLocalPort());
-            }
-            else{
-                System.out.println(InetAddress.getLocalHost().getHostAddress());
-                System.out.println("UDP port : " + udpSocket.socket().getLocalPort());
-                return new InetSocketAddress(InetAddress.getLocalHost().getHostAddress(), udpSocket.socket().getLocalPort());
-            }
-        }
-        catch (IOException e){
-            System.out.println("Could not retrieve gameserver address");
+            return mode == ConnectionMode.TCP ? new InetSocketAddress(InetAddress.getLocalHost().getHostAddress(), serverSocketChannel.socket().getLocalPort())
+                    : new InetSocketAddress(InetAddress.getLocalHost().getHostAddress(), udpSocket.socket().getLocalPort());
+        } catch (IOException e) {
+            System.out.println("Could not retrieve gameserver's address");
         }
         return null;
     }

@@ -39,7 +39,6 @@ public abstract class AbstractGame {
     }
 
     protected boolean isFree(int xpos, int ypos){
-        System.out.println("isFree");
         //boolean p =  !grid.downWall(xpos, ypos) && !grid.upWall(xpos, ypos) && !grid.leftWall(xpos, ypos) && !grid.rightWall(xpos, ypos);
         for (AbstractPlayer player : players) {
             if (player.getxPos() == xpos && player.getyPos() == ypos) return false;
