@@ -14,7 +14,7 @@ public class GridViewUpdater {
         if (gridView == null) return null;
         if (command == null || command[0].isEmpty()) return gridView;
 
-        System.out.println(Arrays.toString(command));
+        System.out.println("update got : " + Arrays.toString(command));
 
         for (String p : command) {
             String[] subparts = p.split(":");
@@ -89,6 +89,7 @@ public class GridViewUpdater {
                 }
             }
         }
+        System.out.println("gridview updated");
         return gridView;
     }
 
@@ -126,7 +127,6 @@ public class GridViewUpdater {
                     controller.column = Math.min(COLUMN_COUNT - 1, controller.column + 1);
                     controller.hParallax--;
                     gridView.emptyPlayers();
-
                 }
             }
             default -> {

@@ -1,6 +1,7 @@
 package com.example.goldfinder.server;
 
 import com.example.goldfinder.server.commands.gameserver.GameServerCommand;
+import com.example.utils.ConnectionMode;
 import com.example.utils.Logger;
 import com.example.goldfinder.server.commands.gameserver.GameServerCommandParser;
 import com.example.utils.games.AbstractGame;
@@ -58,12 +59,18 @@ public class GameServer extends IServer {
         return games;
     }
 
-    public InetSocketAddress getAddr(){
+    public InetSocketAddress getAddr(ConnectionMode mode){
         try {
-            System.out.println(InetAddress.getLocalHost().getHostAddress());
-            System.out.println("TCP port : " + serverSocketChannel.socket().getLocalPort());
-            System.out.println("UDP port : " + udpSocket.socket().getLocalPort());
-            return new InetSocketAddress(InetAddress.getLocalHost().getHostAddress(), serverSocketChannel.socket().getLocalPort());
+            if(mode == ConnectionMode.TCP){
+                System.out.println(InetAddress.getLocalHost().getHostAddress());
+                System.out.println("TCP port : " + serverSocketChannel.socket().getLocalPort());
+                return new InetSocketAddress(InetAddress.getLocalHost().getHostAddress(), serverSocketChannel.socket().getLocalPort());
+            }
+            else{
+                System.out.println(InetAddress.getLocalHost().getHostAddress());
+                System.out.println("UDP port : " + udpSocket.socket().getLocalPort());
+                return new InetSocketAddress(InetAddress.getLocalHost().getHostAddress(), udpSocket.socket().getLocalPort());
+            }
         }
         catch (IOException e){
             System.out.println("Could not retrieve gameserver address");

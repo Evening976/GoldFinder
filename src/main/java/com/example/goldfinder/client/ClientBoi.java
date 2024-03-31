@@ -1,22 +1,23 @@
 package com.example.goldfinder.client;
 
+import com.example.goldfinder.client.commands.ClientCommandParser;
 import com.example.goldfinder.client.commands.IClientCommand;
 import com.example.goldfinder.client.commands.SurroundingClient;
 import com.example.utils.ConnectionMode;
-import com.example.goldfinder.client.commands.ClientCommandParser;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.nio.channels.DatagramChannel;
 import java.nio.channels.SocketChannel;
 
 public class ClientBoi extends IClient {
     private boolean isConnected = false;
     private boolean isPlaying = false;
 
-    public IClientCommand updateClient(){
-        if(!isConnected) return null;
+    public IClientCommand updateClient() {
+        if (!isConnected) return null;
         String command = receiveMessage(mode);
-        if(command.isEmpty()) return null;
+        if (command.isEmpty()) return null;
 
         System.out.println("Received command : " + command);
         return ClientCommandParser.parseCommand(command);
@@ -29,11 +30,9 @@ public class ClientBoi extends IClient {
     }
 
     public String sendCommand(IClientCommand command, String params) {
-        if(!isConnected) isConnected = true;
-
         System.out.println("Sending command : " + command.getName() + " " + params);
         command.run(this, params);
-        String resp = "";
+        String resp;
         while (true) {
             if (!(resp = receiveMessage(mode)).isEmpty()) {
                 return command.response(this, resp);
@@ -43,10 +42,17 @@ public class ClientBoi extends IClient {
 
     public void redirect(InetSocketAddress address) {
         try {
-            tcpSocket.close();
-            udpSocket.close();
-            if(mode == ConnectionMode.TCP) tcpSocket = SocketChannel.open(address);
-            else udpSocket = udpSocket.bind(address);
+            if (mode == ConnectionMode.TCP) {
+                tcpSocket.close();
+                tcpSocket = SocketChannel.open(address);
+                tcpSocket.configureBlocking(false);
+            } else {
+                udpSocket.close();
+                udpSocket = DatagramChannel.open();
+                udpSocket.configureBlocking(false);
+                udpSocket = udpSocket.connect(address);
+            }
+            isConnected = true;
         } catch (IOException e) {
             System.out.println("Error while redirecting sockets");
             e.printStackTrace();
@@ -64,5 +70,13 @@ public class ClientBoi extends IClient {
 
     public void setPlaying(boolean b) {
         isPlaying = b;
+    }
+
+    public void setConnected(boolean b) {
+        isConnected = b;
+    }
+
+    public boolean isConnected() {
+        return isConnected;
     }
 }

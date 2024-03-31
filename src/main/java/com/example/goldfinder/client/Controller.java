@@ -17,9 +17,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.input.KeyEvent;
 
-import java.net.InetSocketAddress;
-import java.util.Arrays;
-
 public class Controller {
 
     @FXML
@@ -90,13 +87,13 @@ public class Controller {
                 client.changeConnection(ConnectionMode.valueOf(connectionMode.getValue()));
                 client.setGameType(GameType.valueOf(gameType.getValue()));
                 client.connect();
-                String[] r = client.sendCommand(new Client_Join(), name + GameType.getGameType(gameType.getValue())).split(":");
-                System.out.println("Response to game_join : " + Arrays.toString(r));
+                client.sendCommand(new Client_Join(), name + GameType.getGameType(gameType.getValue()));
+                String r = client.sendCommand(new Client_Join(), name + GameType.getGameType(gameType.getValue()));
+                System.out.println("Response to game_join : " + r);
+
                 playerName.setDisable(true);
                 connectionMode.setDisable(true);
                 playToggleButton.setDisable(true);
-                client.redirect(new InetSocketAddress(r[1], Integer.parseInt(r[2])));
-                client.sendCommand(new Client_Join(), name + GameType.getGameType(gameType.getValue()));
             }
         }
     }

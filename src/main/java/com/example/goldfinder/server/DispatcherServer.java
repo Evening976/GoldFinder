@@ -55,6 +55,8 @@ public class DispatcherServer extends IServer {
                     }
                     selectedKeys.remove();
                 } catch (IOException e) {
+                    key.cancel();
+                    key.channel().close();
                     Logger.printYellow("Connection with client has been closed : " + e.getMessage());
                 }
             }
@@ -65,8 +67,9 @@ public class DispatcherServer extends IServer {
     protected void handleTCPRead(SelectionKey key) throws IOException {
         InetSocketAddress senderAddress = (InetSocketAddress) ((SocketChannel) key.channel()).getRemoteAddress();
         String msg = receiveTCPMessage((SocketChannel) key.channel());
-        System.out.println("Received message from " + senderAddress + " : " + msg);
         if(!msg.isEmpty()){
+            System.out.println("Received message from " + senderAddress + " : " + msg);
+            key.attach("TCP");
             handleCommands(key, msg, senderAddress);
         }
     }
@@ -76,6 +79,7 @@ public class DispatcherServer extends IServer {
         Pair<InetSocketAddress, String> messageandIp = receiveUDPMessage(key);
         String msg = messageandIp.getValue();
         InetSocketAddress senderAddress = messageandIp.getKey();
+        key.attach("UDP");
         if (!msg.isEmpty()) {
             handleCommands(key, msg, senderAddress);
         }
@@ -96,7 +100,7 @@ public class DispatcherServer extends IServer {
     private void handleCommands(SelectionKey key, String msg, InetSocketAddress senderAddress) {
         DispatcherServerCommand currentCommand = DispatcherServerCommandParser.parseCommand(msg);
         if (currentCommand != null) {
-            String response = currentCommand.run(key.channel(), gameServers, senderAddress, msg.split(" "));
+            String response = currentCommand.run(key.channel(),key, gameServers, senderAddress, msg.split(" "));
             System.out.println("Sending to " + senderAddress + " : " + response);
             sendMessage(key.channel(), response, senderAddress);
         }

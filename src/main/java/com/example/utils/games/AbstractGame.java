@@ -86,6 +86,7 @@ public abstract class AbstractGame {
 
     }
     public List<AbstractPlayer> getPlayers() {
+        System.out.println(players.size() + " players are in game" );
         return players;
     }
 

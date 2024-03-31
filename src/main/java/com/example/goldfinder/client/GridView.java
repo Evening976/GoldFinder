@@ -45,7 +45,6 @@ public class GridView {
                 }
             }
         }
-
     }
 
     public void setGoldAt(int col, int row) {

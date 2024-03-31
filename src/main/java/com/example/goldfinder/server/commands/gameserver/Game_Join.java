@@ -43,7 +43,7 @@ public class Game_Join implements GameServerCommand {
 
         if (game.isRunning()) {
             for (AbstractPlayer p : game.getPlayers()) {
-                System.out.println(p);
+                System.out.println("Sending game start to : " + p + "\n");
                 server.sendMessage(p.getClient(), new Game_Start().run(p.getClient(), server, p, game, (InetSocketAddress) p.getAddress(), new String[]{}), p.getAddress());
             }
         }
