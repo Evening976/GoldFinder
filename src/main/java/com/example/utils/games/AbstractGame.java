@@ -100,6 +100,14 @@ public abstract class AbstractGame {
         }
     }
 
+    public AbstractPlayer getPlayerFromCoordinates(int xpos, int ypos){
+        for (AbstractPlayer p : players) {
+            if (p.getxPos() == xpos && p.getyPos() == ypos) {
+                return p;
+            }
+        }
+        return null;
+    }
     public boolean hasEnded() {
         return hasEnded;
     }

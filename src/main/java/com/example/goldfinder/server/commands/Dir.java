@@ -25,7 +25,8 @@ public class Dir implements IServerCommand {
                     if (game instanceof CRGame || p instanceof CRPlayer) {
                         if (dir.contains("ENEMY")) {
                             if (((CRPlayer) p).isCop()) {
-                                System.out.println("Robber caught!");
+                                ((CRGame) game).catchRobber(p, game.getPlayerFromCoordinates(p.getxPos(), p.getyPos() - 1));
+                                handleCRGame(server, p, g, dir);
                             }
                         } else{
                             game.movePlayer(p, 0, -1);
@@ -44,7 +45,8 @@ public class Dir implements IServerCommand {
                     if (game instanceof CRGame || p instanceof CRPlayer) {
                         if (dir.contains("ENEMY")) {
                             if (((CRPlayer) p).isCop()) {
-                                System.out.println("Robber caught!");
+                                ((CRGame) game).catchRobber(p, game.getPlayerFromCoordinates(p.getxPos(), p.getyPos() + 1));
+                                handleCRGame(server, p, g, dir);
                             }
                         } else {
                             game.movePlayer(p, 0, 1);
@@ -63,7 +65,8 @@ public class Dir implements IServerCommand {
                     if (game instanceof CRGame || p instanceof CRPlayer) {
                         if (dir.contains("ENEMY")) {
                             if (((CRPlayer) p).isCop()) {
-                                System.out.println("Robber caught!");
+                                ((CRGame) game).catchRobber(p, game.getPlayerFromCoordinates(p.getxPos()-1, p.getyPos()));
+                                handleCRGame(server, p, g, dir);
                             }
                         } else{
                             game.movePlayer(p, -1, 0);
@@ -83,7 +86,8 @@ public class Dir implements IServerCommand {
                     if (game instanceof CRGame || p instanceof CRPlayer) {
                         if (dir.contains("ENEMY")) {
                             if (((CRPlayer) p).isCop()) {
-                                System.out.println("Robber caught!");
+                                ((CRGame) game).catchRobber(p, game.getPlayerFromCoordinates(p.getxPos() + 1, p.getyPos()));
+                                handleCRGame(server, p, g, dir);
                             }
                         } else{
                             game.movePlayer(p, 1, 0);
@@ -130,15 +134,34 @@ public class Dir implements IServerCommand {
     }
 
     public void handleCRGame(GameServer server, AbstractPlayer p, AbstractGame g, String dir) {
-        if (((CRPlayer) p).isCop() && dir.contains("ROBBER")) {
-            System.out.println("Robber caught!");
-        }
+        System.out.println("handling the game");
         if(game instanceof CRGame || p instanceof CRPlayer) {
             if (dir.contains("GOLD")) {
                 System.out.println("Gold collected!");
                 game.collectGold(p);
             }
         }
+
+        int robberCount = ((CRGame)g).getRobbers().size();
+        for(AbstractPlayer robber : ((CRGame)g).getRobbers().keySet()) {
+            if(((CRGame)g).getRobbers().get(robber).equals("CAUGHT")) {
+                robberCount--;
+            }
+        }
+        System.out.println("checkjing");
+        System.out.println("robbercount: " + robberCount);
+        if (robberCount == 0) {
+            for(AbstractPlayer abstractPlayer : game.getPlayers()) {
+                System.out.println("Game ended");
+                server.sendMessage(abstractPlayer.getClient(),
+                        "GAME_END", abstractPlayer.getAddress());
+                game.setHasEnded(true);
+            }
+        }
+
+        //TO DO faire en sorte que les bandits puissent gagner
+
+
     }
 
     @Override

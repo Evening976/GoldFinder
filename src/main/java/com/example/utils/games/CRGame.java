@@ -12,7 +12,7 @@ public class CRGame extends AbstractGame{
     List<AbstractPlayer> cops;
     Map<AbstractPlayer, String> robbers;
     public CRGame(int maxPlayers) {
-        super(4);
+        super(2);
         this.cops = new ArrayList<>();
         this.robbers = new HashMap<>();
     }
@@ -99,7 +99,6 @@ public class CRGame extends AbstractGame{
                     if (isPlayerACop(xpos, ypos)) {
                         return "ALLY ";
                     } else {
-                        System.out.println("je ne suis pas un policier");
                         return "ENEMY ";
                     }
                 } else {
@@ -142,7 +141,6 @@ public class CRGame extends AbstractGame{
 
     public void catchRobber() {
         System.out.println("Robber caught!");
-
     }
 
     public void setCop(CRPlayer p) {
@@ -170,10 +168,13 @@ public class CRGame extends AbstractGame{
         }
     }
 
-    public void catchRobber(AbstractPlayer p) {
-        if (grid.hasGold(p.getxPos(), p.getyPos()) && ((CRPlayer) p).isCop()) {
-            p.collectGold();
-            grid.removeGold(p.getxPos(), p.getyPos());
-        }
+    public Map<AbstractPlayer,String> getRobbers(){
+        return robbers;
+    }
+
+    public void catchRobber(AbstractPlayer cop, AbstractPlayer robber) {
+        cop.collectGold();
+        robbers.put(robber,"CAUGHT");
+        System.out.println("catching robber");
     }
 }
