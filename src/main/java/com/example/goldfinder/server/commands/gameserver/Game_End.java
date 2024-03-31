@@ -1,27 +1,21 @@
-package com.example.goldfinder.server.commands;
+package com.example.goldfinder.server.commands.gameserver;
 
 import com.example.goldfinder.server.GameServer;
 import com.example.utils.games.AbstractGame;
 import com.example.utils.players.AbstractPlayer;
-import com.example.utils.games.GFGame;
 
 import java.net.InetSocketAddress;
 import java.nio.channels.SelectableChannel;
 
-public class Game_Start implements IServerCommand{
+public class Game_End implements GameServerCommand {
     @Override
     public String run(SelectableChannel client, GameServer server, AbstractPlayer p, AbstractGame g, InetSocketAddress addr, String[] params) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("GAME_START ");
-        System.out.println(g.getPlayers());
-        for(AbstractPlayer player : g.getPlayers()){
-            sb.append(player.getName()).append(":").append(g.getPlayers().indexOf(player)).append(" ");
-        }
-        return sb.toString();
+
+        return "GAME_END";
     }
 
     @Override
-    public GFGame getGame() {
+    public AbstractGame getGame() {
         return null;
     }
 

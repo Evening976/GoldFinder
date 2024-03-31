@@ -1,9 +1,9 @@
-package com.example.utils.commandParsers;
+package com.example.goldfinder.server.commands.gameserver;
 
-import com.example.goldfinder.server.commands.*;
+import com.example.goldfinder.server.commands.Leaderboard;
 
-public class ServerCommandParser {
-    public static IServerCommand parseCommand(String command) {
+public class GameServerCommandParser {
+    public static GameServerCommand parseCommand(String command) {
         String prefix = command.split(" ")[0];
         return switch (prefix.toUpperCase()) {
             case "GAME_JOIN" -> new Game_Join();

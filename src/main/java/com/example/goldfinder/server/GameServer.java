@@ -1,8 +1,8 @@
 package com.example.goldfinder.server;
 
-import com.example.goldfinder.server.commands.IServerCommand;
+import com.example.goldfinder.server.commands.gameserver.GameServerCommand;
 import com.example.utils.Logger;
-import com.example.utils.commandParsers.ServerCommandParser;
+import com.example.goldfinder.server.commands.gameserver.GameServerCommandParser;
 import com.example.utils.games.AbstractGame;
 import com.example.utils.games.GameMap;
 import com.example.utils.players.AbstractPlayer;
@@ -70,14 +70,8 @@ public class GameServer extends IServer {
         return (InetSocketAddress) serverSocketChannel.getLocalAddress();
     }
 
-    private void handleAccept(SelectionKey key) throws IOException {
-        SocketChannel client = serverSocketChannel.accept();
-        client.configureBlocking(false);
-        client.register(selector, SelectionKey.OP_READ);
-    }
 
-
-    private void handleTCPRead(SelectionKey key) throws IOException {
+    protected void handleTCPRead(SelectionKey key) throws IOException {
         InetSocketAddress senderAddress = (InetSocketAddress) ((SocketChannel) key.channel()).getRemoteAddress();
         String msg = receiveTCPMessage((SocketChannel) key.channel());
         if (!msg.isEmpty()) {
@@ -86,7 +80,7 @@ public class GameServer extends IServer {
         }
     }
 
-    private void handleUDPRead(SelectionKey key) throws IOException {
+    protected void handleUDPRead(SelectionKey key) throws IOException {
         Pair<InetSocketAddress, String> messageandIp = receiveUDPMessage(key);
         String msg = messageandIp.getValue();
         InetSocketAddress senderAddress = messageandIp.getKey();
@@ -105,7 +99,7 @@ public class GameServer extends IServer {
         AbstractPlayer player = (AbstractPlayer) key.attachment();
         AbstractGame g = player == null ? null : games.getByID(player.getGameID());
 
-        IServerCommand currentCommand = ServerCommandParser.parseCommand(msg);
+        GameServerCommand currentCommand = GameServerCommandParser.parseCommand(msg);
         if (currentCommand != null) {
             String response = currentCommand.run(key.channel(), this, player, g, senderAddress[0], msg.split(" "));
             player = currentCommand.getPlayer();

@@ -33,14 +33,12 @@ public abstract class IServer extends ICommon {
 
     public synchronized void sendMessage(SelectableChannel client, String message, SocketAddress address) {
         try {
-            if (client instanceof SocketChannel){
+            if (client instanceof SocketChannel) {
                 sendTCPMessage((SocketChannel) client, message);
-            }
-            else if(client instanceof DatagramChannel) {
+            } else if (client instanceof DatagramChannel) {
                 sendUDPMessage((DatagramChannel) client, message, address);
             }
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             Logger.printError("Could not send message : ");
             e.printStackTrace();
         }
@@ -59,7 +57,7 @@ public abstract class IServer extends ICommon {
         ByteBuffer buffer = ByteBuffer.allocate(1024);
         buffer.clear();
         try {
-            InetSocketAddress pp = (InetSocketAddress)((DatagramChannel) key.channel()).receive(buffer);
+            InetSocketAddress pp = (InetSocketAddress) ((DatagramChannel) key.channel()).receive(buffer);
             buffer.flip();
             byte[] receivedBytes = new byte[buffer.remaining()];
             buffer.get(receivedBytes);
@@ -69,4 +67,16 @@ public abstract class IServer extends ICommon {
         }
         return new Pair<>(new InetSocketAddress(1), "");
     }
+
+    public abstract void startServer() throws IOException;
+
+    protected void handleAccept(SelectionKey key) throws IOException{
+        SocketChannel client = serverSocketChannel.accept();
+        client.configureBlocking(false);
+        client.register(selector, SelectionKey.OP_READ);
+    }
+
+    protected abstract void handleTCPRead(SelectionKey key) throws IOException;
+
+    protected abstract void handleUDPRead(SelectionKey key) throws IOException;
 }

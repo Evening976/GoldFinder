@@ -1,4 +1,4 @@
-package com.example.goldfinder.server.commands;
+package com.example.goldfinder.server.commands.gameserver;
 
 import com.example.goldfinder.server.GameServer;
 import com.example.utils.games.AbstractGame;
@@ -7,7 +7,7 @@ import com.example.utils.players.AbstractPlayer;
 import java.net.InetSocketAddress;
 import java.nio.channels.SelectableChannel;
 
-public class Surrounding implements IServerCommand {
+public class Surrounding implements GameServerCommand {
     AbstractPlayer player;
     AbstractGame game;
 

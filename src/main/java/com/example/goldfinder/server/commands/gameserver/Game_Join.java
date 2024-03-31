@@ -1,4 +1,4 @@
-package com.example.goldfinder.server.commands;
+package com.example.goldfinder.server.commands.gameserver;
 
 import com.example.goldfinder.server.GameServer;
 import com.example.utils.Logger;
@@ -14,7 +14,7 @@ import java.net.InetSocketAddress;
 import java.nio.channels.SelectableChannel;
 import java.util.Objects;
 
-public class Game_Join implements IServerCommand {
+public class Game_Join implements GameServerCommand {
     AbstractPlayer _player;
     AbstractGame _game;
 

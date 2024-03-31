@@ -1,6 +1,5 @@
-package com.example.goldfinder.server.commands;
+package com.example.goldfinder.server.commands.gameserver;
 
-import com.example.goldfinder.client.commands.Game_End;
 import com.example.goldfinder.server.GameServer;
 import com.example.utils.games.*;
 import com.example.utils.players.AbstractPlayer;
@@ -10,7 +9,7 @@ import com.example.utils.players.GFPlayer;
 import java.net.InetSocketAddress;
 import java.nio.channels.SelectableChannel;
 
-public class Dir implements IServerCommand {
+public class Dir implements GameServerCommand {
     AbstractPlayer player;
     AbstractGame game;
     @Override
