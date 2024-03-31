@@ -19,6 +19,7 @@ public abstract class AbstractGame {
         this.maxPlayers = maxPlayers;
         this.players = new ArrayList<>();
         this.grid = new Grid(DispatcherServer.COLUMN_COUNT, DispatcherServer.ROW_COUNT, new Random());
+
     }
 
     public void addPlayer(AbstractPlayer player) {
@@ -90,12 +91,6 @@ public abstract class AbstractGame {
 
     public void setHasEnded(boolean hasEnded) {
         this.hasEnded = hasEnded;
-    }
-
-    public void restartGame(){
-        for (AbstractPlayer player : getPlayers()){
-            System.out.println("Restarting game");
-        }
     }
 
     public AbstractPlayer getPlayerFromCoordinates(int xpos, int ypos){
