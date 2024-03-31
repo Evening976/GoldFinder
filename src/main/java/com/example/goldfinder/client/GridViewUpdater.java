@@ -4,6 +4,7 @@ import com.example.goldfinder.client.commands.Move_Command;
 import com.example.utils.players.PlayerColor;
 import javafx.scene.input.KeyEvent;
 
+import java.awt.*;
 import java.util.Arrays;
 
 import static com.example.goldfinder.client.Controller.COLUMN_COUNT;
@@ -24,8 +25,14 @@ public class GridViewUpdater {
                         gridView.setHWall(_col, _row);
                     } else if (subparts[1].equals("GOLD")) {
                         gridView.setGoldAt(_col, _row - 1);
-                    } else if (subparts[1].startsWith("PLAYER")) {
+                    } else if (subparts[1].startsWith("PLAYER")){
                         gridView.setPlayerPositions(_col, _row - 1, PlayerColor.values()[Integer.parseInt(subparts[1].substring(subparts[1].length() - 1))]);
+                    }else if (subparts[1].startsWith("ENEMY")) {
+                        System.out.println("ici, enemy");
+                        gridView.setPlayerPositions(_col, _row - 1, PlayerColor.RED);
+                    } else if (subparts[1].startsWith("ALLY")){
+                        System.out.println("ici, ally");
+                        gridView.setPlayerPositions(_col, _row - 1, PlayerColor.BLUE);
                     } else if (subparts[1].equals("EMPTY")) {
                        gridView.setEmpty(_col, _row - 1);
                     }
@@ -37,6 +44,12 @@ public class GridViewUpdater {
                         gridView.setGoldAt(_col, _row + 1);
                     } else if (subparts[1].startsWith("PLAYER")) {
                         gridView.setPlayerPositions(_col, _row + 1, PlayerColor.values()[Integer.parseInt(subparts[1].substring(subparts[1].length() - 1))]);
+                    }else if (subparts[1].startsWith("ENEMY")) {
+                        System.out.println("ici, enemy");
+                        gridView.setPlayerPositions(_col, _row + 1, PlayerColor.RED);
+                    }else if (subparts[1].startsWith("ALLY")){
+                        System.out.println("ici, ally");
+                        gridView.setPlayerPositions(_col, _row + 1, PlayerColor.BLUE);
                     } else if (subparts[1].equals("EMPTY")) {
                         gridView.setEmpty(_col, _row + 1);
                     }
@@ -48,6 +61,12 @@ public class GridViewUpdater {
                         gridView.setGoldAt(_col - 1, _row);
                     } else if (subparts[1].startsWith("PLAYER")) {
                         gridView.setPlayerPositions(_col - 1, _row, PlayerColor.values()[Integer.parseInt(subparts[1].substring(subparts[1].length() - 1))]);
+                    }else if (subparts[1].startsWith("ENEMY")){
+                        System.out.println("ici, enemy");
+                        gridView.setPlayerPositions(_col - 1, _row, PlayerColor.RED);
+                    }else if (subparts[1].startsWith("ALLY")){
+                        System.out.println("ici, ally");
+                        gridView.setPlayerPositions(_col - 1, _row, PlayerColor.BLUE);
                     } else if (subparts[1].equals("EMPTY")) {
                         gridView.setEmpty(_col - 1, _row);
                     }
@@ -59,6 +78,12 @@ public class GridViewUpdater {
                         gridView.setGoldAt(_col + 1, _row);
                     } else if (subparts[1].startsWith("PLAYER")) {
                         gridView.setPlayerPositions(_col + 1, _row, PlayerColor.values()[Integer.parseInt(subparts[1].substring(subparts[1].length() - 1))]);
+                    }else if (subparts[1].startsWith("ENEMY")){
+                        System.out.println("ici, enemy");
+                        gridView.setPlayerPositions(_col + 1, _row, PlayerColor.RED);
+                    }else if (subparts[1].startsWith("ALLY")){
+                        System.out.println("ici, ally");
+                        gridView.setPlayerPositions(_col + 1, _row, PlayerColor.BLUE);
                     } else if (subparts[1].equals("EMPTY")) {
                         gridView.setEmpty(_col + 1, _row);
                     }

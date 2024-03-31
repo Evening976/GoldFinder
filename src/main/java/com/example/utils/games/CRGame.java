@@ -12,7 +12,7 @@ public class CRGame extends AbstractGame{
     List<AbstractPlayer> cops;
     Map<AbstractPlayer, String> robbers;
     public CRGame(int maxPlayers) {
-        super(2);
+        super(4);
         this.cops = new ArrayList<>();
         this.robbers = new HashMap<>();
     }
@@ -21,10 +21,10 @@ public class CRGame extends AbstractGame{
         while (true) {
             int xpos = (int) (Math.random() * grid.getColumnCount());
             int ypos = (int) (Math.random() * grid.getRowCount());
-            if (cops.size() < maxPlayers / 2 ||cops.isEmpty()) {
+            if (cops.size() < maxPlayers / 2 || cops.isEmpty()) {
                 setCop((CRPlayer) p);
             } else {
-                setRobber((CRPlayer) p);
+                setRobber( (CRPlayer) p);
             }
             boolean isFree = isFree(xpos, ypos);
             if (isFree) {
@@ -34,17 +34,31 @@ public class CRGame extends AbstractGame{
         }
     }
 
+    private boolean isPlayerACop(int xpos, int ypos) {
+        for (AbstractPlayer p : players) {
+            if (p.getxPos() == xpos && p.getyPos() == ypos && ((CRPlayer) p).isCop()) {
+                return true;
+            }
+        }
+        System.out.println("false");
+        return false;
+    }
+
     @Override
     public String getUp(int xpos, int ypos) {
         if (grid.upWall(xpos, ypos) || ypos == 0) return "WALL ";
         for (AbstractPlayer p : players) {
             if (p.getxPos() == xpos && p.getyPos() == ypos - 1) {
                 if (((CRPlayer) p).isCop()) {
-                    System.out.println("COP" + cops.indexOf(p) + " ");
-                    return "COP" + cops.indexOf(p) + " ";
+                    if (isPlayerACop(xpos, ypos)) {
+                        return "ALLY ";
+                    }
+                    return "ENEMY ";
                 } else {
-                    System.out.println("ROBBER" + robbers.get(p) + " ");
-                    return "ROBBER" + robbers.get(p) + " ";
+                    if (isPlayerACop(xpos, ypos)) {
+                        return "ENEMY ";
+                    }
+                    return "ALLY ";
                 }
             }
         }
@@ -56,13 +70,19 @@ public class CRGame extends AbstractGame{
     public String getDown(int xpos, int ypos) {
         if (grid.downWall(xpos, ypos) || ypos == grid.getRowCount()) return "WALL ";
         for (AbstractPlayer p : players) {
-            if (p.getxPos() == xpos && p.getyPos() == ypos - 1) {
+            if (p.getxPos() == xpos && p.getyPos() == ypos + 1) {
                 if (((CRPlayer) p).isCop()) {
-                    System.out.println("COP" + cops.indexOf(p) + " ");
-                    return "COP" + cops.indexOf(p) + " ";
+                    if (isPlayerACop(xpos, ypos)) {
+                        return "ALLY ";
+                    } else {
+                        return "ENEMY ";
+                    }
                 } else {
-                    System.out.println("ROBBER" + robbers.get(p) + " ");
-                    return "ROBBER" + robbers.get(p) + " ";
+                    if (isPlayerACop(xpos, ypos)) {
+                        return "ENEMY ";
+                    } else {
+                        return "ALLY ";
+                    }
                 }
             }
         }
@@ -73,17 +93,24 @@ public class CRGame extends AbstractGame{
     @Override
     public String getLeft(int xpos, int ypos) {
         if (grid.leftWall(xpos, ypos) || xpos == 0) return "WALL ";
-//        for (AbstractPlayer p : players) {
-//            if (p.getxPos() == xpos && p.getyPos() == ypos - 1) {
-//                if (((CRPlayer) p).isCop()) {
-//                    System.out.println("COP" + cops.indexOf(p) + " ");
-//                    return "COP" + cops.indexOf(p) + " ";
-//                } else {
-//                    System.out.println("ROBBER" + robbers.get(p) + " ");
-//                    return "ROBBER" + robbers.get(p) + " ";
-//                }
-//            }
-//        }
+        for (AbstractPlayer p : players) {
+            if (p.getxPos() == xpos - 1 && p.getyPos() == ypos) {
+                if (((CRPlayer) p).isCop()) {
+                    if (isPlayerACop(xpos, ypos)) {
+                        return "ALLY ";
+                    } else {
+                        System.out.println("je ne suis pas un policier");
+                        return "ENEMY ";
+                    }
+                } else {
+                    if (isPlayerACop(xpos, ypos)) {
+                        return "ENEMY ";
+                    } else {
+                        return "ALLY ";
+                    }
+                }
+            }
+        }
         if (grid.hasGold(xpos - 1, ypos)) return "GOLD ";
         return "EMPTY ";
     }
@@ -91,39 +118,40 @@ public class CRGame extends AbstractGame{
     @Override
     public String getRight(int xpos, int ypos) {
         if (grid.rightWall(xpos, ypos) || xpos == grid.getColumnCount()) return "WALL ";
-//        for (AbstractPlayer p : players) {
-//            if (p.getxPos() == xpos && p.getyPos() == ypos - 1) {
-//                if (((CRPlayer) p).isCop()) {
-//                    System.out.println("COP" + cops.indexOf(p) + " ");
-//                    return "COP" + cops.indexOf(p) + " ";
-//                } else {
-//                    System.out.println("COP" + cops.indexOf(p) + " ");
-//                    return "ROBBER" + robbers.get(p) + " ";
-//                }
-//            }
-//        }
+        for (AbstractPlayer p : players) {
+            if (p.getxPos() == xpos + 1 && p.getyPos() == ypos) {
+                if (((CRPlayer) p).isCop()) {
+                    if (isPlayerACop(xpos, ypos)) {
+                        return "ALLY ";
+                    } else {
+                        System.out.println("je ne suis pas un policier");
+                        return "ENEMY ";
+                    }
+                } else {
+                    if (isPlayerACop(xpos, ypos)) {
+                        return "ENEMY ";
+                    } else {
+                        return "ALLY ";
+                    }
+                }
+            }
+        }
         if (grid.hasGold(xpos + 1, ypos)) return "GOLD ";
         return "EMPTY ";
     }
 
     public void catchRobber() {
         System.out.println("Robber caught!");
-        for (AbstractPlayer p : robbers.keySet()) {
-            if (robbers.get(p).equals("FREE")) {
-                robbers.put(p, "CAUGHT");
-                break;
-            }
-        }
+
     }
 
     public void setCop(CRPlayer p) {
         p.setCop(true);
         cops.add(p);
-        System.out.println("Cops: " + cops);
     }
 
-    public void setRobber(AbstractPlayer p) {
-        ((CRPlayer) p).setCop(false);
+    public void setRobber(CRPlayer p) {
+        p.setCop(false);
         robbers.put(p, "FREE");
     }
 
@@ -136,9 +164,7 @@ public class CRGame extends AbstractGame{
     }
 
     public void collectGold(AbstractPlayer p) {
-        System.out.println("Collecting gold");
         if (grid.hasGold(p.getxPos(), p.getyPos()) && !((CRPlayer) p).isCop()) {
-            System.out.printf("Player %s collected gold\n", p.getName());
             p.collectGold();
             grid.removeGold(p.getxPos(), p.getyPos());
         }

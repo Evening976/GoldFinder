@@ -78,10 +78,6 @@ public class GFGame extends AbstractGame {
             grid.removeGold(p.getxPos(), p.getyPos());
         }
     }
-
-    //    public GFPlayer getPlayer(GFPlayer p) {
-//        return (GFPlayer) players.get(players.indexOf(p));
-//    }
     public boolean isSolo() {
         return isSolo;
     }

@@ -11,7 +11,6 @@ public class ClientCommandParser {
             case "VALID_MOVE" -> new Valid_Move();
             case "SCORE" -> new Score();
             default -> {
-                //System.out.println(command);
                 System.out.println("Invalid command received : " + command); yield null;}
         };
     }

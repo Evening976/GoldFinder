@@ -24,7 +24,7 @@ public class Game_Join implements IServerCommand {
         Pair<Short, AbstractGame> availableGame;
         if (Objects.equals(params[2], "COPS_AND_ROBBERS")) {
             player = new CRPlayer(client, playerName, 0, 0);
-            availableGame = server.getGames().getAvailable(new CRGame(1), false);
+            availableGame = server.getGames().getAvailable(new CRGame(2), false);
         } else {
             player = new GFPlayer(client, playerName, 0, 0);
             if (params[2] == null || !params[2].endsWith("_SOLO"))
@@ -43,6 +43,7 @@ public class Game_Join implements IServerCommand {
 
         if (game.isRunning()) {
             for (AbstractPlayer p : game.getPlayers()) {
+                System.out.println(p);
                 server.sendMessage(p.getClient(), new Game_Start().run(p.getClient(), server, p, game, (InetSocketAddress) p.getAddress(), new String[]{}), p.getAddress());
             }
         }

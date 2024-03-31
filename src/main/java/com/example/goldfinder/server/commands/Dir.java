@@ -18,14 +18,19 @@ public class Dir implements IServerCommand {
         this.player = p;
         this.game = g;
         String dir = "INVALID_MOVE";
-
         switch (params[0].toUpperCase()) {
             case "UP" -> {
                 dir = game.getUp(p.getxPos(), p.getyPos());
-                if (dir.contains("EMPTY") || dir.contains("GOLD") || dir.contains("ROBBER")) {
+                if (dir.contains("EMPTY") || dir.contains("GOLD") || dir.contains("ENEMY")) {
                     if (game instanceof CRGame || p instanceof CRPlayer) {
-                        game.movePlayer(p, 0, -1);
-                        handleCRGame(server, p, g, dir);
+                        if (dir.contains("ENEMY")) {
+                            if (((CRPlayer) p).isCop()) {
+                                System.out.println("Robber caught!");
+                            }
+                        } else{
+                            game.movePlayer(p, 0, -1);
+                            handleCRGame(server, p, g, dir);
+                        }
                     }
                     else if (game instanceof GFGame || p instanceof GFPlayer) {
                         game.movePlayer(p, 0, -1);
@@ -35,10 +40,16 @@ public class Dir implements IServerCommand {
             }
             case "DOWN" -> {
                 dir = game.getDown(p.getxPos(), p.getyPos());
-                if (dir.contains("EMPTY") || dir.contains("GOLD") || dir.contains("ROBBER")) {
+                if (dir.contains("EMPTY") || dir.contains("GOLD") || dir.contains("ENEMY")) {
                     if (game instanceof CRGame || p instanceof CRPlayer) {
-                        game.movePlayer(p, 0, 1);
-                        handleCRGame(server, p, g, dir);
+                        if (dir.contains("ENEMY")) {
+                            if (((CRPlayer) p).isCop()) {
+                                System.out.println("Robber caught!");
+                            }
+                        } else {
+                            game.movePlayer(p, 0, 1);
+                            handleCRGame(server, p, g, dir);
+                        }
                     }
                     else if (game instanceof GFGame || p instanceof GFPlayer) {
                         game.movePlayer(p, 0, 1);
@@ -48,10 +59,17 @@ public class Dir implements IServerCommand {
             }
             case "LEFT" -> {
                 dir = game.getLeft(p.getxPos(), p.getyPos());
-                if (dir.contains("EMPTY") || dir.contains("GOLD") || dir.contains("ROBBER")) {
+                if (dir.contains("EMPTY") || dir.contains("GOLD") || dir.contains("ENEMY")) {
                     if (game instanceof CRGame || p instanceof CRPlayer) {
-                        game.movePlayer(p, -1, 0);
-                        handleCRGame(server, p, g, dir);
+                        if (dir.contains("ENEMY")) {
+                            if (((CRPlayer) p).isCop()) {
+                                System.out.println("Robber caught!");
+                            }
+                        } else{
+                            game.movePlayer(p, -1, 0);
+                            handleCRGame(server, p, g, dir);
+                        }
+
                     }
                     else if (game instanceof GFGame || p instanceof GFPlayer) {
                         game.movePlayer(p, -1, 0);
@@ -61,10 +79,16 @@ public class Dir implements IServerCommand {
             }
             case "RIGHT" -> {
                 dir = game.getRight(p.getxPos(), p.getyPos());
-                if (dir.contains("EMPTY") || dir.contains("GOLD") || dir.contains("ROBBER")) {
+                if (dir.contains("EMPTY") || dir.contains("GOLD") || dir.contains("ENEMY")) {
                     if (game instanceof CRGame || p instanceof CRPlayer) {
-                        game.movePlayer(p, 1, 0);
-                        handleCRGame(server, p, g, dir);
+                        if (dir.contains("ENEMY")) {
+                            if (((CRPlayer) p).isCop()) {
+                                System.out.println("Robber caught!");
+                            }
+                        } else{
+                            game.movePlayer(p, 1, 0);
+                            handleCRGame(server, p, g, dir);
+                        }
                     }
                     else if (game instanceof GFGame || p instanceof GFPlayer) {
                         game.movePlayer(p, 1, 0);
@@ -77,8 +101,8 @@ public class Dir implements IServerCommand {
         if(game.hasEnded()){
             return "GAME_END";
         }
-        System.out.println(dir);
-        if (!dir.endsWith("WALL ") && !dir.contains("PLAYER")) {
+
+        if (!dir.endsWith("WALL ") && !dir.contains("PLAYER") && !dir.contains("ENEMY ") && !dir.contains("ALLY ")){
             System.out.println("VALID_MOVE:" + dir.stripTrailing().replace(dir.split(":")[0] + ": ", ""));
             return "VALID_MOVE:" + dir.stripTrailing().replace(dir.split(":")[0] + ": ", "");
         }
@@ -106,13 +130,13 @@ public class Dir implements IServerCommand {
     }
 
     public void handleCRGame(GameServer server, AbstractPlayer p, AbstractGame g, String dir) {
+        if (((CRPlayer) p).isCop() && dir.contains("ROBBER")) {
+            System.out.println("Robber caught!");
+        }
         if(game instanceof CRGame || p instanceof CRPlayer) {
             if (dir.contains("GOLD")) {
                 System.out.println("Gold collected!");
                 game.collectGold(p);
-            }
-            if (dir.contains("ROBBER")) {
-                ((CRGame) game).catchRobber();
             }
         }
     }
@@ -123,7 +147,5 @@ public class Dir implements IServerCommand {
     }
 
     @Override
-    public AbstractPlayer getPlayer() {
-        return game.getPlayer(player);
-    }
+    public AbstractPlayer getPlayer() { return game.getPlayer(player); }
 }

@@ -20,6 +20,8 @@ public class CRPlayer extends AbstractPlayer {
         return isCop;
     }
 
-
-
+    @Override
+    public String toString() {
+        return "Player " + name + " is a " + (isCop ? "Cop" : "Robber") + " at (" + xPos + ", " + yPos + ")";
+    }
 }

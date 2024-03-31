@@ -13,6 +13,7 @@ public class Game_Start implements IServerCommand{
     public String run(SelectableChannel client, GameServer server, AbstractPlayer p, AbstractGame g, InetSocketAddress addr, String[] params) {
         StringBuilder sb = new StringBuilder();
         sb.append("GAME_START ");
+        System.out.println(g.getPlayers());
         for(AbstractPlayer player : g.getPlayers()){
             sb.append(player.getName()).append(":").append(g.getPlayers().indexOf(player)).append(" ");
         }

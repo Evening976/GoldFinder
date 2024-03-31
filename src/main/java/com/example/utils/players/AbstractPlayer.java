@@ -23,7 +23,6 @@ public abstract class AbstractPlayer {
     public void move(int x, int y) {
         xPos += x;
         yPos += y;
-        System.out.printf("Player %s moved to %d, %d\n", name, xPos, yPos);
     }
 
     public String getName() {
