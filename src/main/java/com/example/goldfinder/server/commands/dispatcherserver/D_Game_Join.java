@@ -13,7 +13,7 @@ public class D_Game_Join implements DispatcherServerCommand {
     public String run(SelectableChannel client, List<GameServer> gameServers, InetSocketAddress addr, String[] params) {
         for(GameServer gameServer : gameServers){
             if(gameServer.getGames().getRunningGames() < GAME_COUNT){
-
+                return "REDIRECT " + gameServer.getAddr().getAddress().getHostAddress() + ":" + gameServer.getAddr().getPort();
             }
         }
         return null;

@@ -1,5 +1,7 @@
 package com.example.goldfinder.server;
 
+import com.example.goldfinder.server.commands.dispatcherserver.DispatcherServerCommand;
+import com.example.goldfinder.server.commands.dispatcherserver.DispatcherServerCommandParser;
 import com.example.utils.Logger;
 import javafx.util.Pair;
 
@@ -29,7 +31,7 @@ public class DispatcherServer extends IServer {
         gameServers = new ArrayList<>(SERVER_COUNT);
         executor = Executors.newFixedThreadPool(SERVER_COUNT);
         for (int i = 0; i < SERVER_COUNT; i++) {
-            gameServers.add(new GameServer(DispatcherServer.serverPort + i, GAME_COUNT));
+            gameServers.add(new GameServer(0, GAME_COUNT));
         }
     }
 
@@ -63,6 +65,7 @@ public class DispatcherServer extends IServer {
     protected void handleTCPRead(SelectionKey key) throws IOException {
         InetSocketAddress senderAddress = (InetSocketAddress) ((SocketChannel) key.channel()).getRemoteAddress();
         String msg = receiveTCPMessage((SocketChannel) key.channel());
+        System.out.println("Received message from " + senderAddress + " : " + msg);
         if(!msg.isEmpty()){
             handleCommands(key, msg, senderAddress);
         }
@@ -80,17 +83,23 @@ public class DispatcherServer extends IServer {
 
     private void initGameServers(){
         for (GameServer gameServer : gameServers) {
-            try {
-                gameServer.startServer();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            executor.execute(() -> {
+                try {
+                    gameServer.startServer();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
         }
     }
 
     private void handleCommands(SelectionKey key, String msg, InetSocketAddress senderAddress) {
-        // TODO
-
+        DispatcherServerCommand currentCommand = DispatcherServerCommandParser.parseCommand(msg);
+        if (currentCommand != null) {
+            String response = currentCommand.run(key.channel(), gameServers, senderAddress, msg.split(" "));
+            System.out.println("Sending to " + senderAddress + " : " + response);
+            sendMessage(key.channel(), response, senderAddress);
+        }
     }
 
     // mettre une propriete pour recuperer l'ip d'un serveur dans le bon type de connexion
@@ -104,7 +113,6 @@ public class DispatcherServer extends IServer {
 
     public static void main(String[] args) {
         DispatcherServer server;
-
         try {
             server = new DispatcherServer(serverPort);
             System.out.println("dispatcher server should be listening on port " + serverPort);

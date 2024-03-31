@@ -1,6 +1,4 @@
-package com.example.utils.commandParsers;
-
-import com.example.goldfinder.client.commands.*;
+package com.example.goldfinder.client.commands;
 
 public class ClientCommandParser {
     public static IClientCommand parseCommand(String command) {
@@ -10,6 +8,7 @@ public class ClientCommandParser {
             case "GAME_END" -> new Game_End();
             case "VALID_MOVE" -> new Valid_Move();
             case "SCORE" -> new Score();
+            case "REDIRECT" -> new Redirect();
             default -> {
                 System.out.println("Invalid command received : " + command); yield null;}
         };

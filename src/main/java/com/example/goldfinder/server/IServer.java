@@ -10,11 +10,8 @@ import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.*;
 import java.nio.channels.spi.AbstractSelectableChannel;
-import java.util.ArrayList;
-import java.util.List;
 
 public abstract class IServer extends ICommon {
-    protected final List<String> backBuffer = new ArrayList<>();
     protected ServerSocketChannel serverSocketChannel;
     protected Selector selector;
 
@@ -27,7 +24,7 @@ public abstract class IServer extends ICommon {
 
         udpSocket = DatagramChannel.open();
         udpSocket.configureBlocking(false);
-        udpSocket.bind(new InetSocketAddress("localhost", port));
+        udpSocket.bind(new InetSocketAddress(port));
         udpSocket.register(selector, SelectionKey.OP_READ);
     }
 
@@ -74,6 +71,7 @@ public abstract class IServer extends ICommon {
         SocketChannel client = serverSocketChannel.accept();
         client.configureBlocking(false);
         client.register(selector, SelectionKey.OP_READ);
+        System.out.println("Connection accepted from " + client.getRemoteAddress());
     }
 
     protected abstract void handleTCPRead(SelectionKey key) throws IOException;

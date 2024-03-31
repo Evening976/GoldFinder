@@ -2,6 +2,8 @@ package com.example.goldfinder.client.commands;
 
 import com.example.goldfinder.client.ClientBoi;
 
+import java.util.Objects;
+
 public class Client_Join implements IClientCommand{
     @Override
     public String getName() {
@@ -21,6 +23,7 @@ public class Client_Join implements IClientCommand{
             boi.setPlaying(true);
             return "Game started!";
         }
-        return msg;
+        String r = Objects.requireNonNull(ClientCommandParser.parseCommand(msg)).run(boi, msg);
+        return r == null ? msg : r;
     }
 }

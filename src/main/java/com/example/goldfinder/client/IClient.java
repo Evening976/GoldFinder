@@ -10,8 +10,6 @@ import java.net.InetSocketAddress;
 import java.nio.channels.DatagramChannel;
 import java.nio.channels.SocketChannel;
 
-import static java.lang.System.exit;
-
 public abstract class IClient extends ICommon {
     ConnectionMode mode = ConnectionMode.TCP;
     GameType gameType = GameType.GOLD_FINDER_SOLO;
@@ -50,7 +48,7 @@ public abstract class IClient extends ICommon {
         int attempts = 0;
         while (tcpSocket == null && attempts < 10) {
             try {
-                tcpSocket = SocketChannel.open(new InetSocketAddress("127.0.0.1", 1234));
+                tcpSocket = SocketChannel.open(new InetSocketAddress("localhost", 1234));
                 tcpSocket.configureBlocking(false);
 
             } catch (Exception e) {
@@ -66,7 +64,7 @@ public abstract class IClient extends ICommon {
     private void startUDPConnection() throws IOException {
         udpSocket = DatagramChannel.open();
         udpSocket.configureBlocking(false);
-        udpSocket.connect(new InetSocketAddress("127.0.0.1", 1234));
+        udpSocket.connect(new InetSocketAddress("localhost", 1234));
     }
 }
 

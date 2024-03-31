@@ -14,10 +14,10 @@ module com.example.goldfinder {
     opens com.example.utils.players to javafx.fxml;
     exports com.example.utils.games;
     opens com.example.utils.games to javafx.fxml;
-    exports com.example.utils.commandParsers;
-    opens com.example.utils.commandParsers to javafx.fxml;
     exports com.example.goldfinder.server.commands;
     opens com.example.goldfinder.server.commands to javafx.fxml;
     exports com.example.goldfinder.server.commands.gameserver;
     opens com.example.goldfinder.server.commands.gameserver to javafx.fxml;
+    exports com.example.goldfinder.server.commands.dispatcherserver;
+    opens com.example.goldfinder.server.commands.dispatcherserver to javafx.fxml;
 }

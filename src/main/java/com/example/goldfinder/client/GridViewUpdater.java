@@ -4,7 +4,6 @@ import com.example.goldfinder.client.commands.Move_Command;
 import com.example.utils.players.PlayerColor;
 import javafx.scene.input.KeyEvent;
 
-import java.awt.*;
 import java.util.Arrays;
 
 import static com.example.goldfinder.client.Controller.COLUMN_COUNT;
@@ -13,7 +12,7 @@ import static com.example.goldfinder.client.Controller.ROW_COUNT;
 public class GridViewUpdater {
     public static GridView update(String[] command, GridView gridView, int _row, int _col) {
         if (gridView == null) return null;
-        if (command == null) return gridView;
+        if (command == null || command[0].isEmpty()) return gridView;
 
         System.out.println(Arrays.toString(command));
 

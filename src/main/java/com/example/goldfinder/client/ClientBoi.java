@@ -1,23 +1,23 @@
 package com.example.goldfinder.client;
 
-import com.example.goldfinder.client.commands.Game_End;
 import com.example.goldfinder.client.commands.IClientCommand;
 import com.example.goldfinder.client.commands.SurroundingClient;
-import com.example.utils.commandParsers.ClientCommandParser;
+import com.example.utils.ConnectionMode;
+import com.example.goldfinder.client.commands.ClientCommandParser;
 
-import static java.lang.System.exit;
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.nio.channels.SocketChannel;
 
 public class ClientBoi extends IClient {
     private boolean isConnected = false;
     private boolean isPlaying = false;
 
-    public ClientBoi() {
-        super();
-    }
-
     public IClientCommand updateClient(){
         if(!isConnected) return null;
         String command = receiveMessage(mode);
+        if(command.isEmpty()) return null;
+
         System.out.println("Received command : " + command);
         return ClientCommandParser.parseCommand(command);
     }
@@ -41,7 +41,17 @@ public class ClientBoi extends IClient {
         }
     }
 
-
+    public void redirect(InetSocketAddress address) {
+        try {
+            tcpSocket.close();
+            udpSocket.close();
+            if(mode == ConnectionMode.TCP) tcpSocket = SocketChannel.open(address);
+            else udpSocket = udpSocket.bind(address);
+        } catch (IOException e) {
+            System.out.println("Error while redirecting sockets");
+            e.printStackTrace();
+        }
+    }
 
     public void sendMessage(String msg) {
         sendMessage(mode, msg);

@@ -9,6 +9,7 @@ import com.example.utils.players.AbstractPlayer;
 import javafx.util.Pair;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.SocketChannel;
@@ -20,11 +21,6 @@ public class GameServer extends IServer {
     private final Map<InetSocketAddress, AbstractPlayer> attachedPlayers = new HashMap<>();
     private final GameMap games;
     private static final int MAX_PLAYERS = 4;
-
-    public GameServer(int port) throws IOException {
-        super(port);
-        games = new GameMap(MAX_PLAYERS, 10);
-    }
 
     public GameServer(int port, int maxGames) throws IOException {
         super(port);
@@ -62,12 +58,17 @@ public class GameServer extends IServer {
         return games;
     }
 
-    public InetSocketAddress getUdpAddress() throws IOException {
-        return (InetSocketAddress) udpSocket.getLocalAddress();
-    }
-
-    public InetSocketAddress getTcpAddress() throws IOException {
-        return (InetSocketAddress) serverSocketChannel.getLocalAddress();
+    public InetSocketAddress getAddr(){
+        try {
+            System.out.println(InetAddress.getLocalHost().getHostAddress());
+            System.out.println("TCP port : " + serverSocketChannel.socket().getLocalPort());
+            System.out.println("UDP port : " + udpSocket.socket().getLocalPort());
+            return new InetSocketAddress(InetAddress.getLocalHost().getHostAddress(), serverSocketChannel.socket().getLocalPort());
+        }
+        catch (IOException e){
+            System.out.println("Could not retrieve gameserver address");
+        }
+        return null;
     }
 
 
@@ -95,6 +96,7 @@ public class GameServer extends IServer {
         }
     }
 
+
     private SelectionKey handleCommands(SelectionKey key, String msg, InetSocketAddress... senderAddress) {
         AbstractPlayer player = (AbstractPlayer) key.attachment();
         AbstractGame g = player == null ? null : games.getByID(player.getGameID());
@@ -110,4 +112,6 @@ public class GameServer extends IServer {
         key.attach(player);
         return key;
     }
+
+    //rajouter une liste de client qui attendent le leaderboard et faire une methode que appelle le dipsatcher pour envoyer le leaderboard?
 }

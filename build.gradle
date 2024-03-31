@@ -27,7 +27,7 @@ test {
 }
 
 application {
-    mainClass.set("com.example.goldfinder.server.AppServer")
+    mainClass.set("com.example.goldfinder.server.DispatcherServer")
 }
 
 
