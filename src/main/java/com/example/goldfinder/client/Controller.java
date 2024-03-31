@@ -2,7 +2,7 @@ package com.example.goldfinder.client;
 
 import com.example.goldfinder.client.commands.Client_Join;
 import com.example.goldfinder.client.commands.IClientCommand;
-import com.example.goldfinder.server.AppServer;
+import com.example.goldfinder.server.DispatcherServer;
 import com.example.utils.ConnectionMode;
 import com.example.utils.GameType;
 import javafx.animation.KeyFrame;
@@ -17,8 +17,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
-
-import static java.lang.System.exit;
 
 public class Controller {
 
@@ -41,8 +39,8 @@ public class Controller {
     int vParallax = 0;
     int hParallax = 0;
     int column, row;
-    public static int COLUMN_COUNT = AppServer.COLUMN_COUNT * 2;
-    public static int ROW_COUNT = AppServer.ROW_COUNT * 2;
+    public static int COLUMN_COUNT = DispatcherServer.COLUMN_COUNT * 2;
+    public static int ROW_COUNT = DispatcherServer.ROW_COUNT * 2;
 
     public void initialize() {
         this.gridView = new GridView(gridCanvas, COLUMN_COUNT, ROW_COUNT);

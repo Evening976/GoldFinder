@@ -26,6 +26,11 @@ public class GameServer extends IServer {
         games = new GameMap(MAX_PLAYERS, 10);
     }
 
+    public GameServer(int port, int maxGames) throws IOException {
+        super(port);
+        games = new GameMap(MAX_PLAYERS, maxGames);
+    }
+
     public void startServer() throws IOException {
         while (true) {
             if (selector.select() == 0) {
@@ -55,6 +60,14 @@ public class GameServer extends IServer {
 
     public GameMap getGames() {
         return games;
+    }
+
+    public InetSocketAddress getUdpAddress() throws IOException {
+        return (InetSocketAddress) udpSocket.getLocalAddress();
+    }
+
+    public InetSocketAddress getTcpAddress() throws IOException {
+        return (InetSocketAddress) serverSocketChannel.getLocalAddress();
     }
 
     private void handleAccept(SelectionKey key) throws IOException {

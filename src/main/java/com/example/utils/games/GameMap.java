@@ -10,14 +10,10 @@ public class GameMap {
     int maxPlayers = 4;
     int maxGames = 10;
 
-    public GameMap() {
-        games.put((short) 0, new GFGame(maxPlayers));
-    }
-
     public GameMap(int maxPlayers, int maxGames) {
         this.maxPlayers = maxPlayers;
         this.maxGames = maxGames;
-        games.put((short) 0, new GFGame(maxPlayers));
+        games = new HashMap<>(maxGames);
     }
 
     public AbstractGame getByID(short gameID) {
@@ -43,7 +39,6 @@ public class GameMap {
         Short key = (short) games.size();
         if (solo) {
             games.put(key, new GFGame());
-            System.out.println("Solo");
         } else {
             if (game instanceof GFGame) {
                 games.put(key, new GFGame(maxPlayers));
@@ -62,6 +57,17 @@ public class GameMap {
 
     public void setGame(short gameID, AbstractGame game) {
         games.put(gameID, game);
+    }
+
+
+    public int getRunningGames() {
+        int count = 0;
+        for (Short key : games.keySet()) {
+            if (games.get(key).isRunning()) {
+                count++;
+            }
+        }
+        return count;
     }
 
 }
