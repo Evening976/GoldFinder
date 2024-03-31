@@ -67,4 +67,8 @@ public abstract class AbstractPlayer {
     public String toString(){
         return xPos + "," + yPos;
     }
+
+    public int getScore() {
+        return score;
+    }
 }

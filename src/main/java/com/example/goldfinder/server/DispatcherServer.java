@@ -106,15 +106,6 @@ public class DispatcherServer extends IServer {
         }
     }
 
-    // mettre une propriete pour recuperer l'ip d'un serveur dans le bon type de connexion
-    //ajouter une commande redirect au client
-    // changer le démarrage du client pour qu'il sache se rediriger vers un serveur de jeu après s'être connecté au dispatcher
-    //mettre un executor avec un compte de thread pour les serveurs
-    //mettre un selector pour gérer les connexions entrantes
-    //on met un tableau de game server avec une propriete dans les games server pour savoir combien de parties sont dispos
-    //dès qu'il y'a une connexion entrante on parcourt tout nos serveurs pour savoir lequel a le bon type de game de disponible
-    //on envoie le joueur sur ce serveur
-
     public static void main(String[] args) {
         DispatcherServer server;
         try {

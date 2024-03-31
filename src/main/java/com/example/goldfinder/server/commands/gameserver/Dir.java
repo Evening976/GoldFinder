@@ -26,16 +26,16 @@ public class Dir implements GameServerCommand {
                             if (((CRPlayer) p).isCop()) {
                                 ((CRGame) game).catchRobber(p, game.getPlayerFromCoordinates(p.getxPos(), p.getyPos() - 1));
                                 //game.movePlayer(p, 0, -1);
-                                handleCRGame(server, p, g, dir);
+                                handleCREnd(client, server, p, g, addr, dir);
                             }
                         } else{
                             game.movePlayer(p, 0, -1);
-                            handleCRGame(server, p, g, dir);
+                            handleCREnd(client, server, p, g, addr, dir);
                         }
                     }
                     else if (game instanceof GFGame || p instanceof GFPlayer) {
                         game.movePlayer(p, 0, -1);
-                        handleGFGame(server, p, g, dir);
+                        handleGFEnd(client, server, p, g, addr, dir);
                     }
                 }
             }
@@ -47,16 +47,16 @@ public class Dir implements GameServerCommand {
                             if (((CRPlayer) p).isCop()) {
                                 ((CRGame) game).catchRobber(p, game.getPlayerFromCoordinates(p.getxPos(), p.getyPos() + 1));
                                 //game.movePlayer(p, 0, 1);
-                                handleCRGame(server, p, g, dir);
+                                handleCREnd(client, server, p, g, addr, dir);
                             }
                         } else {
                             game.movePlayer(p, 0, 1);
-                            handleCRGame(server, p, g, dir);
+                            handleCREnd(client, server, p, g, addr, dir);
                         }
                     }
                     else if (game instanceof GFGame || p instanceof GFPlayer) {
                         game.movePlayer(p, 0, 1);
-                        handleGFGame(server, p, g, dir);
+                        handleGFEnd(client, server, p, g, addr, dir);
                     }
                 }
             }
@@ -68,17 +68,17 @@ public class Dir implements GameServerCommand {
                             if (((CRPlayer) p).isCop()) {
                                 ((CRGame) game).catchRobber(p, game.getPlayerFromCoordinates(p.getxPos()-1, p.getyPos()));
                                 //game.movePlayer(p, -1, 0);
-                                handleCRGame(server, p, g, dir);
+                                handleCREnd(client, server, p, g, addr, dir);
                             }
                         } else{
                             game.movePlayer(p, -1, 0);
-                            handleCRGame(server, p, g, dir);
+                            handleCREnd(client, server, p, g, addr, dir);
                         }
 
                     }
                     else if (game instanceof GFGame || p instanceof GFPlayer) {
                         game.movePlayer(p, -1, 0);
-                        handleGFGame(server, p, g, dir);
+                        handleGFEnd(client, server, p, g, addr, dir);
                     }
                 }
             }
@@ -90,16 +90,16 @@ public class Dir implements GameServerCommand {
                             if (((CRPlayer) p).isCop()) {
                                 ((CRGame) game).catchRobber(p, game.getPlayerFromCoordinates(p.getxPos() + 1, p.getyPos()));
                                 //game.movePlayer(p, 1, 0);
-                                handleCRGame(server, p, g, dir);
+                                handleCREnd(client, server, p, g, addr, dir);
                             }
                         } else{
                             game.movePlayer(p, 1, 0);
-                            handleCRGame(server, p, g, dir);
+                            handleCREnd(client, server, p, g, addr, dir);
                         }
                     }
                     else if (game instanceof GFGame || p instanceof GFPlayer) {
                         game.movePlayer(p, 1, 0);
-                        handleGFGame(server, p, g, dir);
+                        handleGFEnd(client, server, p, g, addr, dir);
                     }
                 }
             }
@@ -117,7 +117,7 @@ public class Dir implements GameServerCommand {
         return "INVALID_MOVE";
     }
 
-    private void handleGFGame(GameServer server, AbstractPlayer p, AbstractGame g,String dir) {
+    private void handleGFEnd(SelectableChannel client, GameServer server, AbstractPlayer p, AbstractGame g, InetSocketAddress addr, String dir) {
         System.out.println(p.getxPos() + " " + p.getyPos() + " " + dir);
         System.out.println(g.getPlayer(p).getxPos() + " " + g.getPlayer(p).getyPos() + " " + dir);
         if(game instanceof GFGame || p instanceof GFPlayer) {
@@ -129,14 +129,15 @@ public class Dir implements GameServerCommand {
                 for(AbstractPlayer abstractPlayer : game.getPlayers()) {
                     System.out.println("Game ended");
                     server.sendMessage(abstractPlayer.getClient(),
-                            "GAME_END", abstractPlayer.getAddress());
+                            new Game_End().run(client, server, p, g, addr, null),
+                            abstractPlayer.getAddress());
                     game.setHasEnded(true);
                 }
             }
         }
     }
 
-    public void handleCRGame(GameServer server, AbstractPlayer p, AbstractGame g, String dir) {
+    public void handleCREnd(SelectableChannel client, GameServer server, AbstractPlayer p, AbstractGame g, InetSocketAddress addr, String dir) {
         if(game instanceof CRGame || p instanceof CRPlayer) {
             if (dir.contains("GOLD")) {
                 System.out.println("Gold collected!");
@@ -145,7 +146,8 @@ public class Dir implements GameServerCommand {
                     for(AbstractPlayer abstractPlayer : game.getPlayers()) {
                         System.out.println("Game ended");
                         server.sendMessage(abstractPlayer.getClient(),
-                                "GAME_END", abstractPlayer.getAddress());
+                                new Game_End().run(client, server, p, g, addr, null),
+                                abstractPlayer.getAddress());
                         game.setHasEnded(true);
                     }
                 }
@@ -161,19 +163,14 @@ public class Dir implements GameServerCommand {
 
         }
 
-
         if (robberCount == 0) {
             for(AbstractPlayer abstractPlayer : game.getPlayers()) {
                 System.out.println("Game ended COPS WIN!");
                 server.sendMessage(abstractPlayer.getClient(),
-                        "GAME_END", abstractPlayer.getAddress());
+                        new Game_End().run(client, server, p, g, addr, null), abstractPlayer.getAddress());
                 game.setHasEnded(true);
             }
         }
-
-        //TO DO faire en sorte que les bandits puissent gagner
-
-
     }
 
     @Override

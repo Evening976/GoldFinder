@@ -29,15 +29,15 @@ Commandes serveur de gestion :
 
 Taches à réaliser :
 - [x] Création du serveur de jeu
-- [ ] Création du serveur de gestion
+- [x] Création du serveur de gestion
 - [x] Création du client
 
 Sous-taches :
-- [ ] Jeu
+- [x] Jeu
 - [ ] Bot
 - [ ] Leaderboard
 - [x] Gestion de parties multiples
 - [x] TCP et UDP
-- [ ] Montée en charge
+- [x] Montée en charge
 
 
