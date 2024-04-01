@@ -11,16 +11,27 @@
             <Label alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="24.0" prefWidth="200.0" text="Score" />
             <Label fx:id="score" alignment="CENTER" contentDisplay="TEXT_ONLY" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="24.0" prefWidth="200.0" />
             <Separator maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="24.0" prefWidth="200.0" />
-            <ToggleButton fx:id="playToggleButton" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" onAction="#playToggleButtonAction" prefHeight="24.0" prefWidth="200.0" styleClass="button" text="Play" />
+            <ToggleButton fx:id="playToggleButton" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" onAction="#playToggleButtonAction" prefHeight="24.0" prefWidth="200.0" styleClass="button" text="Connect" />
             <ToggleButton fx:id="restartToggleButton" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" onAction="#restartButtonAction" prefHeight="24.0" prefWidth="200.0" styleClass="button" text="Restart" />
+         <Separator prefHeight="28.0" prefWidth="100.0" />
+         <Label prefHeight="21.0" prefWidth="88.0" text="Paramètres" textAlignment="CENTER" />
+         <Separator layoutX="10.0" layoutY="172.0" prefHeight="24.0" prefWidth="100.0" />
             <Label text="Name :" />
             <TextField fx:id="playerName" />
+         <Separator prefHeight="29.0" prefWidth="100.0" />
          <Label fx:id="score1" alignment="CENTER" contentDisplay="TEXT_ONLY" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="24.0" prefWidth="200.0" text="TCP/UDP" />
          <ChoiceBox fx:id="connectionMode" prefWidth="150.0" />
+         <Separator prefHeight="19.0" prefWidth="100.0" />
          <Label fx:id="gameTypelabel" alignment="CENTER" contentDisplay="TEXT_ONLY" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="24.0" prefWidth="200.0" text="Solo/Multiplayer" />
          <ChoiceBox fx:id="gameType" prefWidth="150.0" />
-         <Separator prefWidth="200.0" />
+         <Separator prefHeight="16.0" prefWidth="100.0" />
          <Button maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" onAction="#exitApplication" prefHeight="24.0" prefWidth="200.0" styleClass="button" text="Exit" />
+         <Separator prefWidth="200.0" />
+         <Label text="Classement :" />
+         <ListView fx:id="viewLeaderboard" prefHeight="4.0" prefWidth="100.0" />
+         <Label text="Taille :" />
+         <TextField fx:id="leaderSizeText" />
+         <Button fx:id="getleaderboardbtn" mnemonicParsing="false" onAction="#getLeaderboard" prefHeight="33.0" prefWidth="100.0" text="Button" />
         </VBox>
         <Canvas fx:id="gridCanvas" height="900.0" width="900.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
         </Canvas>

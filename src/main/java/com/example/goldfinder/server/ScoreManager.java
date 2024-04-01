@@ -18,22 +18,24 @@ public class ScoreManager {
     }
 
     public static String getLeaderboardsText(TreeMap<Integer, ArrayList<String>> scores, int nScores) {
-        StringBuilder scoresString = new StringBuilder().append("Leaderboard:\n");
-        System.out.println(scores.toString());
+        StringBuilder scoresString = new StringBuilder();
         int count = 0;
         for (int i : scores.keySet()) {
-            count++;
-            if (scores.lastKey() == i || count == nScores) {
-                scoresString.append(scores.get(i)).append(" : ").append(i).append(" gold");
-                break;
+            for (String name : scores.get(i)) {
+                count++;
+                String cleanScore = name.replaceAll("\\[", "").replaceAll("]", "");
+                if (scores.get(i).size() == i || count == nScores) {
+                    scoresString.append("SCORE:").append(i).append(":").append(cleanScore).append("\n");
+                    break;
+                }
+                scoresString.append("SCORE:").append(i).append(":").append(cleanScore).append("\n");
             }
-            scoresString.append(scores.get(i)).append(" : ").append(i).append(" gold\n");
         }
         return scoresString.toString();
     }
 
     public static TreeMap<Integer, ArrayList<String>> LoadLeaderboards() {
-        TreeMap<Integer, ArrayList<String>> scores = new TreeMap<>();
+        TreeMap<Integer, ArrayList<String>> scores = new TreeMap<>(Comparator.reverseOrder());
         try {
             File file = new File("leaderboard.txt");
             Scanner scanner = new Scanner(file);

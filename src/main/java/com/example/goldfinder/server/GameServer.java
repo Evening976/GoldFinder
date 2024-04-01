@@ -101,9 +101,12 @@ public class GameServer extends IServer {
         GameServerCommand currentCommand = GameServerCommandParser.parseCommand(msg);
         if (currentCommand != null) {
             String response = currentCommand.run(key.channel(), this, player, g, senderAddress[0], msg.split(" "));
-            player = currentCommand.getPlayer();
-            games.setGame(player.getGameID(), currentCommand.getGame());
-            sendMessage(key.channel(), response, player.getAddress());
+            if(player != null && currentCommand.getGame() != null){
+                player = currentCommand.getPlayer();
+                games.setGame(player.getGameID(), currentCommand.getGame());
+                sendMessage(key.channel(), response, player.getAddress());
+            }
+            else sendMessage(key.channel(), response, senderAddress[0]);
         }
         key.attach(player);
         return key;

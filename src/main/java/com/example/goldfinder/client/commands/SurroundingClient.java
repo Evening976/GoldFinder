@@ -14,7 +14,7 @@ public class SurroundingClient implements IClientCommand{
             boi.sendMessage("SURROUNDING");
             return "";
         }
-        return "ALED";
+        return "Faut jouer enfaite";
     }
 
     @Override

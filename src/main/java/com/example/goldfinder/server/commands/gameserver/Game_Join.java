@@ -37,6 +37,9 @@ public class Game_Join implements GameServerCommand {
         game.addPlayer(player);
         player.attachToGame(availableGame.getKey(), (short) game.getPlayers().indexOf(player));
 
+        if (player.getScore() != 0) {
+            player.setScore(0);
+        }
         _game = game;
         _player = player;
 

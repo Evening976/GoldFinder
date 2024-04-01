@@ -1,6 +1,7 @@
 package com.example.goldfinder.client;
 
 import com.example.goldfinder.client.commands.Client_Join;
+import com.example.goldfinder.client.commands.Client_Leaderboard;
 import com.example.goldfinder.client.commands.IClientCommand;
 import com.example.goldfinder.server.DispatcherServer;
 import com.example.utils.ConnectionMode;
@@ -8,17 +9,24 @@ import com.example.utils.GameType;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleButton;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
 
-public class Controller {
+import java.util.List;
 
+public class Controller {
+    @FXML
+    ListView<String> viewLeaderboard;
+    @FXML
+    TextField leaderSizeText;
+    @FXML
+    Button getleaderboardbtn;
     @FXML
     Canvas gridCanvas;
     @FXML
@@ -33,6 +41,7 @@ public class Controller {
     TextField debugCommand;
     @FXML
     ToggleButton playToggleButton;
+
     GridView gridView;
     ClientBoi client;
     int vParallax = 0;
@@ -83,11 +92,16 @@ public class Controller {
     public void playToggleButtonAction() {
         String name = playerName.getText();
         if (!client.isPlaying()) {
-            if (!name.isEmpty()) {
-                client.changeConnection(ConnectionMode.valueOf(connectionMode.getValue()));
-                client.setGameType(GameType.valueOf(gameType.getValue()));
-                client.connect();
-                client.sendCommand(new Client_Join(), name + GameType.getGameType(gameType.getValue()));
+            if (!client.isConnected()) {
+                if (!name.isEmpty()) {
+                    client.changeConnection(ConnectionMode.valueOf(connectionMode.getValue()));
+                    client.setGameType(GameType.valueOf(gameType.getValue()));
+                    client.connect();
+                    playToggleButton.setText("Play!");
+                    client.sendCommand(new Client_Join(), name + GameType.getGameType(gameType.getValue()));
+                }
+            }
+            else{
                 String r = client.sendCommand(new Client_Join(), name + GameType.getGameType(gameType.getValue()));
                 System.out.println("Response to game_join : " + r);
 
@@ -141,6 +155,24 @@ public class Controller {
         Platform.exit();
     }
 
+    public void getLeaderboard(ActionEvent actionEvent) {
+        if (!client.isConnected() && !client.isPlaying()) {
+            return;
+        }
 
+        String size = leaderSizeText.getText();
+        if (size.isEmpty()) {
+            size = "10";
+        }
+        String r = client.sendCommand(new Client_Leaderboard(), size);
+        System.out.println("Treated leaderboard : " + r);
+        viewLeaderboard.getItems().clear();
+        List<String> lines = List.of(r.split("\n"));
+        ObservableList<String> list = FXCollections.observableArrayList(lines);
+        for (String s : lines) {
+            viewLeaderboard.getItems().add(s);
+        }
+        viewLeaderboard.prefHeightProperty().bind(Bindings.size(list).multiply(24));
+    }
 }
 

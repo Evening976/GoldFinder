@@ -11,7 +11,7 @@ import java.nio.channels.SelectableChannel;
 public class Leaderboard implements GameServerCommand {
     @Override
     public String run(SelectableChannel client, GameServer server, AbstractPlayer p, AbstractGame g, InetSocketAddress addr, String[] params) {
-        return ScoreManager.getLeaderboardsText(ScoreManager.LoadLeaderboards(), Integer.parseInt(params[1]));
+        return ScoreManager.getLeaderboardsText(ScoreManager.LoadLeaderboards(), Integer.parseInt(params[1])) + "END";
     }
 
     @Override
