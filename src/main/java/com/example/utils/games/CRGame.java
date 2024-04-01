@@ -11,16 +11,13 @@ import java.util.Map;
 public class CRGame extends AbstractGame{
     List<AbstractPlayer> cops;
     Map<AbstractPlayer, String> robbers;
-
-    int robberCount;
     int goldCount;
 
     public CRGame(int maxPlayers) {
         super(maxPlayers);
         this.cops = new ArrayList<>();
         this.robbers = new HashMap<>();
-        this.goldCount = countGold();
-        this.robberCount = 0;
+        this.goldCount = getGoldCount();
     }
 
     protected void spawnPlayer(AbstractPlayer p) {
@@ -39,34 +36,14 @@ public class CRGame extends AbstractGame{
             }
         }
     }
+    @Override
+    protected boolean canCollectGold(AbstractPlayer p) {
+        return !((CRPlayer)p).isCop();
+    }
 
     private boolean isPlayerACop(int xpos, int ypos) {
         CRPlayer p = (CRPlayer) getPlayerFromCoordinates(xpos, ypos);
         return p != null && p.isCop();
-    }
-
-    @Override
-    public String getUp(int xpos, int ypos) {
-        if (grid.upWall(xpos, ypos) || ypos == 0) return "WALL ";
-        return getNeighbour(xpos, ypos, 0, -1);
-    }
-
-    @Override
-    public String getDown(int xpos, int ypos) {
-        if (grid.downWall(xpos, ypos) || ypos == grid.getRowCount()) return "WALL ";
-        return getNeighbour(xpos, ypos, 0, 1);
-    }
-
-    @Override
-    public String getLeft(int xpos, int ypos) {
-        if (grid.leftWall(xpos, ypos) || xpos == 0) return "WALL ";
-        return getNeighbour(xpos, ypos, -1, 0);
-    }
-
-    @Override
-    public String getRight(int xpos, int ypos) {
-        if (grid.rightWall(xpos, ypos) || xpos == grid.getColumnCount()) return "WALL ";
-        return getNeighbour(xpos, ypos, 1, 0);
     }
 
     public void setCop(CRPlayer p) {
@@ -77,7 +54,6 @@ public class CRGame extends AbstractGame{
     public void setRobber(CRPlayer p) {
         p.setCop(false);
         robbers.put(p, "FREE");
-        robberCount++;
     }
 
     public CRPlayer getPlayer(AbstractPlayer p) {
@@ -88,13 +64,6 @@ public class CRGame extends AbstractGame{
         return "Cops and Robbers game with " + players.size() + " players";
     }
 
-    public void collectGold(AbstractPlayer p) {
-        if (grid.hasGold(p.getxPos(), p.getyPos()) && !((CRPlayer) p).isCop()) {
-            p.collectGold();
-            goldCount--;
-            grid.removeGold(p.getxPos(), p.getyPos());
-        }
-    }
 
     public Map<AbstractPlayer,String> getRobbers(){
         return robbers;
@@ -103,22 +72,15 @@ public class CRGame extends AbstractGame{
     public void catchRobber(AbstractPlayer cop, AbstractPlayer robber) {
         cop.collectGold();
         robbers.put(robber,"CAUGHT");
+        removePlayer(robber);
         System.out.println("catching robber");
     }
 
-    private int countGold(){
-        int count = 0;
-        for (int i = 0; i < grid.getColumnCount(); i++) {
-            for (int j = 0; j < grid.getRowCount(); j++) {
-                if (grid.hasGold(i, j)) {
-                    count++;
-                }
-            }
-        }
-        return count;
+    public int getGoldCount(){
+        return grid.getGoldCount();
     }
 
-    private String getNeighbour(int xpos, int ypos, int x, int y){
+    protected String getObstacles(int xpos, int ypos, int x, int y){
         CRPlayer p = (CRPlayer) getPlayerFromCoordinates(xpos + x, ypos + y);
         if(p != null){
             if (p.isCop()) {
@@ -132,16 +94,4 @@ public class CRGame extends AbstractGame{
         }
         return "EMPTY ";
     }
-
-    public int getGoldCount(){
-        return goldCount;
-    }
-
-    public int getRobberCount(){
-        return robberCount;
-    }
-    public void decreaseRobberCount(){
-        robberCount--;
-    }
-
 }
