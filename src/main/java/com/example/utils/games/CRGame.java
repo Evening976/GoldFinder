@@ -30,8 +30,7 @@ public class CRGame extends AbstractGame{
             } else {
                 setRobber((CRPlayer) p);
             }
-            boolean isFree = isFree(xpos, ypos);
-            if (isFree) {
+            if (isFree(xpos, ypos)) {
                 p.move(xpos, ypos);
                 break;
             }
@@ -39,107 +38,32 @@ public class CRGame extends AbstractGame{
     }
 
     private boolean isPlayerACop(int xpos, int ypos) {
-        for (AbstractPlayer p : players) {
-            if (p.getxPos() == xpos && p.getyPos() == ypos && ((CRPlayer) p).isCop()) {
-                return true;
-            }
-        }
-        System.out.println("false");
-        return false;
+        CRPlayer p = (CRPlayer) getPlayerFromCoordinates(xpos, ypos);
+        return p != null && p.isCop();
     }
 
     @Override
     public String getUp(int xpos, int ypos) {
         if (grid.upWall(xpos, ypos) || ypos == 0) return "WALL ";
-        for (AbstractPlayer p : players) {
-            if (p.getxPos() == xpos && p.getyPos() == ypos - 1) {
-                if (((CRPlayer) p).isCop()) {
-                    if (isPlayerACop(xpos, ypos)) {
-                        return "ALLY ";
-                    }
-                    return "ENEMY ";
-                } else {
-                    if (isPlayerACop(xpos, ypos)) {
-                        return "ENEMY ";
-                    }
-                    return "ALLY ";
-                }
-            }
-        }
-        if (grid.hasGold(xpos, ypos - 1)) return "GOLD ";
-        return "EMPTY ";
+        return getNeighbour(xpos, ypos, 0, -1);
     }
 
     @Override
     public String getDown(int xpos, int ypos) {
         if (grid.downWall(xpos, ypos) || ypos == grid.getRowCount()) return "WALL ";
-        for (AbstractPlayer p : players) {
-            if (p.getxPos() == xpos && p.getyPos() == ypos + 1) {
-                if (((CRPlayer) p).isCop()) {
-                    if (isPlayerACop(xpos, ypos)) {
-                        return "ALLY ";
-                    } else {
-                        return "ENEMY ";
-                    }
-                } else {
-                    if (isPlayerACop(xpos, ypos)) {
-                        return "ENEMY ";
-                    } else {
-                        return "ALLY ";
-                    }
-                }
-            }
-        }
-        if (grid.hasGold(xpos, ypos + 1)) return "GOLD ";
-        return "EMPTY ";
+        return getNeighbour(xpos, ypos, 0, 1);
     }
 
     @Override
     public String getLeft(int xpos, int ypos) {
         if (grid.leftWall(xpos, ypos) || xpos == 0) return "WALL ";
-        for (AbstractPlayer p : players) {
-            if (p.getxPos() == xpos - 1 && p.getyPos() == ypos) {
-                if (((CRPlayer) p).isCop()) {
-                    if (isPlayerACop(xpos, ypos)) {
-                        return "ALLY ";
-                    } else {
-                        return "ENEMY ";
-                    }
-                } else {
-                    if (isPlayerACop(xpos, ypos)) {
-                        return "ENEMY ";
-                    } else {
-                        return "ALLY ";
-                    }
-                }
-            }
-        }
-        if (grid.hasGold(xpos - 1, ypos)) return "GOLD ";
-        return "EMPTY ";
+        return getNeighbour(xpos, ypos, -1, 0);
     }
 
     @Override
     public String getRight(int xpos, int ypos) {
         if (grid.rightWall(xpos, ypos) || xpos == grid.getColumnCount()) return "WALL ";
-        for (AbstractPlayer p : players) {
-            if (p.getxPos() == xpos + 1 && p.getyPos() == ypos) {
-                if (((CRPlayer) p).isCop()) {
-                    if (isPlayerACop(xpos, ypos)) {
-                        return "ALLY ";
-                    } else {
-                        return "ENEMY ";
-                    }
-                } else {
-                    if (isPlayerACop(xpos, ypos)) {
-                        return "ENEMY ";
-                    } else {
-                        return "ALLY ";
-                    }
-                }
-            }
-        }
-        if (grid.hasGold(xpos + 1, ypos)) return "GOLD ";
-        return "EMPTY ";
+        return getNeighbour(xpos, ypos, 1, 0);
     }
 
     public void setCop(CRPlayer p) {
@@ -189,6 +113,21 @@ public class CRGame extends AbstractGame{
             }
         }
         return count;
+    }
+
+    private String getNeighbour(int xpos, int ypos, int x, int y){
+        CRPlayer p = (CRPlayer) getPlayerFromCoordinates(xpos + x, ypos + y);
+        if(p != null){
+            if (p.isCop()) {
+                return isPlayerACop(xpos, ypos) ? "ALLY " : "ENEMY ";
+            } else {
+                return isPlayerACop(xpos, ypos) ? "ENEMY " : "ALLY ";
+            }
+        }
+        if(grid.hasGold(xpos + x, ypos + y)){
+            return "GOLD ";
+        }
+        return "EMPTY ";
     }
 
     public int getGoldCount(){

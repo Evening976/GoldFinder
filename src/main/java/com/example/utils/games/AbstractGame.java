@@ -39,11 +39,7 @@ public abstract class AbstractGame {
     }
 
     protected boolean isFree(int xpos, int ypos){
-        //boolean p =  !grid.downWall(xpos, ypos) && !grid.upWall(xpos, ypos) && !grid.leftWall(xpos, ypos) && !grid.rightWall(xpos, ypos);
-        for (AbstractPlayer player : players) {
-            if (player.getxPos() == xpos && player.getyPos() == ypos) return false;
-        }
-        return true;
+        return getPlayerFromCoordinates(xpos, ypos) == null;
     }
 
     public abstract String getUp(int xpos, int ypos);
