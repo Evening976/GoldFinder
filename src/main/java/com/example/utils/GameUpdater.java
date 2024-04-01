@@ -134,15 +134,16 @@ public class GameUpdater {
             }
         }
 
-        int robberCount = ((CRGame)game).getRobbers().size();
+
         for(AbstractPlayer robber : ((CRGame)game).getRobbers().keySet()) {
-            if(((CRGame)game).getRobbers().get(robber).equals("CAUGHT")) {
-                robberCount--;
-                server.sendMessage(robber.getClient(), "GAME_END ", robber.getAddress());
+            if(((CRGame)game).getRobbers().get(robber).equals("CAUGHT") && game.getPlayers().contains(robber)) {
+                ((CRGame)game).decreaseRobberCount();
+                server.sendMessage(robber.getClient(), new Game_End().run(client, server, p, game, addr, null), robber.getAddress());
+                game.removePlayer(robber);
             }
         }
 
-        if (robberCount == 0) {
+        if (((CRGame)game).getRobberCount() == 0) {
             for(AbstractPlayer abstractPlayer : game.getPlayers()) {
                 System.out.println("Game ended COPS WIN!");
                 server.sendMessage(abstractPlayer.getClient(),
