@@ -6,12 +6,14 @@ import java.util.Random;
 public class Grid implements Serializable {
     boolean[][] hWall, vWall, gold;
     int columnCount, rowCount;
-
     private final Random random;
+    private int goldCount;
+
     public Grid(int columnCount, int rowCount, Random random) {
         this.columnCount = columnCount;
         this.rowCount = rowCount;
         this.random = random;
+        this.goldCount = 0;
 
         RandomMaze randomMaze = new RandomMaze(columnCount,rowCount,.1, random);
         randomMaze.generate();
@@ -47,12 +49,16 @@ public class Grid implements Serializable {
         return gold[column][row];
     }
     private void generateGold(double v) {
-        for(int column=0; column<columnCount; column++)
-            for(int row=0;row<rowCount; row++)
-                gold[column][row]=(random.nextInt(10)<v);
+        for(int column=0; column<columnCount; column++) {
+            for (int row = 0; row < rowCount; row++) {
+                gold[column][row] = (random.nextInt(10) < v);
+                if(gold[column][row]) goldCount++;
+            }
+        }
     }
 
     public void removeGold(int column, int row){
+        if(gold[column][row]) goldCount--;
         gold[column][row] = false;
     }
 
@@ -63,4 +69,6 @@ public class Grid implements Serializable {
     public int getRowCount() {
         return rowCount;
     }
+
+    public int getGoldCount(){return goldCount;}
 }

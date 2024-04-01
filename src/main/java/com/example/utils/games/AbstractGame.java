@@ -42,21 +42,36 @@ public abstract class AbstractGame {
         return getPlayerFromCoordinates(xpos, ypos) == null;
     }
 
-    public abstract String getUp(int xpos, int ypos);
+    public String getUp(int xpos, int ypos){
+        if(grid.upWall(xpos, ypos) || ypos == 0) return "WALL ";
+        return getObstacles(xpos, ypos, 0, -1);
+    }
 
-    public abstract String getDown(int xpos, int ypos);
+    public  String getDown(int xpos, int ypos){
+        if(grid.downWall(xpos, ypos) || ypos == grid.getRowCount()) return "WALL ";
+        return getObstacles(xpos, ypos, 0, 1);
+    }
 
-    public abstract String getLeft(int xpos, int ypos);
+    public  String getLeft(int xpos, int ypos){
+        if(grid.leftWall(xpos, ypos) || xpos == 0) return "WALL ";
+        return getObstacles(xpos, ypos, -1, 0);
+    }
 
-    public abstract String getRight(int xpos, int ypos);
+    public  String getRight(int xpos, int ypos){
+        if(grid.rightWall(xpos, ypos) || xpos == grid.getColumnCount()) return "WALL ";
+        return getObstacles(xpos, ypos, 1, 0);
+    }
+
+    protected abstract String getObstacles(int xpos, int ypos, int xdir, int ydir);
 
     protected abstract void spawnPlayer(AbstractPlayer p);
+
+    protected abstract boolean canCollectGold(AbstractPlayer p);
 
     public void movePlayer(AbstractPlayer p, int xpos, int ypos) {
         players.get(players.indexOf(p)).move(xpos, ypos);
 
     }
-
     public void removePlayer(AbstractPlayer player) {
         players.remove(player);
     }
@@ -65,7 +80,12 @@ public abstract class AbstractGame {
         return players.get(players.indexOf(p));
     }
 
-    public abstract void collectGold(AbstractPlayer p);
+    public void collectGold(AbstractPlayer p){
+        if(grid.hasGold(p.getxPos(), p.getyPos()) && canCollectGold(p)){
+            p.collectGold();
+            grid.removeGold(p.getxPos(), p.getyPos());
+        }
+    }
 
     public boolean isRunning() {
         return isRunning;
