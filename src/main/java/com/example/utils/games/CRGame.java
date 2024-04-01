@@ -13,11 +13,14 @@ public class CRGame extends AbstractGame{
     Map<AbstractPlayer, String> robbers;
     int goldCount;
 
+    int robberCount;
+
     public CRGame(int maxPlayers) {
         super(maxPlayers);
         this.cops = new ArrayList<>();
         this.robbers = new HashMap<>();
         this.goldCount = getGoldCount();
+        this.robberCount = 0;
     }
 
     protected void spawnPlayer(AbstractPlayer p) {
@@ -54,6 +57,7 @@ public class CRGame extends AbstractGame{
     public void setRobber(CRPlayer p) {
         p.setCop(false);
         robbers.put(p, "FREE");
+        robberCount++;
     }
 
     public CRPlayer getPlayer(AbstractPlayer p) {
@@ -93,5 +97,13 @@ public class CRGame extends AbstractGame{
             return "GOLD ";
         }
         return "EMPTY ";
+    }
+
+    public int getRobberCount() {
+        return robberCount;
+    }
+
+    public void decreaseRobberCount() {
+        robberCount--;
     }
 }
