@@ -20,6 +20,9 @@ public class GameUpdater {
                 dir = game.getUp(p.getxPos(), p.getyPos());
                 if (dir.contains("EMPTY") || dir.contains("GOLD") || dir.contains("ENEMY")) {
                     if (game instanceof CRGame || p instanceof CRPlayer) {
+                        if(((CRPlayer) p).isDead()) {
+                            return "INVALID_MOVE";
+                        }
                         if (dir.contains("ENEMY")) {
                             ((CRGame) game).catchRobber(p, game.getPlayerFromCoordinates(p.getxPos(), p.getyPos() - 1));
                         } else { game.movePlayer(p, 0, -1); }
@@ -34,6 +37,9 @@ public class GameUpdater {
                 dir = game.getDown(p.getxPos(), p.getyPos());
                 if (dir.contains("EMPTY") || dir.contains("GOLD") || dir.contains("ENEMY")) {
                     if (game instanceof CRGame || p instanceof CRPlayer) {
+                        if(((CRPlayer) p).isDead()) {
+                            return "INVALID_MOVE";
+                        }
                         if (dir.contains("ENEMY")) {
                                 ((CRGame) game).catchRobber(p, game.getPlayerFromCoordinates(p.getxPos(), p.getyPos() + 1));
                         } else {
@@ -50,6 +56,9 @@ public class GameUpdater {
                 dir = game.getLeft(p.getxPos(), p.getyPos());
                 if (dir.contains("EMPTY") || dir.contains("GOLD") || dir.contains("ENEMY")) {
                     if (game instanceof CRGame || p instanceof CRPlayer) {
+                        if(((CRPlayer) p).isDead()) {
+                            return "INVALID_MOVE";
+                        }
                         if (dir.contains("ENEMY")) {
                                 ((CRGame) game).catchRobber(p, game.getPlayerFromCoordinates(p.getxPos() - 1, p.getyPos()));
                         } else {
@@ -66,6 +75,9 @@ public class GameUpdater {
                 dir = game.getRight(p.getxPos(), p.getyPos());
                 if (dir.contains("EMPTY") || dir.contains("GOLD") || dir.contains("ENEMY")) {
                     if (game instanceof CRGame || p instanceof CRPlayer) {
+                        if(((CRPlayer) p).isDead()) {
+                            return "INVALID_MOVE";
+                        }
                         if (dir.contains("ENEMY")) {
                                 ((CRGame) game).catchRobber(p, game.getPlayerFromCoordinates(p.getxPos() + 1, p.getyPos()));
                         } else {
@@ -117,8 +129,9 @@ public class GameUpdater {
 
         System.out.println("Robber count: " + ((CRGame) game).getRobberCount());
         for (AbstractPlayer robber : ((CRGame) game).getRobbers().keySet()) {
-            if (((CRGame) game).getRobbers().get(robber).equals("CAUGHT") && game.getPlayers().contains(robber)) {
+            if (((CRGame) game).getRobbers().get(robber).equals("CAUGHT") && !((CRPlayer)robber).isDead()) {
                 ((CRGame) game).decreaseRobberCount();
+                ((CRPlayer) robber).setDead(true);
                 server.sendMessage(robber.getClient(),
                         new Game_End().run(client, server, p, game, addr, null), robber.getAddress());
             }

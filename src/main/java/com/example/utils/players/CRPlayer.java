@@ -1,12 +1,11 @@
 package com.example.utils.players;
 
-import javafx.scene.paint.Color;
-
 import java.nio.channels.SelectableChannel;
 
 public class CRPlayer extends AbstractPlayer {
 
     boolean isCop;
+    boolean isDead;
 
     public CRPlayer(SelectableChannel client,String name, int xPos, int yPos){
         super(client, name, xPos, yPos);
@@ -18,6 +17,13 @@ public class CRPlayer extends AbstractPlayer {
 
     public boolean isCop(){
         return isCop;
+    }
+
+    public void setDead(boolean isDead){
+        this.isDead = isDead;
+    }
+    public boolean isDead(){
+        return isDead;
     }
 
     @Override

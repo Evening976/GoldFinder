@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CRGame extends AbstractGame{
+public class CRGame extends AbstractGame {
     List<AbstractPlayer> cops;
     Map<AbstractPlayer, String> robbers;
     int goldCount;
@@ -39,9 +39,10 @@ public class CRGame extends AbstractGame{
             }
         }
     }
+
     @Override
     protected boolean canCollectGold(AbstractPlayer p) {
-        return !((CRPlayer)p).isCop();
+        return !((CRPlayer) p).isCop();
     }
 
     private boolean isPlayerACop(int xpos, int ypos) {
@@ -63,42 +64,46 @@ public class CRGame extends AbstractGame{
     public CRPlayer getPlayer(AbstractPlayer p) {
         return (CRPlayer) players.get(players.indexOf(p));
     }
+
     @Override
     public String toString() {
         return "Cops and Robbers game with " + players.size() + " players";
     }
 
 
-    public Map<AbstractPlayer,String> getRobbers(){
+    public Map<AbstractPlayer, String> getRobbers() {
         return robbers;
     }
 
     public void catchRobber(AbstractPlayer p1, AbstractPlayer p2) {
-        if (((CRPlayer)p1).isCop()){
+        if (((CRPlayer) p1).isCop() && !((CRPlayer) p2).isCop() && !robbers.get(p2).equals("CAUGHT")){
             p1.collectGold();
-            robbers.put(p2,"CAUGHT");
-        } else {
+            robbers.remove(p2);
+            robbers.put(p2, "CAUGHT");
+        } else if(((CRPlayer) p2).isCop() && !((CRPlayer) p1).isCop() && !robbers.get(p1).equals("CAUGHT")){
             p2.collectGold();
-            robbers.put(p1,"CAUGHT");
+            robbers.remove(p1);
+            robbers.put(p1, "CAUGHT");
             System.out.println("p1: " + p1 + " p2: " + p2);
         }
-        System.out.println("catching robber");
     }
 
-    public int getGoldCount(){
+    public int getGoldCount() {
         return grid.getGoldCount();
     }
 
-    protected String getObstacles(int xpos, int ypos, int x, int y){
+    protected String getObstacles(int xpos, int ypos, int x, int y) {
         CRPlayer p = (CRPlayer) getPlayerFromCoordinates(xpos + x, ypos + y);
-        if(p != null){
+        if (p != null) {
             if (p.isCop()) {
                 return isPlayerACop(xpos, ypos) ? "ALLY " : "ENEMY ";
             } else {
-                return isPlayerACop(xpos, ypos) ? "ENEMY " : "ALLY ";
+                if (!robbers.get(p).equals("CAUGHT")) {
+                    return isPlayerACop(xpos, ypos) ? "ENEMY " : "ALLY ";
+                }
             }
         }
-        if(grid.hasGold(xpos + x, ypos + y)){
+        if (grid.hasGold(xpos + x, ypos + y)) {
             return "GOLD ";
         }
         return "EMPTY ";
