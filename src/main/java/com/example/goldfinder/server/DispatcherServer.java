@@ -12,6 +12,7 @@ import java.nio.channels.SocketChannel;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.TreeMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -25,6 +26,8 @@ public class DispatcherServer extends IServer {
 
     ExecutorService executor;
     List<GameServer> gameServers;
+
+    TreeMap<Integer, List<String>> scores = new TreeMap<>();
 
     public DispatcherServer(int port) throws IOException {
         super(port);
@@ -106,12 +109,28 @@ public class DispatcherServer extends IServer {
         }
     }
 
+    private TreeMap<Integer, ArrayList<String>> getScores(){
+        TreeMap<Integer, ArrayList<String>> biggesMapEver = new TreeMap<>();
+        for(GameServer gameServer : gameServers){
+            biggesMapEver.putAll(gameServer.getScores());
+        }
+        /*soit le dispatcher poll les gameServer et met a jour les tableaux des scores de tous les serveurs
+         mais on a plein de copies du même tableau (- de complexité en temps, + de complexité en espace)
+         soit on met a jour la liste des scores a chaque fois qu'on ajoute un score dans un gameServer
+         et poll le dispatcher pour renvoyer la liste des scores a chaque fois qu'on demande les scores
+         ( + de complexité en temps (+ de complexité pour les serveurs de jeux aussi), - de complexité en espace)
+         la 1ère solution est plus facile a mettre en place
+        */
+        return null;
+    }
+
     public static void main(String[] args) {
         DispatcherServer server;
         try {
             server = new DispatcherServer(serverPort);
             System.out.println("dispatcher server should be listening on port " + serverPort);
             server.startServer();
+            //ScoreManager.SaveLeaderboards();
         } catch (IOException e) {
             System.out.println("Error creating server " + e.getMessage());
         }

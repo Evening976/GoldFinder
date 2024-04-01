@@ -14,11 +14,10 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.SocketChannel;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 public class GameServer extends IServer {
+    private final TreeMap<Integer, ArrayList<String>> serverScores = new TreeMap<>();
     private final Map<InetSocketAddress, AbstractPlayer> attachedPlayers = new HashMap<>();
     private final GameMap games;
     private static final int MAX_PLAYERS = 4;
@@ -111,5 +110,11 @@ public class GameServer extends IServer {
         return key;
     }
 
-    //rajouter une liste de client qui attendent le leaderboard et faire une methode que appelle le dipsatcher pour envoyer le leaderboard?
+    public void saveScore(TreeMap<Integer, ArrayList<String>> scores) {
+        serverScores.putAll(scores);
+    }
+
+    public Map<Integer, ArrayList<String>> getScores() {
+        return serverScores;
+    }
 }

@@ -1,12 +1,14 @@
 package com.example.utils.games;
 
+import com.example.goldfinder.server.ScoreManager;
+import com.example.utils.players.AbstractPlayer;
 import javafx.util.Pair;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class GameMap {
     Map<Short /*Game ID*/, AbstractGame> games = new HashMap<>();
+    TreeMap<Integer, ArrayList<String>> scores = new TreeMap<>();
     int maxPlayers = 4;
     int maxGames = 10;
 
@@ -70,4 +72,11 @@ public class GameMap {
         return count;
     }
 
+    public TreeMap<Integer, ArrayList<String>> saveScores(short gameID) {
+        scores.clear();
+        for(AbstractPlayer p : games.get(gameID).getPlayers()){
+            ScoreManager.addToLeaderboards(scores, p.getScore(), p.getName());
+        }
+        return scores;
+    }
 }
