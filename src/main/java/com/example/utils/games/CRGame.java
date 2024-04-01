@@ -73,10 +73,15 @@ public class CRGame extends AbstractGame{
         return robbers;
     }
 
-    public void catchRobber(AbstractPlayer cop, AbstractPlayer robber) {
-        cop.collectGold();
-        removePlayer(robber);
-        robbers.put(robber,"CAUGHT");
+    public void catchRobber(AbstractPlayer p1, AbstractPlayer p2) {
+        if (((CRPlayer)p1).isCop()){
+            p1.collectGold();
+            robbers.put(p2,"CAUGHT");
+        } else {
+            p2.collectGold();
+            robbers.put(p1,"CAUGHT");
+            System.out.println("p1: " + p1 + " p2: " + p2);
+        }
         System.out.println("catching robber");
     }
 
