@@ -123,10 +123,11 @@ public class GameUpdater {
         }
 
         for (AbstractPlayer robber : ((CRGame) game).getRobbers().keySet()) {
-            if (((CRGame) game).getRobbers().get(robber).equals("CAUGHT") && game.getPlayers().contains(robber)) {
+            if (((CRGame) game).getRobbers().get(robber).equals("CAUGHT") && game.getPlayers().contains(robber) && ((CRGame) game).getRobberCount() > 0) {
                 ((CRGame) game).decreaseRobberCount();
                 server.sendMessage(robber.getClient(), new Game_End().run(client, server, p, game, addr, null), robber.getAddress());
                 game.removePlayer(robber);
+                ((CRGame) game).getRobbers().remove(robber);
             }
         }
 
@@ -138,6 +139,7 @@ public class GameUpdater {
                 game.setHasEnded(true);
             }
         }
+
     }
 
     private static void endGame(SelectableChannel client, GameServer server, AbstractPlayer p, AbstractGame game, InetSocketAddress addr) {

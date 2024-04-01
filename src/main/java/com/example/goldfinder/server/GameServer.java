@@ -111,7 +111,11 @@ public class GameServer extends IServer {
     }
 
     public void saveScore(TreeMap<Integer, ArrayList<String>> scores) {
-        serverScores.putAll(scores);
+        for(int entry : scores.keySet()){
+            for(String name : scores.get(entry)){
+                ScoreManager.addToLeaderboards(serverScores, entry, name);
+            }
+        }
     }
 
     public Map<Integer, ArrayList<String>> getScores() {

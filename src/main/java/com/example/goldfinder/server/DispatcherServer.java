@@ -118,7 +118,7 @@ public class DispatcherServer extends IServer {
          mais on a plein de copies du même tableau (- de complexité en temps, + de complexité en espace)
          soit on met a jour la liste des scores a chaque fois qu'on ajoute un score dans un gameServer
          et poll le dispatcher pour renvoyer la liste des scores a chaque fois qu'on demande les scores
-         ( + de complexité en temps (+ de complexité pour les serveurs de jeux aussi), - de complexité en espace)
+         ( + de complexité en temps (+ d'opérations pour les sockets aussi), - de complexité en espace)
          la 1ère solution est plus facile a mettre en place
         */
         return null;
@@ -130,7 +130,6 @@ public class DispatcherServer extends IServer {
             server = new DispatcherServer(serverPort);
             System.out.println("dispatcher server should be listening on port " + serverPort);
             server.startServer();
-            //ScoreManager.SaveLeaderboards();
         } catch (IOException e) {
             System.out.println("Error creating server " + e.getMessage());
         }

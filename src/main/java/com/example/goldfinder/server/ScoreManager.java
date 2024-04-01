@@ -20,7 +20,6 @@ public class ScoreManager {
     public static String getLeaderboardsText(TreeMap<Integer, ArrayList<String>> scores, int nScores) {
         StringBuilder scoresString = new StringBuilder().append("Leaderboard:\n");
         System.out.println(scores.toString());
-
         int count = 0;
         for (int i : scores.keySet()) {
             count++;
@@ -43,11 +42,7 @@ public class ScoreManager {
                 int key = Integer.parseInt(line[0]);
                 String[] values = line[1].substring(1, line[1].length() - 1).split(", ");
                 for (String value : values) {
-                    if (scores.containsKey(key)) {
-                        scores.get(key).add(value);
-                    } else {
-                        scores.put(key, new ArrayList<>(List.of(value)));
-                    }
+                    addToLeaderboards(scores, key, value);
                 }
             }
             scanner.close();
