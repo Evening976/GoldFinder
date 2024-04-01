@@ -11,6 +11,8 @@ import java.util.Map;
 public class CRGame extends AbstractGame{
     List<AbstractPlayer> cops;
     Map<AbstractPlayer, String> robbers;
+
+    int robberCount;
     int goldCount;
 
     public CRGame(int maxPlayers) {
@@ -18,6 +20,7 @@ public class CRGame extends AbstractGame{
         this.cops = new ArrayList<>();
         this.robbers = new HashMap<>();
         this.goldCount = countGold();
+        this.robberCount = 0;
     }
 
     protected void spawnPlayer(AbstractPlayer p) {
@@ -74,6 +77,7 @@ public class CRGame extends AbstractGame{
     public void setRobber(CRPlayer p) {
         p.setCop(false);
         robbers.put(p, "FREE");
+        robberCount++;
     }
 
     public CRPlayer getPlayer(AbstractPlayer p) {
@@ -99,7 +103,6 @@ public class CRGame extends AbstractGame{
     public void catchRobber(AbstractPlayer cop, AbstractPlayer robber) {
         cop.collectGold();
         robbers.put(robber,"CAUGHT");
-        removePlayer(robber);
         System.out.println("catching robber");
     }
 
@@ -133,4 +136,12 @@ public class CRGame extends AbstractGame{
     public int getGoldCount(){
         return goldCount;
     }
+
+    public int getRobberCount(){
+        return robberCount;
+    }
+    public void decreaseRobberCount(){
+        robberCount--;
+    }
+
 }
