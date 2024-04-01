@@ -15,7 +15,6 @@ public class Surrounding implements GameServerCommand {
     public String run(SelectableChannel client, GameServer server, AbstractPlayer p, AbstractGame g, InetSocketAddress addr, String[] params) {
         this.player = p;
         this.game = g;
-        //System.out.println("Surrounding " + p + ": " + game.getSurrounding(p.getxPos(),p.getyPos()));
         return game.getSurrounding(p.getxPos(),p.getyPos());
     }
 

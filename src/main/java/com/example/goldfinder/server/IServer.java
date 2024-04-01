@@ -29,8 +29,7 @@ public abstract class IServer extends ICommon {
     }
 
     public synchronized void sendMessage(SelectableChannel client, String message, SocketAddress address) {
-        //get time as string and print it
-        System.out.println("[" + java.time.LocalTime.now() + "] Sending message : " + message + " to " + address);
+        //System.out.println("[" + java.time.LocalTime.now() + "] Sending message : " + message + " to " + address);
         try {
             if (client instanceof SocketChannel) {
                 sendTCPMessage((SocketChannel) client, message);

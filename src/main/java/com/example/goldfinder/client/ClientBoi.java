@@ -25,7 +25,11 @@ public class ClientBoi extends IClient {
 
     @Override
     public String updateSurrounding(int xpos, int ypos) {
-        if (isPlaying) return sendCommand(new SurroundingClient(), "");
+        if (isPlaying) {
+            String x = sendCommand(new SurroundingClient(), "");
+            System.out.println(x);
+            return x;
+        }
         return "";
     }
 

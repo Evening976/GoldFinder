@@ -27,7 +27,7 @@ public class CRGame extends AbstractGame {
         while (true) {
             int xpos = (int) (Math.random() * grid.getColumnCount());
             int ypos = (int) (Math.random() * grid.getRowCount());
-            if (cops.isEmpty() || cops.size() < maxPlayers / 2) {
+            if (cops.size() < maxPlayers / 2) {
                 System.out.println(cops.size() + " cops");
                 setCop((CRPlayer) p);
             } else {
@@ -51,6 +51,7 @@ public class CRGame extends AbstractGame {
     }
 
     public void setCop(CRPlayer p) {
+        robbers.remove(p);
         p.setCop(true);
         cops.add(p);
     }
@@ -59,6 +60,12 @@ public class CRGame extends AbstractGame {
         p.setCop(false);
         robbers.put(p, "FREE");
         robberCount++;
+    }
+
+    public void setNeutral(CRPlayer p) {
+        p.setCop(false);
+        p.setDead(false);
+        robbers.remove(p);
     }
 
     public CRPlayer getPlayer(AbstractPlayer p) {
@@ -98,7 +105,7 @@ public class CRGame extends AbstractGame {
             if (p.isCop()) {
                 return isPlayerACop(xpos, ypos) ? "ALLY " : "ENEMY ";
             } else {
-                if (!robbers.get(p).equals("CAUGHT")) {
+                if (!robbers.get(p).equals("CAUGHT") && !p.isDead()) {
                     return isPlayerACop(xpos, ypos) ? "ENEMY " : "ALLY ";
                 }
             }

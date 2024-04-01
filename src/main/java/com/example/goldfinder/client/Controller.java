@@ -120,7 +120,7 @@ public class Controller {
         if (inc_command != null) inc_command.run(client, "");
 
         String resp = client.updateSurrounding(column, row);
-        GridViewUpdater.update(resp.split(" "), gridView, row, column);
+        gridView = GridViewUpdater.update(resp.split(" "), gridView, row, column);
         gridView.repaint(hParallax, vParallax);
         gridView.paintPlayer(COLUMN_COUNT / 2, ROW_COUNT / 2);
     }

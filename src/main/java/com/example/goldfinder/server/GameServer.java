@@ -17,7 +17,7 @@ import java.nio.channels.SocketChannel;
 import java.util.*;
 
 public class GameServer extends IServer {
-    private final TreeMap<Integer, ArrayList<String>> serverScores = new TreeMap<>();
+    private TreeMap<Integer, ArrayList<String>> serverScores = new TreeMap<>();
     private final Map<InetSocketAddress, AbstractPlayer> attachedPlayers = new HashMap<>();
     private final GameMap games;
     private static final int MAX_PLAYERS = 4;
@@ -104,18 +104,19 @@ public class GameServer extends IServer {
             player = currentCommand.getPlayer();
             games.setGame(player.getGameID(), currentCommand.getGame());
             sendMessage(key.channel(), response, player.getAddress());
-            System.out.println("Game server data : " + player + " game : " + games.getByID(player.getGameID()));
         }
         key.attach(player);
         return key;
     }
 
     public void saveScore(TreeMap<Integer, ArrayList<String>> scores) {
+        serverScores = ScoreManager.LoadLeaderboards();
         for(int entry : scores.keySet()){
             for(String name : scores.get(entry)){
                 ScoreManager.addToLeaderboards(serverScores, entry, name);
             }
         }
+        ScoreManager.SaveLeaderboards(serverScores);
     }
 
     public Map<Integer, ArrayList<String>> getScores() {

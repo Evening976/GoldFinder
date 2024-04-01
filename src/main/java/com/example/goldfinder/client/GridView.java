@@ -54,16 +54,19 @@ public class GridView {
 
     public void setVWall(int col, int row) {
         if (col >= 0 && col < columnCount + 1 && row >= 0 && row < rowCount) {
+            if (!vWall[col][row]) {
+                System.out.println("Setting hWall at " + col + " " + row);
+            }
             vWall[col][row] = true;
         }
     }
 
     public void setHWall(int col, int row) {
-        System.out.println("Setting wall at " + col + " " + row);
-        System.out.println("Column count: " + columnCount + " Row count: " + rowCount);
         if (col >= 0 && col < columnCount && row >= 0 && row < rowCount + 1) {
+            if (!hWall[col][row]) {
+                System.out.println("Setting hWall at " + col + " " + row);
+            }
             hWall[col][row] = true;
-            System.out.println("Wall set at " + col + " " + row);
         }
     }
 
