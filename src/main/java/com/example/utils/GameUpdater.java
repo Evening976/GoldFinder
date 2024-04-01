@@ -122,7 +122,6 @@ public class GameUpdater {
             }
         }
 
-
         for (AbstractPlayer robber : ((CRGame) game).getRobbers().keySet()) {
             if (((CRGame) game).getRobbers().get(robber).equals("CAUGHT") && game.getPlayers().contains(robber)) {
                 ((CRGame) game).decreaseRobberCount();
