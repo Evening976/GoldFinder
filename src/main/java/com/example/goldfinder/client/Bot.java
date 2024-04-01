@@ -64,7 +64,7 @@ public class Bot {
         timeline.play();
     }
 
-    public void playToggleButtonAction() {
+    public void startBot() {
         if (!client.isPlaying()) {
             if (!name.isEmpty()) {
                 client.changeConnection(connectionMode);
@@ -84,7 +84,7 @@ public class Bot {
         return resp;
     }
 
-    public void randomMove(KeyEvent keyEvent) {
+    public void randomMove() {
         String resp;
         ArrayList<String> directions = new ArrayList<>();
         directions.add("UP");
@@ -135,12 +135,18 @@ public class Bot {
 
     public void exitApplication() {
         System.out.println("Exiting...");
-        Platform.exit();
     }
 
     public static void main(String[] args) {
         Bot bot = new Bot(ConnectionMode.TCP, GameType.GOLD_FINDER, "Bot");
-        bot.playToggleButtonAction();
+        try{
+            bot.startBot();
+            while(true){
+                bot.randomMove();
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
 
