@@ -12,7 +12,6 @@ import java.nio.channels.SocketChannel;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.TreeMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -20,14 +19,13 @@ public class DispatcherServer extends IServer {
 
     public static final int SERVER_COUNT = 4;
     public static final int GAME_COUNT = 10;
-    public static final int ROW_COUNT = 4;
-    public static final int COLUMN_COUNT = 4;
+    public static final int ROW_COUNT = 10;
+    public static final int COLUMN_COUNT = 10;
+    public static final int DEFAULT_PLAYER_COUNT = 4;
     final static int serverPort = 1234;
 
     ExecutorService executor;
     List<GameServer> gameServers;
-
-    TreeMap<Integer, List<String>> scores = new TreeMap<>();
 
     public DispatcherServer(int port) throws IOException {
         super(port);
@@ -37,7 +35,6 @@ public class DispatcherServer extends IServer {
             gameServers.add(new GameServer(0, GAME_COUNT));
         }
     }
-
 
     @Override
     public void startServer() throws IOException {
@@ -107,21 +104,6 @@ public class DispatcherServer extends IServer {
             System.out.println("Sending to " + senderAddress + " : " + response);
             sendMessage(key.channel(), response, senderAddress);
         }
-    }
-
-    private TreeMap<Integer, ArrayList<String>> getScores(){
-        TreeMap<Integer, ArrayList<String>> biggesMapEver = new TreeMap<>();
-        for(GameServer gameServer : gameServers){
-            biggesMapEver.putAll(gameServer.getScores());
-        }
-        /*soit le dispatcher poll les gameServer et met a jour les tableaux des scores de tous les serveurs
-         mais on a plein de copies du même tableau (- de complexité en temps, + de complexité en espace)
-         soit on met a jour la liste des scores a chaque fois qu'on ajoute un score dans un gameServer
-         et poll le dispatcher pour renvoyer la liste des scores a chaque fois qu'on demande les scores
-         ( + de complexité en temps (+ d'opérations pour les sockets aussi), - de complexité en espace)
-         la 1ère solution est plus facile a mettre en place
-        */
-        return null;
     }
 
     public static void main(String[] args) {

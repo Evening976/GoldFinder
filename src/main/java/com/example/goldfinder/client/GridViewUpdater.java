@@ -4,8 +4,6 @@ import com.example.goldfinder.client.commands.Move_Command;
 import com.example.utils.players.PlayerColor;
 import javafx.scene.input.KeyEvent;
 
-import java.awt.im.InputContext;
-
 import static com.example.goldfinder.client.Controller.COLUMN_COUNT;
 import static com.example.goldfinder.client.Controller.ROW_COUNT;
 
@@ -89,10 +87,10 @@ public class GridViewUpdater {
     public static String handleKeyEvent(KeyEvent keyEvent, GridView gridView, Controller controller, ClientBoi client){
         String resp;
 
-        InputContext context = InputContext.getInstance();
-        if(context.getLocale().toString().startsWith("fr")){
-            //-->azerty
-        }
+//        InputContext context = InputContext.getInstance();
+//        if(context.getLocale().toString().startsWith("fr")){
+//            -->azerty
+//        }
 
         switch (keyEvent.getCode()) {
             case Z,W -> {

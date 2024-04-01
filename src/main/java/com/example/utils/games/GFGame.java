@@ -5,7 +5,6 @@ import com.example.utils.players.AbstractPlayer;
 public class GFGame extends AbstractGame {
     int maxCells = 0;
     boolean[][] discoveredCells;
-    boolean isSolo = false;
 
     public GFGame() {
         super(1);
@@ -14,6 +13,7 @@ public class GFGame extends AbstractGame {
     public GFGame(int maxPlayers) {
         super(maxPlayers);
     }
+
     @Override
     protected void spawnPlayer(AbstractPlayer p) {
         while (true) {
@@ -32,10 +32,6 @@ public class GFGame extends AbstractGame {
         return true;
     }
 
-    public boolean isSolo() {
-        return isSolo;
-    }
-
     public void setDiscoveredCell(int xpos, int ypos) {
         if (discoveredCells == null) {
             discoveredCells = new boolean[grid.getColumnCount()][grid.getRowCount()];
@@ -44,7 +40,24 @@ public class GFGame extends AbstractGame {
             discoveredCells[xpos][ypos] = true;
             maxCells++;
         }
+        if (xpos + 1 < grid.getColumnCount() && !discoveredCells[xpos+1][ypos] && !grid.rightWall(xpos+1, ypos)) {
+            discoveredCells[xpos+1][ypos] = true;
+            maxCells++;
+        }
+        if (xpos-1 >= 0 && !discoveredCells[xpos-1][ypos] && !grid.leftWall(xpos, ypos)) {
+            discoveredCells[xpos-1][ypos] = true;
+            maxCells++;
+        }
+        if (ypos+1 < grid.getRowCount() && !discoveredCells[xpos][ypos+1] && !grid.downWall(xpos, ypos)) {
+            discoveredCells[xpos][ypos+1] = true;
+            maxCells++;
+        }
+        if(ypos-1 >= 0 && !discoveredCells[xpos][ypos-1] && !grid.upWall(xpos, ypos)) {
+            discoveredCells[xpos][ypos-1] = true;
+            maxCells++;
+        }
     }
+
     public int getMaxCells() {
         return grid.getColumnCount() * grid.getRowCount();
     }
@@ -52,6 +65,7 @@ public class GFGame extends AbstractGame {
     public int getDiscoveredCells() {
         return maxCells;
     }
+
     @Override
     public String toString() {
         return "Goldfinder game with " + players.size() + " players";

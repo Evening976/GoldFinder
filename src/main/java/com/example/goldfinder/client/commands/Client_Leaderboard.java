@@ -17,7 +17,6 @@ public class Client_Leaderboard implements IClientCommand {
 
     @Override
     public String response(ClientBoi boi, String msg) {
-        System.out.println("Leaderboard : \n" + msg);
         StringBuilder sb = new StringBuilder();
         String[] lines = msg.split("\n");
         for (String line : lines) {

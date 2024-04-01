@@ -16,15 +16,16 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.SocketChannel;
 import java.util.*;
 
+import static com.example.goldfinder.server.DispatcherServer.DEFAULT_PLAYER_COUNT;
+
 public class GameServer extends IServer {
     private TreeMap<Integer, ArrayList<String>> serverScores = new TreeMap<>();
     private final Map<InetSocketAddress, AbstractPlayer> attachedPlayers = new HashMap<>();
     private final GameMap games;
-    private static final int MAX_PLAYERS = 4;
 
     public GameServer(int port, int maxGames) throws IOException {
         super(port);
-        games = new GameMap(MAX_PLAYERS, maxGames);
+        games = new GameMap(DEFAULT_PLAYER_COUNT, maxGames);
     }
 
     public void startServer() throws IOException {
@@ -101,7 +102,7 @@ public class GameServer extends IServer {
         GameServerCommand currentCommand = GameServerCommandParser.parseCommand(msg);
         if (currentCommand != null) {
             String response = currentCommand.run(key.channel(), this, player, g, senderAddress[0], msg.split(" "));
-            if(player != null && currentCommand.getGame() != null){
+            if(currentCommand.getPlayer() != null){
                 player = currentCommand.getPlayer();
                 games.setGame(player.getGameID(), currentCommand.getGame());
                 sendMessage(key.channel(), response, player.getAddress());

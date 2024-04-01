@@ -8,22 +8,9 @@ import com.example.utils.ConnectionMode;
 import com.example.utils.GameType;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-
-import static com.example.goldfinder.client.Controller.COLUMN_COUNT;
-import static com.example.goldfinder.client.Controller.ROW_COUNT;
 
 public class Bot {
     GridView gridView;
@@ -131,8 +118,6 @@ public class Bot {
             score++;
         }
     }
-
-
     public void exitApplication() {
         System.out.println("Exiting...");
     }

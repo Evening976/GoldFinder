@@ -10,8 +10,6 @@ import java.nio.channels.SelectableChannel;
 public class Game_End implements GameServerCommand {
     @Override
     public String run(SelectableChannel client, GameServer server, AbstractPlayer p, AbstractGame g, InetSocketAddress addr, String[] params) {
-        server.saveScore(server.getGames().saveScores(p.getGameID()));
-
         StringBuilder response = new StringBuilder();
         response.append("GAME_END ");
         for(AbstractPlayer player : g.getPlayers()) {

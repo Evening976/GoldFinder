@@ -101,6 +101,8 @@ public class GameUpdater {
         }
 
         if (game.hasEnded()) {
+            Thread t = new Thread(() -> server.saveScore(server.getGames().saveScores(p.getGameID())));
+            t.start();
             return new Game_End().run(client, server, p, game, addr, null);
         }
         else if (!dir.endsWith("WALL ") && !dir.contains("PLAYER") && !dir.endsWith("ENEMY ") && !dir.endsWith("ALLY ")) {
@@ -119,7 +121,7 @@ public class GameUpdater {
         if (dir.contains("GOLD")) {
             game.collectGold(p);
         }
-        if (((GFGame) game).getMaxCells() == ((GFGame) game).getDiscoveredCells()) {
+        if (((GFGame) game).getMaxCells() == ((GFGame) game).getDiscoveredCells() && game.getGoldCount() == 0){
             endGame(client, server, p, game, addr);
         }
     }
@@ -130,7 +132,7 @@ public class GameUpdater {
         if (dir.contains("GOLD")) {
             System.out.println("Gold collected!");
             game.collectGold(p);
-            if (((CRGame) game).getGoldCount() == 0) {
+            if (game.getGoldCount() == 0) {
                 endGame(client, server, p, game, addr);
                 return;
             }
@@ -156,8 +158,10 @@ public class GameUpdater {
                     abstractPlayer.getAddress());
             game.setHasEnded(true);
         }
-        for(AbstractPlayer robber : game.getPlayers()){
-            ((CRGame)game).setNeutral((CRPlayer) robber);
+        if(game instanceof CRGame) {
+            for (AbstractPlayer robber : game.getPlayers()) {
+                ((CRGame) game).setNeutral((CRPlayer) robber);
+            }
         }
     }
 }

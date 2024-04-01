@@ -63,6 +63,8 @@ public class Controller {
 
         gridView.paintPlayer(column, row);
 
+        getleaderboardbtn.setDisable(true);
+
         initConnectionMode();
         initGameMode();
         initTimeline();
@@ -85,6 +87,7 @@ public class Controller {
     private void initGameMode() {
         gameType.getItems().add("GOLD_FINDER");
         gameType.getItems().add("GOLD_FINDER_SOLO");
+        gameType.getItems().add("GOLD_FINDER_MASSIVE");
         gameType.getItems().add("COPS_AND_ROBBERS");
         gameType.setValue("COPS_AND_ROBBERS");
     }
@@ -99,20 +102,19 @@ public class Controller {
                     client.connect();
                     playToggleButton.setText("Play!");
                     client.sendCommand(new Client_Join(), name + GameType.getGameType(gameType.getValue()));
+                    getleaderboardbtn.setDisable(false);
+                    connectionMode.setDisable(true);
+                    playerName.setDisable(true);
                 }
-            }
-            else{
+            } else {
                 String r = client.sendCommand(new Client_Join(), name + GameType.getGameType(gameType.getValue()));
                 System.out.println("Response to game_join : " + r);
-
-                playerName.setDisable(true);
-                connectionMode.setDisable(true);
                 playToggleButton.setDisable(true);
             }
         }
     }
 
-    public void restartButtonAction(ActionEvent actionEvent) {
+    public void restartButtonAction() {
         client.clean();
         score.setText("0");
         vParallax = 0;
@@ -125,8 +127,10 @@ public class Controller {
 
         gridView.repaint(hParallax, vParallax);
         gridView.paintPlayer(column, row);
+        getleaderboardbtn.setDisable(true);
         connectionMode.setDisable(false);
         playToggleButton.setDisable(false);
+        playToggleButton.setText("Connect");
     }
 
     public void updateClient(ActionEvent actionEvent) {
@@ -150,12 +154,7 @@ public class Controller {
         gridView.paintPlayer(COLUMN_COUNT / 2, ROW_COUNT / 2);
     }
 
-    public void exitApplication() {
-        System.out.println("Exiting...");
-        Platform.exit();
-    }
-
-    public void getLeaderboard(ActionEvent actionEvent) {
+    public void getLeaderboard() {
         if (!client.isConnected() && !client.isPlaying()) {
             return;
         }
@@ -165,7 +164,6 @@ public class Controller {
             size = "10";
         }
         String r = client.sendCommand(new Client_Leaderboard(), size);
-        System.out.println("Treated leaderboard : " + r);
         viewLeaderboard.getItems().clear();
         List<String> lines = List.of(r.split("\n"));
         ObservableList<String> list = FXCollections.observableArrayList(lines);
@@ -173,6 +171,22 @@ public class Controller {
             viewLeaderboard.getItems().add(s);
         }
         viewLeaderboard.prefHeightProperty().bind(Bindings.size(list).multiply(24));
+    }
+
+    public void exitApplication() {
+        System.out.println("Exiting...");
+        Platform.exit();
+    }
+
+    public void gameModeChanged() {
+        GameType currentGT = GameType.valueOf(this.gameType.getValue());
+        COLUMN_COUNT = GameType.getGridSize(currentGT);
+        ROW_COUNT = GameType.getGridSize(currentGT);
+        this.gridView = new GridView(gridCanvas, COLUMN_COUNT, ROW_COUNT);
+        column = COLUMN_COUNT / 2;
+        row = ROW_COUNT / 2;
+        gridView.repaint(hParallax, vParallax);
+        gridView.paintPlayer(column, row);
     }
 }
 

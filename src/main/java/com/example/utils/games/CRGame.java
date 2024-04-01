@@ -95,10 +95,6 @@ public class CRGame extends AbstractGame {
         }
     }
 
-    public int getGoldCount() {
-        return grid.getGoldCount();
-    }
-
     protected String getObstacles(int xpos, int ypos, int x, int y) {
         CRPlayer p = (CRPlayer) getPlayerFromCoordinates(xpos + x, ypos + y);
         if (p != null) {

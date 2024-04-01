@@ -20,16 +20,21 @@ public class Game_Join implements GameServerCommand {
 
     @Override
     public String run(SelectableChannel client, GameServer server, AbstractPlayer player, AbstractGame game, InetSocketAddress addr, String[] params) {
+        System.out.println("Game_Join: " + params[1] + " " + params[2] + "\n");
         String playerName = params[1];
         Pair<Short, AbstractGame> availableGame;
         if (Objects.equals(params[2], "COPS_AND_ROBBERS")) {
             player = new CRPlayer(client, playerName, 0, 0);
-            availableGame = server.getGames().getAvailable(new CRGame(2), false);
+            availableGame = server.getGames().getAvailable(new CRGame(2), 4);
         } else {
             player = new GFPlayer(client, playerName, 0, 0);
-            if (params[2] == null || !params[2].endsWith("_SOLO"))
-                availableGame = server.getGames().getAvailable(new GFGame(), false);
-            else availableGame = server.getGames().getAvailable(new GFGame(), true);
+            if (params[2] == null || !params[2].endsWith("_SOLO")) {
+                availableGame = server.getGames().getAvailable(new GFGame(), -1);
+            } else if (params[2].endsWith("_MASSIVE")) {
+                availableGame = server.getGames().getAvailable(new GFGame(), 64);
+            } else {
+                availableGame = server.getGames().getAvailable(new GFGame(), 1);
+            }
         }
         player.setAddress(addr);
 

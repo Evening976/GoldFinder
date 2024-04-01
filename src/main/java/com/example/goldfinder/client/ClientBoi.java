@@ -76,10 +76,6 @@ public class ClientBoi extends IClient {
         isPlaying = b;
     }
 
-    public void setConnected(boolean b) {
-        isConnected = b;
-    }
-
     public boolean isConnected() {
         return isConnected;
     }

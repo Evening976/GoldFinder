@@ -6,6 +6,8 @@ import javafx.util.Pair;
 
 import java.util.*;
 
+import static com.example.goldfinder.server.DispatcherServer.DEFAULT_PLAYER_COUNT;
+
 public class GameMap {
     Map<Short /*Game ID*/, AbstractGame> games = new HashMap<>();
     TreeMap<Integer, ArrayList<String>> scores = new TreeMap<>();
@@ -27,27 +29,29 @@ public class GameMap {
         return null;
     }
 
-    public Pair<Short, AbstractGame> getAvailable(AbstractGame game, boolean solo) {
-        System.out.println(games.size());
+    public Pair<Short, AbstractGame> getAvailable(AbstractGame game, int maxPlayers) {
         for (Short key : games.keySet()) {
-            if(games.get(key).hasEnded()){
+            if (games.get(key).hasEnded()) {
                 games.remove(key);
                 continue;
             }
-            if (!games.get(key).isRunning() && games.get(key).isSolo() == solo && game.getClass() == games.get(key).getClass()) {
+            if (!games.get(key).isRunning() && game.getClass() == games.get(key).getClass()) {
+                if(maxPlayers != -1){
+                    if(games.get(key).maxPlayers != maxPlayers){
+                        continue;
+                    }
+                }
                 return new Pair<>(key, games.get(key));
             }
         }
         Short key = (short) games.size();
-        if (solo) {
-            games.put(key, new GFGame());
-        } else {
-            if (game instanceof GFGame) {
-                games.put(key, new GFGame(maxPlayers));
-            } else if (game instanceof CRGame) {
-                games.put(key, new CRGame(maxPlayers));
-            }
+        maxPlayers = maxPlayers == -1 ? DEFAULT_PLAYER_COUNT : maxPlayers;
+        if (game instanceof GFGame) {
+            games.put(key, new GFGame(maxPlayers));
+        } else if (game instanceof CRGame) {
+            games.put(key, new CRGame(maxPlayers));
         }
+
 
         System.out.println("Game created with ID " + key);
         return new Pair<>(key, games.get(key));
@@ -74,7 +78,7 @@ public class GameMap {
 
     public TreeMap<Integer, ArrayList<String>> saveScores(short gameID) {
         scores.clear();
-        for(AbstractPlayer p : games.get(gameID).getPlayers()){
+        for (AbstractPlayer p : games.get(gameID).getPlayers()) {
             ScoreManager.addToLeaderboards(scores, p.getScore(), p.getName());
         }
         return scores;

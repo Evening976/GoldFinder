@@ -18,7 +18,7 @@ public abstract class AbstractGame {
     public AbstractGame(int maxPlayers) {
         this.maxPlayers = maxPlayers;
         this.players = new ArrayList<>();
-        this.grid = new Grid(DispatcherServer.COLUMN_COUNT, DispatcherServer.ROW_COUNT, new Random());
+        this.grid = new Grid(DispatcherServer.COLUMN_COUNT * maxPlayers, DispatcherServer.ROW_COUNT * maxPlayers, new Random());
 
     }
 
@@ -68,6 +68,10 @@ public abstract class AbstractGame {
 
     protected abstract boolean canCollectGold(AbstractPlayer p);
 
+    public int getGoldCount() {
+        return grid.getGoldCount();
+    }
+
     public void movePlayer(AbstractPlayer p, int xpos, int ypos) {
         players.get(players.indexOf(p)).move(xpos, ypos);
 
@@ -89,10 +93,6 @@ public abstract class AbstractGame {
 
     public boolean isRunning() {
         return isRunning;
-    }
-
-    public boolean isSolo() {
-        return maxPlayers == 1;
     }
 
     @Override

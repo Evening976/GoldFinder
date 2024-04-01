@@ -23,7 +23,7 @@
          <ChoiceBox fx:id="connectionMode" prefWidth="150.0" />
          <Separator prefHeight="19.0" prefWidth="100.0" />
          <Label fx:id="gameTypelabel" alignment="CENTER" contentDisplay="TEXT_ONLY" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="24.0" prefWidth="200.0" text="Solo/Multiplayer" />
-         <ChoiceBox fx:id="gameType" prefWidth="150.0" />
+         <ChoiceBox fx:id="gameType" onAction="#gameModeChanged" prefWidth="150.0" />
          <Separator prefHeight="16.0" prefWidth="100.0" />
          <Button maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" onAction="#exitApplication" prefHeight="24.0" prefWidth="200.0" styleClass="button" text="Exit" />
          <Separator prefWidth="200.0" />
@@ -31,7 +31,7 @@
          <ListView fx:id="viewLeaderboard" prefHeight="4.0" prefWidth="100.0" />
          <Label text="Taille :" />
          <TextField fx:id="leaderSizeText" />
-         <Button fx:id="getleaderboardbtn" mnemonicParsing="false" onAction="#getLeaderboard" prefHeight="33.0" prefWidth="100.0" text="Button" />
+         <Button fx:id="getleaderboardbtn" mnemonicParsing="false" onAction="#getLeaderboard" prefHeight="33.0" prefWidth="100.0" text="Classement" />
         </VBox>
         <Canvas fx:id="gridCanvas" height="900.0" width="900.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
         </Canvas>
