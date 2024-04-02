@@ -29,13 +29,13 @@ public class GameMap {
         return null;
     }
 
-    public Pair<Short, AbstractGame> getAvailable(AbstractGame game, int maxPlayers) {
+    public Pair<Short, AbstractGame> getAvailable(Class<? extends AbstractGame> game, int maxPlayers) {
         for (Short key : games.keySet()) {
             if (games.get(key).hasEnded()) {
                 games.remove(key);
                 continue;
             }
-            if (!games.get(key).isRunning() && game.getClass() == games.get(key).getClass()) {
+            if (!games.get(key).isRunning() && game == games.get(key).getClass()) {
                 if(maxPlayers != -1){
                     if(games.get(key).maxPlayers != maxPlayers){
                         continue;
@@ -45,15 +45,17 @@ public class GameMap {
             }
         }
         Short key = (short) games.size();
-        maxPlayers = maxPlayers == -1 ? DEFAULT_PLAYER_COUNT : maxPlayers;
-        if (game instanceof GFGame) {
+        if(maxPlayers == -1){
+            maxPlayers = DEFAULT_PLAYER_COUNT;
+        }
+        if (game == GFGame.class) {
             games.put(key, new GFGame(maxPlayers));
-        } else if (game instanceof CRGame) {
+        } else if (game == CRGame.class) {
             games.put(key, new CRGame(maxPlayers));
         }
 
 
-        System.out.println("Game created with ID " + key);
+        System.out.println("Game created with ID " + key + "max players: " + maxPlayers);
         return new Pair<>(key, games.get(key));
     }
 

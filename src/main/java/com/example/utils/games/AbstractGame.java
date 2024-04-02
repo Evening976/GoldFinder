@@ -19,7 +19,7 @@ public abstract class AbstractGame {
         this.maxPlayers = maxPlayers;
         this.players = new ArrayList<>();
         this.grid = new Grid(DispatcherServer.COLUMN_COUNT * maxPlayers, DispatcherServer.ROW_COUNT * maxPlayers, new Random());
-
+        System.out.println("Game size : " + grid.getRowCount() + "x" + grid.getColumnCount());
     }
 
     public void addPlayer(AbstractPlayer player) {

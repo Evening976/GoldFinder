@@ -96,6 +96,7 @@ public class CRGame extends AbstractGame {
     }
 
     protected String getObstacles(int xpos, int ypos, int x, int y) {
+        System.out.println("Mon bro ?????");
         CRPlayer p = (CRPlayer) getPlayerFromCoordinates(xpos + x, ypos + y);
         if (p != null) {
             if (p.isCop()) {

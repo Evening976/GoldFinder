@@ -28,12 +28,15 @@ public class GridView {
             canvas.getGraphicsContext2D().setFill(playerPositions.get(player).getColor());
             canvas.getGraphicsContext2D().fillRect((player.getKey() + hParallax) * cellWidth(), (player.getValue() + vParallax) * cellHeight(), cellWidth(), cellHeight());
         }
-        for (int column = 0; column < columnCount; column++)
-            for (int row = 0; row < rowCount; row++)
+        for (int column = 0; column < columnCount; column++) {
+            for (int row = 0; row < rowCount; row++) {
                 if (goldAt[column][row]) {
                     canvas.getGraphicsContext2D().setFill(Color.YELLOW);
                     canvas.getGraphicsContext2D().fillOval((column + hParallax) * cellWidth(), (row + vParallax) * cellHeight(), cellWidth(), cellHeight());
                 }
+            }
+        }
+
         canvas.getGraphicsContext2D().setStroke(Color.WHITE);
         for (int column = 0; column < columnCount; column++) {
             for (int row = 0; row < rowCount; row++) {

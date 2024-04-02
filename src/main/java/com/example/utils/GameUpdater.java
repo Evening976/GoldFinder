@@ -26,9 +26,8 @@ public class GameUpdater {
                         if (dir.contains("ENEMY")) {
                             assert game instanceof CRGame;
                             ((CRGame) game).catchRobber(p, game.getPlayerFromCoordinates(p.getxPos(), p.getyPos() - 1));
-                        } else {
-                            game.movePlayer(p, 0, -1);
                         }
+                        game.movePlayer(p, 0, -1);
                         handleCREnd(client, server, p, game, addr, dir);
                     } else if (game instanceof GFGame || p instanceof GFPlayer) {
                         game.movePlayer(p, 0, -1);
@@ -47,9 +46,7 @@ public class GameUpdater {
                             assert game instanceof CRGame;
                             ((CRGame) game).catchRobber(p, game.getPlayerFromCoordinates(p.getxPos(), p.getyPos() + 1));
                         }
-                        {
-                            game.movePlayer(p, 0, 1);
-                        }
+                        game.movePlayer(p, 0, 1);
                         handleCREnd(client, server, p, game, addr, dir);
                     } else if (game instanceof GFGame || p instanceof GFPlayer) {
                         game.movePlayer(p, 0, 1);
@@ -67,9 +64,8 @@ public class GameUpdater {
                         if (dir.contains("ENEMY")) {
                             assert game instanceof CRGame;
                             ((CRGame) game).catchRobber(p, game.getPlayerFromCoordinates(p.getxPos() - 1, p.getyPos()));
-                        } else {
-                            game.movePlayer(p, -1, 0);
                         }
+                        game.movePlayer(p, -1, 0);
                         handleCREnd(client, server, p, game, addr, dir);
                     } else if (game instanceof GFGame || p instanceof GFPlayer) {
                         game.movePlayer(p, -1, 0);
@@ -87,9 +83,8 @@ public class GameUpdater {
                         if (dir.contains("ENEMY")) {
                             assert game instanceof CRGame;
                             ((CRGame) game).catchRobber(p, game.getPlayerFromCoordinates(p.getxPos() + 1, p.getyPos()));
-                        } else {
-                            game.movePlayer(p, 1, 0);
                         }
+                        game.movePlayer(p, 1, 0);
                         handleCREnd(client, server, p, game, addr, dir);
 
                     } else if (game instanceof GFGame || p instanceof GFPlayer) {
@@ -104,8 +99,7 @@ public class GameUpdater {
             Thread t = new Thread(() -> server.saveScore(server.getGames().saveScores(p.getGameID())));
             t.start();
             return new Game_End().run(client, server, p, game, addr, null);
-        }
-        else if (!dir.endsWith("WALL ") && !dir.contains("PLAYER") && !dir.endsWith("ENEMY ") && !dir.endsWith("ALLY ")) {
+        } else if (!dir.endsWith("WALL ") && !dir.contains("PLAYER") && !dir.endsWith("ENEMY ") && !dir.endsWith("ALLY ")) {
             System.out.println("VALID_MOVE:" + dir.stripTrailing().replace(dir.split(":")[0] + ": ", ""));
             return "VALID_MOVE:" + dir.stripTrailing().replace(dir.split(":")[0] + ": ", "");
         }
@@ -121,7 +115,7 @@ public class GameUpdater {
         if (dir.contains("GOLD")) {
             game.collectGold(p);
         }
-        if (((GFGame) game).getMaxCells() == ((GFGame) game).getDiscoveredCells() && game.getGoldCount() == 0){
+        if (((GFGame) game).getMaxCells() == ((GFGame) game).getDiscoveredCells() && game.getGoldCount() == 0) {
             endGame(client, server, p, game, addr);
         }
     }
@@ -158,7 +152,7 @@ public class GameUpdater {
                     abstractPlayer.getAddress());
             game.setHasEnded(true);
         }
-        if(game instanceof CRGame) {
+        if (game instanceof CRGame) {
             for (AbstractPlayer robber : game.getPlayers()) {
                 ((CRGame) game).setNeutral((CRPlayer) robber);
             }

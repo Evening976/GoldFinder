@@ -47,8 +47,8 @@ public class Controller {
     int vParallax = 0;
     int hParallax = 0;
     int column, row;
-    public static int COLUMN_COUNT = DispatcherServer.COLUMN_COUNT * 2;
-    public static int ROW_COUNT = DispatcherServer.ROW_COUNT * 2;
+    public static int COLUMN_COUNT; // = DispatcherServer.COLUMN_COUNT * 2;
+    public static int ROW_COUNT; // = DispatcherServer.ROW_COUNT * 2;
 
     public void initialize() {
         this.gridView = new GridView(gridCanvas, COLUMN_COUNT, ROW_COUNT);
@@ -183,6 +183,8 @@ public class Controller {
         COLUMN_COUNT = GameType.getGridSize(currentGT);
         ROW_COUNT = GameType.getGridSize(currentGT);
         this.gridView = new GridView(gridCanvas, COLUMN_COUNT, ROW_COUNT);
+        hParallax = 0;
+        vParallax = 0;
         column = COLUMN_COUNT / 2;
         row = ROW_COUNT / 2;
         gridView.repaint(hParallax, vParallax);

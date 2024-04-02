@@ -1,5 +1,6 @@
 package com.example.utils.games;
 
+import com.example.goldfinder.server.DispatcherServer;
 import com.example.utils.players.AbstractPlayer;
 
 public class GFGame extends AbstractGame {
@@ -7,7 +8,7 @@ public class GFGame extends AbstractGame {
     boolean[][] discoveredCells;
 
     public GFGame() {
-        super(1);
+        super(DispatcherServer.DEFAULT_PLAYER_COUNT);
     }
 
     public GFGame(int maxPlayers) {

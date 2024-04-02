@@ -25,15 +25,15 @@ public class Game_Join implements GameServerCommand {
         Pair<Short, AbstractGame> availableGame;
         if (Objects.equals(params[2], "COPS_AND_ROBBERS")) {
             player = new CRPlayer(client, playerName, 0, 0);
-            availableGame = server.getGames().getAvailable(new CRGame(2), 4);
+            availableGame = server.getGames().getAvailable(CRGame.class, -1);
         } else {
             player = new GFPlayer(client, playerName, 0, 0);
             if (params[2] == null || !params[2].endsWith("_SOLO")) {
-                availableGame = server.getGames().getAvailable(new GFGame(), -1);
+                availableGame = server.getGames().getAvailable(GFGame.class, -1);
             } else if (params[2].endsWith("_MASSIVE")) {
-                availableGame = server.getGames().getAvailable(new GFGame(), 64);
+                availableGame = server.getGames().getAvailable(GFGame.class, 64);
             } else {
-                availableGame = server.getGames().getAvailable(new GFGame(), 1);
+                availableGame = server.getGames().getAvailable(GFGame.class, 1);
             }
         }
         player.setAddress(addr);

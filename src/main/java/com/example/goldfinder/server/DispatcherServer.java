@@ -19,8 +19,8 @@ public class DispatcherServer extends IServer {
 
     public static final int SERVER_COUNT = 4;
     public static final int GAME_COUNT = 10;
-    public static final int ROW_COUNT = 10;
-    public static final int COLUMN_COUNT = 10;
+    public static final int ROW_COUNT = 4;
+    public static final int COLUMN_COUNT = 4;
     public static final int DEFAULT_PLAYER_COUNT = 4;
     final static int serverPort = 1234;
 
