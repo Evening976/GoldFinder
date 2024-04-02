@@ -54,7 +54,7 @@ public abstract class ICommon {
         return "";
     }
     protected synchronized void sendTCPMessage(SocketChannel client, String message) throws IOException {
-        ByteBuffer z = ByteBuffer.allocate(128);
+        ByteBuffer z = ByteBuffer.allocate(message.getBytes().length);
         z.clear();
         z.put(message.getBytes());
         z.flip();
@@ -62,21 +62,16 @@ public abstract class ICommon {
     }
 
     synchronized void sendUDPMessage(DatagramChannel client, String message) throws IOException {
-        ByteBuffer buffer = ByteBuffer.allocate(128);
+        ByteBuffer buffer = ByteBuffer.allocate(message.getBytes().length);
         buffer.clear();
         buffer.put(message.getBytes());
         buffer.flip();
 
-        ByteBuffer p = ByteBuffer.allocate(128);
-        p.clear();
-        p.put(message.getBytes());
-        p.flip();
-        System.out.println("Sending UDP message : " + StandardCharsets.UTF_8.decode(p).toString());
         client.send(buffer, client.getRemoteAddress());
     }
 
     String receiveUDPMessage(DatagramChannel client) {
-        ByteBuffer buffer = ByteBuffer.allocate(128);
+        ByteBuffer buffer = ByteBuffer.allocate(2048);
         buffer.clear();
         try {
             client.receive(buffer);
