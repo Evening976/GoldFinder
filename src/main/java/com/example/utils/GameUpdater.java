@@ -18,6 +18,7 @@ public class GameUpdater {
         switch (params[0].toUpperCase()) {
             case "UP" -> {
                 dir = game.getUp(p.getxPos(), p.getyPos());
+                System.out.println("UP: " + dir);
                 if (dir.contains("EMPTY") || dir.contains("GOLD") || dir.contains("ENEMY")) {
                     if (game instanceof CRGame || p instanceof CRPlayer) {
                         if (((CRPlayer) p).isDead()) {
@@ -37,6 +38,7 @@ public class GameUpdater {
             }
             case "DOWN" -> {
                 dir = game.getDown(p.getxPos(), p.getyPos());
+                System.out.println("DOWN: " + dir);
                 if (dir.contains("EMPTY") || dir.contains("GOLD") || dir.contains("ENEMY")) {
                     if (game instanceof CRGame || p instanceof CRPlayer) {
                         if (((CRPlayer) p).isDead()) {
@@ -56,6 +58,7 @@ public class GameUpdater {
             }
             case "LEFT" -> {
                 dir = game.getLeft(p.getxPos(), p.getyPos());
+                System.out.println("LEFT: " + dir);
                 if (dir.contains("EMPTY") || dir.contains("GOLD") || dir.contains("ENEMY")) {
                     if (game instanceof CRGame || p instanceof CRPlayer) {
                         if (((CRPlayer) p).isDead()) {
@@ -75,6 +78,7 @@ public class GameUpdater {
             }
             case "RIGHT" -> {
                 dir = game.getRight(p.getxPos(), p.getyPos());
+                System.out.println("RIGHT: " + dir);
                 if (dir.contains("EMPTY") || dir.contains("GOLD") || dir.contains("ENEMY")) {
                     if (game instanceof CRGame || p instanceof CRPlayer) {
                         if (((CRPlayer) p).isDead()) {

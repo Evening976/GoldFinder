@@ -39,7 +39,7 @@ public abstract class AbstractGame {
     }
 
     protected boolean isFree(int xpos, int ypos){
-        return getPlayerFromCoordinates(xpos, ypos) == null;
+        return getPlayerFromCoordinates(xpos, ypos) == null && !grid.hasGold(xpos, ypos);
     }
 
     public String getUp(int xpos, int ypos){

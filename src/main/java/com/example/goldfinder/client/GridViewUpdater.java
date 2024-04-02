@@ -40,10 +40,8 @@ public class GridViewUpdater {
                     } else if (subparts[1].startsWith("PLAYER")) {
                         gridView.setPlayerPositions(_col, _row + 1, PlayerColor.values()[Integer.parseInt(subparts[1].substring(subparts[1].length() - 1))]);
                     }else if (subparts[1].startsWith("ENEMY")) {
-                        System.out.println("ici, enemy");
                         gridView.setPlayerPositions(_col, _row + 1, PlayerColor.RED);
                     }else if (subparts[1].startsWith("ALLY")){
-                        System.out.println("ici, ally");
                         gridView.setPlayerPositions(_col, _row + 1, PlayerColor.BLUE);
                     } else if (subparts[1].equals("EMPTY")) {
                         gridView.setEmpty(_col, _row + 1);
@@ -95,6 +93,7 @@ public class GridViewUpdater {
         switch (keyEvent.getCode()) {
             case Z,W -> {
                 if ((resp = client.sendCommand(new Move_Command(), "UP")).startsWith("VALID_MOVE")) {
+                    System.out.println("resp: "+resp);
                     controller.row = Math.max(0, controller.row - 1);
                     controller.vParallax++;
                     gridView.emptyPlayers();
@@ -102,6 +101,7 @@ public class GridViewUpdater {
             }
             case Q,A -> {
                 if ((resp = client.sendCommand(new Move_Command(), "LEFT")).startsWith("VALID_MOVE")){
+                    System.out.println("resp: "+resp);
                     controller.column = Math.max(0, controller.column - 1);
                     controller.hParallax++;
                     gridView.emptyPlayers();
@@ -109,6 +109,7 @@ public class GridViewUpdater {
             }
             case S -> {
                 if ((resp = client.sendCommand(new Move_Command(), "DOWN")).startsWith("VALID_MOVE")){
+                    System.out.println("resp: "+resp);
                     controller.row = Math.min(ROW_COUNT - 1, controller.row + 1);
                     controller.vParallax--;
                     gridView.emptyPlayers();
@@ -117,6 +118,7 @@ public class GridViewUpdater {
             }
             case D -> {
                 if ((resp = client.sendCommand(new Move_Command(), "RIGHT")).startsWith("VALID_MOVE")) {
+                    System.out.println("resp: "+resp);
                     controller.column = Math.min(COLUMN_COUNT - 1, controller.column + 1);
                     controller.hParallax--;
                     gridView.emptyPlayers();

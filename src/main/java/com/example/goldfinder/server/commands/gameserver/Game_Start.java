@@ -15,6 +15,7 @@ public class Game_Start implements GameServerCommand {
         sb.append("GAME_START ");
         System.out.println(g.getPlayers());
         for(AbstractPlayer player : g.getPlayers()){
+            System.out.println("GAME_START: " + player.getName() + " " + g.getPlayers().indexOf(player));
             sb.append(player.getName()).append(":").append(g.getPlayers().indexOf(player)).append(" ");
         }
         return sb.toString();

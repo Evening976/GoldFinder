@@ -6,32 +6,27 @@ import com.example.goldfinder.client.commands.Move_Command;
 import com.example.goldfinder.server.DispatcherServer;
 import com.example.utils.ConnectionMode;
 import com.example.utils.GameType;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
-import javafx.event.ActionEvent;
 
 import java.util.ArrayList;
+import java.util.concurrent.ScheduledExecutorService;
+
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class Bot {
-    GridView gridView;
     ClientBoi client;
-    int vParallax = 0;
-    int hParallax = 0;
     int column, row;
     public static int COLUMN_COUNT = DispatcherServer.COLUMN_COUNT * 2;
     public static int ROW_COUNT = DispatcherServer.ROW_COUNT * 2;
 
     ConnectionMode connectionMode;
-
     GameType gameType;
-
     String name;
 
-    int score;
 
     public Bot(ConnectionMode connectionMode, GameType gameType, String name){
         client = new ClientBoi();
-        score = 0;
 
         column = COLUMN_COUNT / 2;
         row = ROW_COUNT / 2;
@@ -40,15 +35,6 @@ public class Bot {
         this.gameType = gameType;
         this.name = name;
 
-        initTimeline();
-    }
-
-    private void initTimeline() {
-        Timeline timeline = new Timeline();
-        KeyFrame kf = new KeyFrame(javafx.util.Duration.seconds(0.1), this::updateClient);
-        timeline.setCycleCount(Timeline.INDEFINITE);
-        timeline.getKeyFrames().add(kf);
-        timeline.play();
     }
 
     public void startBot() {
@@ -64,14 +50,14 @@ public class Bot {
         }
     }
 
-    public String updateClient(ActionEvent actionEvent) {
+    public void run() {
+        System.out.println("bro is wating");
         IClientCommand inc_command = client.updateClient();
         if (inc_command != null) inc_command.run(client, "");
-        String resp = client.updateSurrounding(column, row);
-        return resp;
-    }
 
-    public void randomMove() {
+        if (!client.isPlaying()) return;
+
+        System.out.println("running");
         String resp;
         ArrayList<String> directions = new ArrayList<>();
         directions.add("UP");
@@ -80,7 +66,6 @@ public class Bot {
         directions.add("RIGHT");
         int random = (int) (Math.random() * 4);
 
-        if (!client.isPlaying()) return;
 
         switch (directions.get(random)) {
             case "UP" -> {
@@ -93,7 +78,6 @@ public class Bot {
                 if ((resp = client.sendCommand(new Move_Command(), "LEFT")).startsWith("VALID_MOVE")){
                     column = Math.max(0, column - 1);
                     System.out.println("GOING LEFT");
-
                 }
             }
             case "DOWN" -> {
@@ -112,26 +96,17 @@ public class Bot {
                 return;
             }
         }
-
-        if (resp.endsWith("GOLD")) {
-            gridView.goldAt[column][row] = false;
-            score++;
-        }
-    }
-    public void exitApplication() {
-        System.out.println("Exiting...");
     }
 
     public static void main(String[] args) {
         Bot bot = new Bot(ConnectionMode.TCP, GameType.GOLD_FINDER, "Bot");
-        try{
-            bot.startBot();
-            while(true){
-                bot.randomMove();
-            }
-        } catch (Exception e){
-            e.printStackTrace();
-        }
+        bot.startBot();
+        System.out.println("waiting for game to start");
+        //while (!bot.client.isPlaying()) {}
+        ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+        executorService.scheduleAtFixedRate(bot::run, 2, 2, TimeUnit.SECONDS);
+
+
     }
 
 
