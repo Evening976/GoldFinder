@@ -24,7 +24,8 @@ public enum GameType {
     public static int getGridSize(GameType gameType) {
         return switch (gameType) {
             case GOLD_FINDER_SOLO -> DispatcherServer.ROW_COUNT * 2;
-            case GOLD_FINDER, COPS_AND_ROBBERS, GOLD_FINDER_MASSIVE -> (DispatcherServer.ROW_COUNT * DispatcherServer.DEFAULT_PLAYER_COUNT) * 2;
+            case GOLD_FINDER, COPS_AND_ROBBERS-> (DispatcherServer.ROW_COUNT * DispatcherServer.DEFAULT_PLAYER_COUNT) * 2;
+            case GOLD_FINDER_MASSIVE -> 32*4;
         };
     }
 

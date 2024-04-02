@@ -74,11 +74,11 @@ public class GridView {
     }
 
     private int cellWidth() {
-        return (int) (canvas.getWidth() / columnCount);
+        return (int) canvas.getWidth() / columnCount;
     }
 
     private int cellHeight() {
-        return (int) (canvas.getHeight() / rowCount);
+        return (int) canvas.getWidth() / rowCount;
     }
 
     public void emptyPlayers() {
@@ -98,7 +98,7 @@ public class GridView {
 
     public void paintPlayer(int column, int row) {
         canvas.getGraphicsContext2D().setFill(Color.BLUE);
-        canvas.getGraphicsContext2D().fillRect(column * cellWidth(), row * cellHeight(), cellWidth(), cellHeight());
+        canvas.getGraphicsContext2D().fillRect(row * cellWidth(), column * cellHeight(), cellWidth(), cellHeight());
     }
 
 }

@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.concurrent.ScheduledExecutorService;
 
 import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class Bot {
@@ -25,7 +24,7 @@ public class Bot {
     String name;
 
 
-    public Bot(ConnectionMode connectionMode, GameType gameType, String name){
+    public Bot(ConnectionMode connectionMode, GameType gameType){
         client = new ClientBoi();
 
         column = COLUMN_COUNT / 2;
@@ -33,7 +32,7 @@ public class Bot {
 
         this.connectionMode = connectionMode;
         this.gameType = gameType;
-        this.name = name;
+        this.name = "Bot";
 
     }
 
@@ -48,17 +47,19 @@ public class Bot {
                 System.out.println("Response to game_join : " + r);
             }
         }
+
+        System.out.println("waiting for game to start");
+        ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+        executorService.scheduleAtFixedRate(this::run, 2, 2, TimeUnit.SECONDS);
     }
 
     public void run() {
-        System.out.println("bro is wating");
         IClientCommand inc_command = client.updateClient();
         if (inc_command != null) inc_command.run(client, "");
 
         if (!client.isPlaying()) return;
 
         System.out.println("running");
-        String resp;
         ArrayList<String> directions = new ArrayList<>();
         directions.add("UP");
         directions.add("DOWN");
@@ -69,27 +70,27 @@ public class Bot {
 
         switch (directions.get(random)) {
             case "UP" -> {
-                if ((resp = client.sendCommand(new Move_Command(), "UP")).startsWith("VALID_MOVE")) {
+                if ((client.sendCommand(new Move_Command(), "UP")).startsWith("VALID_MOVE")) {
                     row = Math.max(0, row - 1);
-                    System.out.println("GOING UP");
+                    System.out.println("MOVING UP");
                 }
             }
             case "LEFT" -> {
-                if ((resp = client.sendCommand(new Move_Command(), "LEFT")).startsWith("VALID_MOVE")){
+                if ((client.sendCommand(new Move_Command(), "LEFT")).startsWith("VALID_MOVE")){
                     column = Math.max(0, column - 1);
-                    System.out.println("GOING LEFT");
+                    System.out.println("MOVING LEFT");
                 }
             }
             case "DOWN" -> {
-                if ((resp = client.sendCommand(new Move_Command(), "DOWN")).startsWith("VALID_MOVE")){
+                if ((client.sendCommand(new Move_Command(), "DOWN")).startsWith("VALID_MOVE")){
                     row = Math.min(ROW_COUNT - 1, row + 1);
-                    System.out.printf("GOING DOWN");
+                    System.out.printf("MOVING DOWN");
                 }
             }
             case "RIGHT" -> {
-                if ((resp = client.sendCommand(new Move_Command(), "RIGHT")).startsWith("VALID_MOVE")) {
+                if ((client.sendCommand(new Move_Command(), "RIGHT")).startsWith("VALID_MOVE")) {
                     column = Math.min(COLUMN_COUNT - 1, column + 1);
-                    System.out.println("GOING RIGHT");
+                    System.out.println("MOVING RIGHT");
                 }
             }
             default -> {
@@ -97,18 +98,5 @@ public class Bot {
             }
         }
     }
-
-    public static void main(String[] args) {
-        Bot bot = new Bot(ConnectionMode.TCP, GameType.GOLD_FINDER, "Bot");
-        bot.startBot();
-        System.out.println("waiting for game to start");
-        //while (!bot.client.isPlaying()) {}
-        ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
-        executorService.scheduleAtFixedRate(bot::run, 2, 2, TimeUnit.SECONDS);
-
-
-    }
-
-
 }
 

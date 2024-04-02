@@ -67,16 +67,11 @@ public abstract class ICommon {
         buffer.put(message.getBytes());
         buffer.flip();
 
-        ByteBuffer p = ByteBuffer.allocate(128);
-        p.clear();
-        p.put(message.getBytes());
-        p.flip();
-        System.out.println("Sending UDP message : " + StandardCharsets.UTF_8.decode(p).toString());
         client.send(buffer, client.getRemoteAddress());
     }
 
     String receiveUDPMessage(DatagramChannel client) {
-        ByteBuffer buffer = ByteBuffer.allocate(128);
+        ByteBuffer buffer = ByteBuffer.allocate(2048);
         buffer.clear();
         try {
             client.receive(buffer);

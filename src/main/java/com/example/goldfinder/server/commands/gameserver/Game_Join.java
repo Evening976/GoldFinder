@@ -28,10 +28,10 @@ public class Game_Join implements GameServerCommand {
             availableGame = server.getGames().getAvailable(CRGame.class, -1);
         } else {
             player = new GFPlayer(client, playerName, 0, 0);
-            if (params[2] == null || !params[2].endsWith("_SOLO")) {
+            if (!params[2].endsWith("_SOLO") && !params[2].endsWith("_MASSIVE")) {
                 availableGame = server.getGames().getAvailable(GFGame.class, -1);
             } else if (params[2].endsWith("_MASSIVE")) {
-                availableGame = server.getGames().getAvailable(GFGame.class, 64);
+                availableGame = server.getGames().getAvailable(GFGame.class, 32);
             } else {
                 availableGame = server.getGames().getAvailable(GFGame.class, 1);
             }
