@@ -125,7 +125,6 @@ public class GameUpdater {
         assert game instanceof CRGame;
 
 
-
         if (dir.contains("GOLD")) {
             System.out.println("Gold collected!");
             game.collectGold(p);

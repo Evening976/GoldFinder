@@ -98,7 +98,7 @@ public class GridView {
 
     public void paintPlayer(int column, int row) {
         canvas.getGraphicsContext2D().setFill(Color.BLUE);
-        canvas.getGraphicsContext2D().fillRect(row * cellWidth(), column * cellHeight(), cellWidth(), cellHeight());
+        canvas.getGraphicsContext2D().fillRect(row * cellWidth() + 2, column * cellHeight() + 2, cellWidth() - 4, cellHeight() - 4);
     }
 
 }
