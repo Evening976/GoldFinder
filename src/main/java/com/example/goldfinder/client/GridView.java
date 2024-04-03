@@ -94,7 +94,7 @@ public class GridView {
     }
 
     public void setPlayerPositions(int col, int row, int playerIndex) {
-        playerPositions.put(new Pair<>(col, row), PlayerColor.values()[playerIndex].getColor());
+        playerPositions.put(new Pair<>(col, row), PlayerColor.values()[playerIndex%6].getColor());
     }
 
     public void setPlayerPositions(int col, int row, Color playerColor) {

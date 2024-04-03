@@ -20,7 +20,7 @@ public class Game_Join implements GameServerCommand {
 
     @Override
     public String run(SelectableChannel client, GameServer server, AbstractPlayer player, AbstractGame game, InetSocketAddress addr, String[] params) {
-        System.out.println("Game_Join: " + params[1] + " " + params[2] + "\n");
+        //System.out.println("Game_Join: " + params[1] + " " + params[2] + "\n");
         String playerName = params[1];
         Pair<Short, AbstractGame> availableGame;
         if (Objects.equals(params[2], "COPS_AND_ROBBERS")) {
@@ -51,7 +51,7 @@ public class Game_Join implements GameServerCommand {
 
         if (game.isRunning()) {
             for (AbstractPlayer p : game.getPlayers()) {
-                System.out.println("Sending game start to : " + p + "\n");
+                //System.out.println("Sending game start to : " + p + "\n");
                 server.sendMessage(p.getClient(), new Game_Start().run(p.getClient(), server, p, game, (InetSocketAddress) p.getAddress(), new String[]{}), p.getAddress());
             }
         }

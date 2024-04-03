@@ -18,7 +18,6 @@ public class GameUpdater {
         switch (params[0].toUpperCase()) {
             case "UP" -> {
                 dir = game.getUp(p.getxPos(), p.getyPos());
-                System.out.println("UP: " + dir);
                 if (dir.contains("EMPTY") || dir.contains("GOLD") || dir.contains("ENEMY")) {
                     if (game instanceof CRGame || p instanceof CRPlayer) {
                         if (((CRPlayer) p).isDead()) {
@@ -37,7 +36,6 @@ public class GameUpdater {
             }
             case "DOWN" -> {
                 dir = game.getDown(p.getxPos(), p.getyPos());
-                System.out.println("DOWN: " + dir);
                 if (dir.contains("EMPTY") || dir.contains("GOLD") || dir.contains("ENEMY")) {
                     if (game instanceof CRGame || p instanceof CRPlayer) {
                         if (((CRPlayer) p).isDead()) {
@@ -57,7 +55,6 @@ public class GameUpdater {
             }
             case "LEFT" -> {
                 dir = game.getLeft(p.getxPos(), p.getyPos());
-                System.out.println("LEFT: " + dir);
                 if (dir.contains("EMPTY") || dir.contains("GOLD") || dir.contains("ENEMY")) {
                     if (game instanceof CRGame || p instanceof CRPlayer) {
                         if (((CRPlayer) p).isDead()) {
@@ -76,7 +73,6 @@ public class GameUpdater {
             }
             case "RIGHT" -> {
                 dir = game.getRight(p.getxPos(), p.getyPos());
-                System.out.println("RIGHT: " + dir);
                 if (dir.contains("EMPTY") || dir.contains("GOLD") || dir.contains("ENEMY")) {
                     if (game instanceof CRGame || p instanceof CRPlayer) {
                         if (((CRPlayer) p).isDead()) {
@@ -101,7 +97,7 @@ public class GameUpdater {
             t.start();
             return new Game_End().run(client, server, p, game, addr, null);
         } else if (!dir.endsWith("WALL ") && !dir.contains("PLAYER") && !dir.endsWith("ENEMY ") && !dir.endsWith("ALLY ")) {
-            System.out.println("VALID_MOVE:" + dir.stripTrailing().replace(dir.split(":")[0] + ": ", ""));
+            //System.out.println("VALID_MOVE:" + dir.stripTrailing().replace(dir.split(":")[0] + ": ", ""));
             return "VALID_MOVE:" + dir.stripTrailing().replace(dir.split(":")[0] + ": ", "");
         }
 
@@ -110,14 +106,11 @@ public class GameUpdater {
 
     private static void handleGFEnd(SelectableChannel client, GameServer server, AbstractPlayer p, AbstractGame game, InetSocketAddress addr, String dir) {
         assert game instanceof GFGame;
-        System.out.println(p.getxPos() + " " + p.getyPos() + " " + dir);
-        System.out.println(game.getPlayer(p).getxPos() + " " + game.getPlayer(p).getyPos() + " " + dir);
         ((GFGame) game).setDiscoveredCell(p.getxPos(), p.getyPos());
         if (dir.contains("GOLD")) {
             game.collectGold(p);
         }
         if (((GFGame) game).getMaxCells() == ((GFGame) game).getDiscoveredCells() && game.getGoldCount() == 0) {
-            System.out.println("discovered cells: " +((GFGame) game).getDiscoveredCells());
             endGame(client, server, p, game, addr);
         }
     }
@@ -127,7 +120,6 @@ public class GameUpdater {
 
 
         if (dir.contains("GOLD")) {
-            System.out.println("Gold collected!");
             game.collectGold(p);
             if (game.getGoldCount() == 0) {
                 endGame(client, server, p, game, addr);
@@ -135,7 +127,6 @@ public class GameUpdater {
             }
         }
 
-        System.out.println("Robber count: " + ((CRGame) game).getRobberCount());
         for (AbstractPlayer robber : ((CRGame) game).getRobbers().keySet()) {
             if (((CRGame) game).getRobbers().get(robber).equals("CAUGHT") && !((CRPlayer) robber).isDead()) {
                 ((CRGame) game).decreaseRobberCount();
@@ -149,7 +140,6 @@ public class GameUpdater {
 
     private static void endGame(SelectableChannel client, GameServer server, AbstractPlayer p, AbstractGame game, InetSocketAddress addr) {
         for (AbstractPlayer abstractPlayer : game.getPlayers()) {
-            System.out.println("Game ended");
             server.sendMessage(abstractPlayer.getClient(),
                     new Game_End().run(client, server, p, game, addr, null),
                     abstractPlayer.getAddress());

@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import static java.lang.Thread.sleep;
+
 public class AppBot {
 
     ExecutorService executor;
@@ -25,6 +27,11 @@ public class AppBot {
     }
     private void initBot(){
         for (Bot bot : bots) {
+            try {
+                sleep(50);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
             executor.execute(() -> {
                 try {
                     bot.startBot();
@@ -36,7 +43,7 @@ public class AppBot {
     }
 
     public static void main(String[] args) {
-        AppBot appBot = new AppBot(3, ConnectionMode.TCP, GameType.GOLD_FINDER);
+        AppBot appBot = new AppBot(500, ConnectionMode.TCP, GameType.GOLD_FINDER_MASSIVE);
         appBot.initBot();
     }
 
