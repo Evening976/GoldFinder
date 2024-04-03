@@ -117,6 +117,7 @@ public class GameUpdater {
             game.collectGold(p);
         }
         if (((GFGame) game).getMaxCells() == ((GFGame) game).getDiscoveredCells() && game.getGoldCount() == 0) {
+            System.out.println("discovered cells: " +((GFGame) game).getDiscoveredCells());
             endGame(client, server, p, game, addr);
         }
     }

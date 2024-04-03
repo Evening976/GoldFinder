@@ -10,7 +10,7 @@ import java.util.Map;
 public class GridView {
     Canvas canvas;
     int columnCount, rowCount;
-    Map<Pair<Integer, Integer>, PlayerColor> playerPositions = new java.util.HashMap<>();
+    Map<Pair<Integer, Integer>, Color> playerPositions = new java.util.HashMap<>();
     boolean[][] goldAt, vWall, hWall;
 
     public GridView(Canvas canvas, int columnCount, int rowCount) {
@@ -25,7 +25,8 @@ public class GridView {
     public void repaint(int hParallax, int vParallax) {
         canvas.getGraphicsContext2D().clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
         for (Pair<Integer, Integer> player : playerPositions.keySet()) {
-            canvas.getGraphicsContext2D().setFill(playerPositions.get(player).getColor());
+            System.out.println("Painting player at " + player.getKey() + " " + player.getValue() + " " + playerPositions.get(player));
+            canvas.getGraphicsContext2D().setFill(playerPositions.get(player));
             canvas.getGraphicsContext2D().fillRect((player.getKey() + hParallax) * cellWidth(), (player.getValue() + vParallax) * cellHeight(), cellWidth(), cellHeight());
         }
         for (int column = 0; column < columnCount; column++) {
@@ -92,8 +93,13 @@ public class GridView {
         }
     }
 
-    public void setPlayerPositions(int col, int row, PlayerColor playerIndex) {
-        playerPositions.put(new Pair<>(col, row), playerIndex);
+    public void setPlayerPositions(int col, int row, int playerIndex) {
+        playerPositions.put(new Pair<>(col, row), PlayerColor.values()[playerIndex].getColor());
+    }
+
+    public void setPlayerPositions(int col, int row, Color playerColor) {
+
+        playerPositions.put(new Pair<>(col, row), playerColor);
     }
 
     public void paintPlayer(int column, int row) {

@@ -4,13 +4,10 @@ package com.example.goldfinder.client;
 import com.example.utils.ConnectionMode;
 import com.example.utils.GameType;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 public class AppBot {
 
@@ -39,7 +36,7 @@ public class AppBot {
     }
 
     public static void main(String[] args) {
-        AppBot appBot = new AppBot(3, ConnectionMode.UDP, GameType.COPS_AND_ROBBERS);
+        AppBot appBot = new AppBot(3, ConnectionMode.TCP, GameType.GOLD_FINDER);
         appBot.initBot();
     }
 

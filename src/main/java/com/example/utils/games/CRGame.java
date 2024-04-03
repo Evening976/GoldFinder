@@ -27,17 +27,17 @@ public class CRGame extends AbstractGame {
         while (true) {
             int xpos = (int) (Math.random() * grid.getColumnCount());
             int ypos = (int) (Math.random() * grid.getRowCount());
-            if (cops.size() < maxPlayers / 2) {
-                System.out.println("setting cop ");
-                setCop((CRPlayer) p);
-            } else {
-                System.out.println("setting robber ");
-                setRobber((CRPlayer) p);
-            }
             if (isFree(xpos, ypos)) {
                 p.move(xpos, ypos);
                 break;
             }
+        }
+        if (cops.size() < maxPlayers / 2) {
+            System.out.println("setting cop ");
+            setCop((CRPlayer) p);
+        } else {
+            System.out.println("setting robber ");
+            setRobber((CRPlayer) p);
         }
     }
 
