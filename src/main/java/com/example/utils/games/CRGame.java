@@ -28,9 +28,10 @@ public class CRGame extends AbstractGame {
             int xpos = (int) (Math.random() * grid.getColumnCount());
             int ypos = (int) (Math.random() * grid.getRowCount());
             if (cops.size() < maxPlayers / 2) {
-                System.out.println(cops.size() + " cops");
+                System.out.println("setting cop ");
                 setCop((CRPlayer) p);
             } else {
+                System.out.println("setting robber ");
                 setRobber((CRPlayer) p);
             }
             if (isFree(xpos, ypos)) {
@@ -96,7 +97,6 @@ public class CRGame extends AbstractGame {
     }
 
     protected String getObstacles(int xpos, int ypos, int x, int y) {
-        System.out.println("Mon bro ?????");
         CRPlayer p = (CRPlayer) getPlayerFromCoordinates(xpos + x, ypos + y);
         if (p != null) {
             if (p.isCop()) {

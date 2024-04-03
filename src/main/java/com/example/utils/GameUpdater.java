@@ -27,8 +27,7 @@ public class GameUpdater {
                         if (dir.contains("ENEMY")) {
                             assert game instanceof CRGame;
                             ((CRGame) game).catchRobber(p, game.getPlayerFromCoordinates(p.getxPos(), p.getyPos() - 1));
-                        }
-                        game.movePlayer(p, 0, -1);
+                        } else { game.movePlayer(p, 0, -1); }
                         handleCREnd(client, server, p, game, addr, dir);
                     } else if (game instanceof GFGame || p instanceof GFPlayer) {
                         game.movePlayer(p, 0, -1);
@@ -47,9 +46,9 @@ public class GameUpdater {
                         if (dir.contains("ENEMY")) {
                             assert game instanceof CRGame;
                             ((CRGame) game).catchRobber(p, game.getPlayerFromCoordinates(p.getxPos(), p.getyPos() + 1));
-                        }
-                        game.movePlayer(p, 0, 1);
+                        } else { game.movePlayer(p, 0, 1); }
                         handleCREnd(client, server, p, game, addr, dir);
+
                     } else if (game instanceof GFGame || p instanceof GFPlayer) {
                         game.movePlayer(p, 0, 1);
                         handleGFEnd(client, server, p, game, addr, dir);
@@ -67,8 +66,7 @@ public class GameUpdater {
                         if (dir.contains("ENEMY")) {
                             assert game instanceof CRGame;
                             ((CRGame) game).catchRobber(p, game.getPlayerFromCoordinates(p.getxPos() - 1, p.getyPos()));
-                        }
-                        game.movePlayer(p, -1, 0);
+                        } else { game.movePlayer(p, -1, 0); }
                         handleCREnd(client, server, p, game, addr, dir);
                     } else if (game instanceof GFGame || p instanceof GFPlayer) {
                         game.movePlayer(p, -1, 0);
@@ -87,8 +85,7 @@ public class GameUpdater {
                         if (dir.contains("ENEMY")) {
                             assert game instanceof CRGame;
                             ((CRGame) game).catchRobber(p, game.getPlayerFromCoordinates(p.getxPos() + 1, p.getyPos()));
-                        }
-                        game.movePlayer(p, 1, 0);
+                        } else { game.movePlayer(p, 1, 0); }
                         handleCREnd(client, server, p, game, addr, dir);
 
                     } else if (game instanceof GFGame || p instanceof GFPlayer) {
@@ -126,6 +123,8 @@ public class GameUpdater {
 
     private static void handleCREnd(SelectableChannel client, GameServer server, AbstractPlayer p, AbstractGame game, InetSocketAddress addr, String dir) {
         assert game instanceof CRGame;
+
+
 
         if (dir.contains("GOLD")) {
             System.out.println("Gold collected!");

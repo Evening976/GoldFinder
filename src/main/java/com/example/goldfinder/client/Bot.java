@@ -8,6 +8,7 @@ import com.example.utils.ConnectionMode;
 import com.example.utils.GameType;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ScheduledExecutorService;
 
 import java.util.concurrent.Executors;
@@ -59,15 +60,18 @@ public class Bot {
 
         if (!client.isPlaying()) return;
 
-        System.out.println("running");
         ArrayList<String> directions = new ArrayList<>();
-        directions.add("UP");
-        directions.add("DOWN");
-        directions.add("LEFT");
-        directions.add("RIGHT");
-        int random = (int) (Math.random() * 4);
 
+        List<String> surrounding = new ArrayList<>(List.of(client.updateSurrounding(row, column).split(" ")));
+        surrounding.removeIf(s -> s.contains("WALL"));
 
+        System.out.println("surrondingbot: " + surrounding);
+        for(String s : surrounding){
+            directions.add(s.split(":")[0].toUpperCase());
+        }
+        int random = (int) (Math.random() * directions.size());
+
+        System.out.println("veh les directions: " + directions);
         switch (directions.get(random)) {
             case "UP" -> {
                 if ((client.sendCommand(new Move_Command(), "UP")).startsWith("VALID_MOVE")) {

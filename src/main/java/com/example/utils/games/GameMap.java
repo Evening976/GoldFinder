@@ -46,13 +46,11 @@ public class GameMap {
         }
         Short key = (short) games.size();
         if(maxPlayers < 0){
-            System.out.println("wtf bro");
             System.out.println(maxPlayers);
 
             maxPlayers = DEFAULT_PLAYER_COUNT;
         }
         if (game == GFGame.class) {
-            System.out.println("game avec maxPlayers: " + maxPlayers);
             games.put(key, new GFGame(maxPlayers));
         } else if (game == CRGame.class) {
             games.put(key, new CRGame(maxPlayers));
