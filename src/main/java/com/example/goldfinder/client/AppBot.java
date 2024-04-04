@@ -43,7 +43,7 @@ public class AppBot {
     }
 
     public static void main(String[] args) {
-        AppBot appBot = new AppBot(3, ConnectionMode.TCP, GameType.COPS_AND_ROBBERS);
+        AppBot appBot = new AppBot(31, ConnectionMode.TCP, GameType.COPS_AND_ROBBERS_MASSIVE);
         appBot.initBot();
     }
 
