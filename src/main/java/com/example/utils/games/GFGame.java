@@ -16,6 +16,30 @@ public class GFGame extends AbstractGame {
     }
 
     @Override
+    public boolean isValidMove(String move) {
+        return move.contains("EMPTY") || move.contains("GOLD");
+    }
+
+    @Override
+    public String updateGame(AbstractPlayer p, String cellState, int nextX, int nextY) {
+        movePlayer(p, nextX, nextY);
+        setDiscoveredCell(p.getxPos(), p.getyPos());
+        if (cellState.contains("GOLD")) {
+            collectGold(p);
+        }
+        if (maxCells() == getDiscoveredCells() && getGoldCount() == 0) {
+            setHasEnded(true);
+            return "GAME_END";
+        }
+        return cellState;
+    }
+
+    @Override
+    public void endGame() {
+        setHasEnded(true);
+    }
+
+    @Override
     protected void spawnPlayer(AbstractPlayer p) {
         while (true) {
             int xpos = (int) (Math.random() * grid.getColumnCount());
@@ -43,7 +67,7 @@ public class GFGame extends AbstractGame {
         }
     }
 
-    public int getDiscoveredCount() {
+    public int maxCells() {
         return grid.getColumnCount() * grid.getRowCount();
     }
 

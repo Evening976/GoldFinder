@@ -45,6 +45,7 @@ public class Bot {
                 client.connect();
                 client.sendCommand(new Client_Join(), name + " " + gameType);
                 String r = client.sendCommand(new Client_Join(), name + " " + gameType);
+                if(r.contains("GAME_END")){return;}
                 System.out.println("Response to game_join : " + r);
             }
         }
@@ -76,29 +77,24 @@ public class Bot {
             case "UP" -> {
                 if ((client.sendCommand(new Move_Command(), "UP")).startsWith("VALID_MOVE")) {
                     row = Math.max(0, row - 1);
-                    System.out.println("MOVING UP");
                 }
             }
             case "LEFT" -> {
                 if ((client.sendCommand(new Move_Command(), "LEFT")).startsWith("VALID_MOVE")){
                     column = Math.max(0, column - 1);
-                    System.out.println("MOVING LEFT");
                 }
             }
             case "DOWN" -> {
                 if ((client.sendCommand(new Move_Command(), "DOWN")).startsWith("VALID_MOVE")){
                     row = Math.min(ROW_COUNT - 1, row + 1);
-                    System.out.printf("MOVING DOWN");
                 }
             }
             case "RIGHT" -> {
                 if ((client.sendCommand(new Move_Command(), "RIGHT")).startsWith("VALID_MOVE")) {
                     column = Math.min(COLUMN_COUNT - 1, column + 1);
-                    System.out.println("MOVING RIGHT");
                 }
             }
             default -> {
-                return;
             }
         }
     }

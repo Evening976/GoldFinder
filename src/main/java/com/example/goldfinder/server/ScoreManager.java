@@ -9,7 +9,6 @@ public class ScoreManager {
     public static synchronized void addToLeaderboards(TreeMap<Integer, ArrayList<String>> scores, int score, String name) {
         for (int i : scores.keySet()) {
             if (scores.get(i).contains(name)) {
-                System.out.println("Removing " + name + " from " + i + " score");
                 score += i;
                 scores.get(i).remove(name);
                 if(scores.get(i).isEmpty()) scores.remove(i);

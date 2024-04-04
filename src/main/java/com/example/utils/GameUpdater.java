@@ -18,124 +18,61 @@ public class GameUpdater {
         switch (params[0].toUpperCase()) {
             case "UP" -> {
                 dir = game.getUp(p.getxPos(), p.getyPos());
-                if (dir.contains("EMPTY") || dir.contains("GOLD") || dir.contains("ENEMY")) {
-                    if (game instanceof CRGame || p instanceof CRPlayer) {
-                        if (((CRPlayer) p).isDead()) {
-                            return "INVALID_MOVE";
-                        }
-                        if (dir.contains("ENEMY")) {
-                            assert game instanceof CRGame;
-                            ((CRGame) game).catchRobber(p, game.getPlayerFromCoordinates(p.getxPos(), p.getyPos() - 1));
-                        } else { game.movePlayer(p, 0, -1); }
-                        handleCREnd(client, server, p, game, addr, dir);
-                    } else if (game instanceof GFGame || p instanceof GFPlayer) {
-                        game.movePlayer(p, 0, -1);
-                        handleGFEnd(client, server, p, game, addr, dir);
+                if (game.isValidMove(dir)) {
+                    System.out.println(dir);
+                    dir = game.updateGame(p, dir, 0, -1);
+                    if(game.hasEnded() || dir.contains("GAME_END")){
+                        endGame(client, server, p, game, addr);
                     }
                 }
             }
             case "DOWN" -> {
                 dir = game.getDown(p.getxPos(), p.getyPos());
-                if (dir.contains("EMPTY") || dir.contains("GOLD") || dir.contains("ENEMY")) {
-                    if (game instanceof CRGame || p instanceof CRPlayer) {
-                        if (((CRPlayer) p).isDead()) {
-                            return "INVALID_MOVE";
-                        }
-                        if (dir.contains("ENEMY")) {
-                            assert game instanceof CRGame;
-                            ((CRGame) game).catchRobber(p, game.getPlayerFromCoordinates(p.getxPos(), p.getyPos() + 1));
-                        } else { game.movePlayer(p, 0, 1); }
-                        handleCREnd(client, server, p, game, addr, dir);
-
-                    } else if (game instanceof GFGame || p instanceof GFPlayer) {
-                        game.movePlayer(p, 0, 1);
-                        handleGFEnd(client, server, p, game, addr, dir);
+                if (game.isValidMove(dir)) {
+                    System.out.println(dir);
+                    dir = game.updateGame(p, dir, 0, 1);
+                    if(game.hasEnded() || dir.contains("GAME_END")) {
+                        endGame(client, server, p, game, addr);
                     }
                 }
             }
             case "LEFT" -> {
                 dir = game.getLeft(p.getxPos(), p.getyPos());
-                if (dir.contains("EMPTY") || dir.contains("GOLD") || dir.contains("ENEMY")) {
-                    if (game instanceof CRGame || p instanceof CRPlayer) {
-                        if (((CRPlayer) p).isDead()) {
-                            return "INVALID_MOVE";
-                        }
-                        if (dir.contains("ENEMY")) {
-                            assert game instanceof CRGame;
-                            ((CRGame) game).catchRobber(p, game.getPlayerFromCoordinates(p.getxPos() - 1, p.getyPos()));
-                        } else { game.movePlayer(p, -1, 0); }
-                        handleCREnd(client, server, p, game, addr, dir);
-                    } else if (game instanceof GFGame || p instanceof GFPlayer) {
-                        game.movePlayer(p, -1, 0);
-                        handleGFEnd(client, server, p, game, addr, dir);
+                if (game.isValidMove(dir)) {
+                    System.out.println(dir);
+                    dir = game.updateGame(p, dir, -1, 0);
+                    if(dir.contains("INVALID_MOVE")){
+                        return "INVALID_MOVE";
+                    }
+                    if(dir.contains("GAME_END")){
+                        endGame(client, server, p, game, addr);
+                        game.endGame();
                     }
                 }
             }
             case "RIGHT" -> {
                 dir = game.getRight(p.getxPos(), p.getyPos());
-                if (dir.contains("EMPTY") || dir.contains("GOLD") || dir.contains("ENEMY")) {
-                    if (game instanceof CRGame || p instanceof CRPlayer) {
-                        if (((CRPlayer) p).isDead()) {
-                            return "INVALID_MOVE";
-                        }
-                        if (dir.contains("ENEMY")) {
-                            assert game instanceof CRGame;
-                            ((CRGame) game).catchRobber(p, game.getPlayerFromCoordinates(p.getxPos() + 1, p.getyPos()));
-                        } else { game.movePlayer(p, 1, 0); }
-                        handleCREnd(client, server, p, game, addr, dir);
-
-                    } else if (game instanceof GFGame || p instanceof GFPlayer) {
-                        game.movePlayer(p, 1, 0);
-                        handleGFEnd(client, server, p, game, addr, dir);
+                if (game.isValidMove(dir)) {
+                    System.out.println(dir);
+                    dir = game.updateGame(p, dir, 1, 0);
+                    if(dir.contains("GAME_END")){
+                        endGame(client, server, p, game, addr);
+                        game.endGame();
                     }
                 }
             }
         }
 
-        if (game.hasEnded()) {
+        if (game.hasEnded() || dir.contains("GAME_END")) {
             Thread t = new Thread(() -> server.saveScore(server.getGames().saveScores(p.getGameID())));
             t.start();
             return new Game_End().run(client, server, p, game, addr, null);
-        } else if (!dir.endsWith("WALL ") && !dir.contains("PLAYER") && !dir.endsWith("ENEMY ") && !dir.endsWith("ALLY ")) {
-            //System.out.println("VALID_MOVE:" + dir.stripTrailing().replace(dir.split(":")[0] + ": ", ""));
+        } else if (!dir.endsWith("WALL ") && !dir.contains("PLAYER") && !dir.endsWith("ENEMY ") && !dir.endsWith("ALLY ") && !dir.contains("INVALID")) {
+            System.out.println("VALID_MOVE:" + dir.stripTrailing().replace(dir.split(":")[0] + ": ", ""));
             return "VALID_MOVE:" + dir.stripTrailing().replace(dir.split(":")[0] + ": ", "");
         }
 
         return "INVALID_MOVE";
-    }
-
-    private static void handleGFEnd(SelectableChannel client, GameServer server, AbstractPlayer p, AbstractGame game, InetSocketAddress addr, String dir) {
-        assert game instanceof GFGame;
-        ((GFGame) game).setDiscoveredCell(p.getxPos(), p.getyPos());
-        if (dir.contains("GOLD")) {
-            game.collectGold(p);
-        }
-        if (((GFGame) game).getDiscoveredCount() == ((GFGame) game).getDiscoveredCells() && game.getGoldCount() == 0) {
-            endGame(client, server, p, game, addr);
-        }
-    }
-
-    private static void handleCREnd(SelectableChannel client, GameServer server, AbstractPlayer p, AbstractGame game, InetSocketAddress addr, String dir) {
-        assert game instanceof CRGame;
-
-
-        if (dir.contains("GOLD")) {
-            game.collectGold(p);
-            if (game.getGoldCount() == 0) {
-                endGame(client, server, p, game, addr);
-                return;
-            }
-        }
-
-        for (AbstractPlayer robber : ((CRGame) game).getRobbers().keySet()) {
-            if (((CRGame) game).getRobbers().get(robber).equals("CAUGHT") && !((CRPlayer) robber).isDead()) {
-                ((CRGame) game).decreaseRobberCount();
-                ((CRPlayer) robber).setDead(true);
-            }
-        }
-        if (((CRGame) game).getRobberCount() == 0) {
-            endGame(client, server, p, game, addr);
-        }
     }
 
     private static void endGame(SelectableChannel client, GameServer server, AbstractPlayer p, AbstractGame game, InetSocketAddress addr) {
@@ -143,12 +80,6 @@ public class GameUpdater {
             server.sendMessage(abstractPlayer.getClient(),
                     new Game_End().run(client, server, p, game, addr, null),
                     abstractPlayer.getAddress());
-            game.setHasEnded(true);
-        }
-        if (game instanceof CRGame) {
-            for (AbstractPlayer robber : game.getPlayers()) {
-                ((CRGame) game).setNeutral((CRPlayer) robber);
-            }
         }
     }
 }

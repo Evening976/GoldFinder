@@ -11,7 +11,7 @@ public class Client_End implements IClientCommand{
 
     @Override
     public String run(ClientBoi boi, String params) {
-        AppClient.getController().restartButtonAction();
+        if(AppClient.getController() != null) AppClient.getController().restartButtonAction();
         return null;
     }
 
