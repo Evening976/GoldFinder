@@ -89,7 +89,8 @@ public class Controller {
         gameType.getItems().add("GOLD_FINDER_SOLO");
         gameType.getItems().add("GOLD_FINDER_MASSIVE");
         gameType.getItems().add("COPS_AND_ROBBERS");
-        gameType.setValue("COPS_AND_ROBBERS");
+        gameType.getItems().add("COPS_AND_ROBBERS_MASSIVE");
+        gameType.setValue("GOLD_FINDER");
     }
 
     public void playToggleButtonAction() {
