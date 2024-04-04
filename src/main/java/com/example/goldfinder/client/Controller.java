@@ -134,10 +134,14 @@ public class Controller {
     }
 
     public void updateClient(ActionEvent actionEvent) {
+        int startUpdate = (int) System.currentTimeMillis();
         IClientCommand inc_command = client.updateClient();
         if (inc_command != null) inc_command.run(client, "");
 
+
         String resp = client.updateSurrounding(column, row);
+        int endUpdate = (int) System.currentTimeMillis();
+        System.out.println("Update time : " + (endUpdate - startUpdate) + " ms");
         gridView = GridViewUpdater.update(resp.split(" "), gridView, row, column);
         gridView.repaint(hParallax, vParallax);
         gridView.paintPlayer(COLUMN_COUNT / 2, ROW_COUNT / 2);

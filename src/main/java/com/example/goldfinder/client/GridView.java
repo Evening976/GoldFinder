@@ -75,11 +75,11 @@ public class GridView {
     }
 
     private int cellWidth() {
-        return (int) canvas.getWidth() / columnCount;
+        return 32;//(int) canvas.getWidth() / columnCount;
     }
 
     private int cellHeight() {
-        return (int) canvas.getWidth() / rowCount;
+        return 32;//(int) canvas.getWidth() / rowCount;
     }
 
     public void emptyPlayers() {

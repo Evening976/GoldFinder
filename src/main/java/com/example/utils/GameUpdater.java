@@ -110,7 +110,7 @@ public class GameUpdater {
         if (dir.contains("GOLD")) {
             game.collectGold(p);
         }
-        if (((GFGame) game).getMaxCells() == ((GFGame) game).getDiscoveredCells() && game.getGoldCount() == 0) {
+        if (((GFGame) game).getDiscoveredCount() == ((GFGame) game).getDiscoveredCells() && game.getGoldCount() == 0) {
             endGame(client, server, p, game, addr);
         }
     }

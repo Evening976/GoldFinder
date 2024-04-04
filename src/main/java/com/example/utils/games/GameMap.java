@@ -31,7 +31,7 @@ public class GameMap {
 
     public Pair<Short, AbstractGame> getAvailable(Class<? extends AbstractGame> game, int maxPlayers) {
         for (Short key : games.keySet()) {
-            if (games.get(key).hasEnded()) {
+            if (games.get(key).hasEnded() || games.get(key).getPlayers().isEmpty()) {
                 games.remove(key);
                 continue;
             }
