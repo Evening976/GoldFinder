@@ -23,6 +23,55 @@ public class CRGame extends AbstractGame {
         this.robberCount = 0;
     }
 
+    @Override
+    public boolean isValidMove(String move) {
+        return move.contains("EMPTY") || move.contains("GOLD") || move.contains("ENEMY");
+    }
+
+    @Override
+    public String updateGame(AbstractPlayer p, String cellState, int nextX, int nextY) {
+        System.out.println("updateGame " + p + " " + cellState + " " + nextX + " " + nextY);
+        if (((CRPlayer) p).isDead()) {
+            return "INVALID_MOVE";
+        }
+
+        if (cellState.contains("ENEMY")) {
+            catchRobber((CRPlayer) p, (CRPlayer) getPlayerFromCoordinates(p.getxPos() + nextX, p.getyPos() + nextY));
+        } else {
+            movePlayer(p, nextX, nextY);
+        }
+
+        if (cellState.contains("GOLD")) {
+            if (((CRPlayer) p).isCop()) {
+                return "EMPTY";
+            }
+            collectGold(p);
+            if (getGoldCount() == 0) {
+                return "GAME_END";
+            }
+        }
+
+        for (AbstractPlayer robber : getRobbers().keySet()) {
+            if (getRobbers().get(robber).equals("CAUGHT") && !((CRPlayer) robber).isDead()) {
+                decreaseRobberCount();
+                ((CRPlayer) robber).setDead(true);
+            }
+        }
+
+        if (getRobberCount() == 0) {
+            return "GAME_END";
+        }
+        return cellState;
+    }
+
+    @Override
+    public void endGame() {
+        setHasEnded(true);
+        for (AbstractPlayer p : getPlayers()) {
+            setNeutral((CRPlayer) p);
+        }
+    }
+
     protected void spawnPlayer(AbstractPlayer p) {
         while (true) {
             int xpos = (int) (Math.random() * grid.getColumnCount());
@@ -83,16 +132,17 @@ public class CRGame extends AbstractGame {
         return robbers;
     }
 
-    public void catchRobber(AbstractPlayer p1, AbstractPlayer p2) {
-        if (((CRPlayer) p1).isCop() && !((CRPlayer) p2).isCop() && !robbers.get(p2).equals("CAUGHT")){
+    public void catchRobber(CRPlayer p1, CRPlayer p2) {
+        if (p1.isCop() && !p2.isCop() && !robbers.get(p2).equals("CAUGHT")) {
             p1.collectGold();
             robbers.remove(p2);
             robbers.put(p2, "CAUGHT");
-        } else if(((CRPlayer) p2).isCop() && !((CRPlayer) p1).isCop() && !robbers.get(p1).equals("CAUGHT")){
+            System.out.println("CATCH  p1: " + p1 + " p2: " + p2);
+        } else if (p2.isCop() && !p1.isCop() && !robbers.get(p1).equals("CAUGHT")) {
             p2.collectGold();
             robbers.remove(p1);
             robbers.put(p1, "CAUGHT");
-            System.out.println("p1: " + p1 + " p2: " + p2);
+            System.out.println("CATCH  p1: " + p1 + " p2: " + p2);
         }
     }
 

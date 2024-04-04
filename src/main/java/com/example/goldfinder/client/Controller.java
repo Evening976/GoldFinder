@@ -89,7 +89,8 @@ public class Controller {
         gameType.getItems().add("GOLD_FINDER_SOLO");
         gameType.getItems().add("GOLD_FINDER_MASSIVE");
         gameType.getItems().add("COPS_AND_ROBBERS");
-        gameType.setValue("COPS_AND_ROBBERS");
+        gameType.getItems().add("COPS_AND_ROBBERS_MASSIVE");
+        gameType.setValue("GOLD_FINDER");
     }
 
     public void playToggleButtonAction() {
@@ -134,10 +135,14 @@ public class Controller {
     }
 
     public void updateClient(ActionEvent actionEvent) {
+        int startUpdate = (int) System.currentTimeMillis();
         IClientCommand inc_command = client.updateClient();
         if (inc_command != null) inc_command.run(client, "");
 
+
         String resp = client.updateSurrounding(column, row);
+        int endUpdate = (int) System.currentTimeMillis();
+        System.out.println("Update time : " + (endUpdate - startUpdate) + " ms");
         gridView = GridViewUpdater.update(resp.split(" "), gridView, row, column);
         gridView.repaint(hParallax, vParallax);
         gridView.paintPlayer(COLUMN_COUNT / 2, ROW_COUNT / 2);

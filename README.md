@@ -34,8 +34,9 @@ Taches à réaliser :
 
 Sous-taches :
 - [x] Jeu
-- [ ] Bot
-- [ ] Leaderboard
+- [x] Bot
+- [x] Cops and Robbers
+- [x] Leaderboard
 - [x] Gestion de parties multiples
 - [x] TCP et UDP
 - [x] Montée en charge

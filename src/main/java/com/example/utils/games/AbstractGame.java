@@ -34,6 +34,9 @@ public abstract class AbstractGame {
         }
     }
 
+    public abstract boolean isValidMove(String move);
+    public abstract String updateGame(AbstractPlayer p, String cellState, int nextX, int nextY);
+    public abstract void endGame();
     public String getSurrounding(int xpos, int ypos) {
         return "up:" + getUp(xpos, ypos) + "down:" + getDown(xpos, ypos) + "left:" + getLeft(xpos, ypos) + "right:" + getRight(xpos, ypos);
     }
@@ -63,7 +66,6 @@ public abstract class AbstractGame {
     }
 
     protected abstract String getObstacles(int xpos, int ypos, int xdir, int ydir);
-
     protected abstract void spawnPlayer(AbstractPlayer p);
 
     protected abstract boolean canCollectGold(AbstractPlayer p);

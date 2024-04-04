@@ -4,7 +4,7 @@ import com.example.goldfinder.server.DispatcherServer;
 import com.example.utils.players.AbstractPlayer;
 
 public class GFGame extends AbstractGame {
-    int maxCells = 0;
+    int discoveredCount = 0;
     boolean[][] discoveredCells;
 
     public GFGame() {
@@ -13,6 +13,30 @@ public class GFGame extends AbstractGame {
 
     public GFGame(int maxPlayers) {
         super(maxPlayers);
+    }
+
+    @Override
+    public boolean isValidMove(String move) {
+        return move.contains("EMPTY") || move.contains("GOLD");
+    }
+
+    @Override
+    public String updateGame(AbstractPlayer p, String cellState, int nextX, int nextY) {
+        movePlayer(p, nextX, nextY);
+        setDiscoveredCell(p.getxPos(), p.getyPos());
+        if (cellState.contains("GOLD")) {
+            collectGold(p);
+        }
+        if (maxCells() == getDiscoveredCells() && getGoldCount() == 0) {
+            setHasEnded(true);
+            return "GAME_END";
+        }
+        return cellState;
+    }
+
+    @Override
+    public void endGame() {
+        setHasEnded(true);
     }
 
     @Override
@@ -39,16 +63,16 @@ public class GFGame extends AbstractGame {
         }
         if (!discoveredCells[xpos][ypos]) {
             discoveredCells[xpos][ypos] = true;
-            maxCells++;
+            discoveredCount++;
         }
     }
 
-    public int getMaxCells() {
+    public int maxCells() {
         return grid.getColumnCount() * grid.getRowCount();
     }
 
     public int getDiscoveredCells() {
-        return maxCells;
+        return discoveredCount;
     }
 
     @Override
