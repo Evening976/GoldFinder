@@ -19,7 +19,6 @@ public class GameUpdater {
             case "UP" -> {
                 dir = game.getUp(p.getxPos(), p.getyPos());
                 if (game.isValidMove(dir)) {
-                    System.out.println(dir);
                     dir = game.updateGame(p, dir, 0, -1);
                     if(game.hasEnded() || dir.contains("GAME_END")){
                         endGame(client, server, p, game, addr);
@@ -29,7 +28,6 @@ public class GameUpdater {
             case "DOWN" -> {
                 dir = game.getDown(p.getxPos(), p.getyPos());
                 if (game.isValidMove(dir)) {
-                    System.out.println(dir);
                     dir = game.updateGame(p, dir, 0, 1);
                     if(game.hasEnded() || dir.contains("GAME_END")) {
                         endGame(client, server, p, game, addr);
@@ -53,7 +51,6 @@ public class GameUpdater {
             case "RIGHT" -> {
                 dir = game.getRight(p.getxPos(), p.getyPos());
                 if (game.isValidMove(dir)) {
-                    System.out.println(dir);
                     dir = game.updateGame(p, dir, 1, 0);
                     if(dir.contains("GAME_END")){
                         endGame(client, server, p, game, addr);
@@ -68,7 +65,6 @@ public class GameUpdater {
             t.start();
             return new Game_End().run(client, server, p, game, addr, null);
         } else if (!dir.endsWith("WALL ") && !dir.contains("PLAYER") && !dir.endsWith("ENEMY ") && !dir.endsWith("ALLY ") && !dir.contains("INVALID")) {
-            System.out.println("VALID_MOVE:" + dir.stripTrailing().replace(dir.split(":")[0] + ": ", ""));
             return "VALID_MOVE:" + dir.stripTrailing().replace(dir.split(":")[0] + ": ", "");
         }
 
