@@ -5,11 +5,6 @@ Projet réseau 2023-2024/L3 info/AMU. Jeu multijoueur de collecte de trésors da
 client-serveur 
 
 
-- Binôme 1 : *LEFEVRE  Quentin* 
-
-- Binôme 2 : *MESKINI DRISS*
-
-
 Commandes client : 
 - `SURROUNDING` : Renvoie les cases adjacentes à la position du joueur
 - `GAME_JOIN <pseudo>` : Rejoindre une partie
